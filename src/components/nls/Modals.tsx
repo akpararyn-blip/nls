@@ -18,7 +18,7 @@ function formatPhone(value: string) {
 }
 
 export function Modals() {
-  const { modal, closeModals, cityKey, setCity } = useCity();
+  const { modal, closeModals, cityKey, setCity, consultation } = useCity();
 
   // Close on Escape
   useEffect(() => {
