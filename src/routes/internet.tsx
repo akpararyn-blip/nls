@@ -107,7 +107,8 @@ function Tariffs() {
         </div>
 
         <div className="tariffs-grid">
-          <div className="tariff-card">
+          <div className="tariff-card tariff-featured">
+            <div className="featured-badge">Хит продаж</div>
             <div className="tariff-header">
               <div className="tariff-icon">
                 <CheckIcon />
@@ -126,13 +127,12 @@ function Tariffs() {
               <li>Статический IP-адрес</li>
               <li>Приоритетная техподдержка 24/7</li>
             </ul>
-            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
+            <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
               Узнать стоимость
             </button>
           </div>
 
-          <div className="tariff-card tariff-featured">
-            <div className="featured-badge">Хит продаж</div>
+          <div className="tariff-card">
             <div className="tariff-header">
               <div className="tariff-icon">
                 <CheckIcon />
@@ -150,7 +150,7 @@ function Tariffs() {
               <li>Физическое резервирование каналов</li>
               <li>Закреплённый персональный менеджер</li>
             </ul>
-            <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
+            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
               Получить КП
             </button>
           </div>
