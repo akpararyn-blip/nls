@@ -42,13 +42,18 @@ interface ModalState {
   consultation: boolean;
 }
 
+export interface ConsultationOptions {
+  subject?: string;
+}
+
 interface CityContextValue {
   cityKey: CityKey;
   city: CityData;
   setCity: (key: CityKey) => void;
   modal: ModalState;
+  consultation: ConsultationOptions;
   openCityModal: () => void;
-  openConsultationModal: () => void;
+  openConsultationModal: (options?: ConsultationOptions) => void;
   closeModals: () => void;
   mobileNavOpen: boolean;
   setMobileNavOpen: (open: boolean) => void;
