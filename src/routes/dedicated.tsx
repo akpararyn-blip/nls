@@ -100,31 +100,82 @@ function useDynamic() {
   return { rows, add, update, remove };
 }
 
+function scrollToCalculator() {
+  const el = document.getElementById("calculator");
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function DedicatedPage() {
   return (
     <SiteLayout>
       <Hero />
       <DedicatedPlans />
+      <CustomBuildCTA />
       <Calculator />
     </SiteLayout>
   );
 }
 
 function Hero() {
+  const { openConsultationModal } = useCity();
+  const features = [
+    "До 100 Мбит/с",
+    "ЦОД Алматы и Астана",
+    "Настройка под задачу",
+    "Поддержка 24/7",
+  ];
   return (
     <section className="hero-dedicated">
       <div className="container">
         <div className="hero-dedicated-icon">
           <ServerIcon />
         </div>
+        <span className="hero-dedicated-eyebrow">Dedicated Servers</span>
         <h1>
           Аренда высокопроизводительных физических серверов в дата-центре{" "}
           <span style={{ color: "var(--color-orange)" }}>NLS</span>
         </h1>
         <p>
-          Готовые сервера с настраиваемой конфигурацией под ваши требования. Серверы размещены в дата-центрах
-          NLS в Алматы и Астаны с каналом до 100 Мбит/с.
+          Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственных дата-центрах
+          NLS в Алматы и Астане с каналом до 100 Мбит/с.
         </p>
+
+        <div className="hero-dedicated-chips">
+          {features.map((f) => (
+            <span className="hero-chip" key={f}>
+              <span className="hero-chip-dot" />
+              {f}
+            </span>
+          ))}
+        </div>
+
+        <div className="hero-dedicated-actions">
+          <button type="button" className="btn btn-primary" onClick={scrollToCalculator}>
+            Собрать сервер
+          </button>
+          <button type="button" className="btn btn-ghost-light" onClick={openConsultationModal}>
+            Получить консультацию
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CustomBuildCTA() {
+  return (
+    <section className="custom-build-cta">
+      <div className="container">
+        <div className="custom-build-card">
+          <div className="custom-build-text">
+            <h3>Не нашли подходящую конфигурацию?</h3>
+            <p>Соберите сервер под свои задачи в конфигураторе — выберите процессор, память, накопители и сеть.</p>
+          </div>
+          <button type="button" className="btn btn-primary custom-build-btn" onClick={scrollToCalculator}>
+            Собрать свой сервер
+            <span aria-hidden className="custom-build-arrow">↓</span>
+          </button>
+        </div>
       </div>
     </section>
   );
