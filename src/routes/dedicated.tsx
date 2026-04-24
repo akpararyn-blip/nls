@@ -138,7 +138,6 @@ function Calculator() {
   const [raid, setRaid] = useState(false);
   const [ipmi, setIpmi] = useState(false);
   const [ipCount, setIpCount] = useState(1);
-  const [ramTab, setRamTab] = useState<"total" | "modules">("total");
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
   const storage = useDynamic();
