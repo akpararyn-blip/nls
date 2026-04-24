@@ -1,6 +1,7 @@
 import { useCity, type CityKey } from "@/lib/city-context";
 import { CloseIcon, SendIcon } from "./Icons";
-import { useEffect, type FormEvent } from "react";
+import { ConsentCheckbox } from "./ConsentCheckbox";
+import { useEffect, useState, type FormEvent } from "react";
 
 const CITY_OPTIONS: { key: CityKey; label: string }[] = [
   { key: "Almaty", label: "Алматы" },
@@ -19,8 +20,12 @@ function formatPhone(value: string) {
 
 export function Modals() {
   const { modal, closeModals, cityKey, setCity, consultation } = useCity();
+  const [consent, setConsent] = useState(false);
 
-  // Close on Escape
+  useEffect(() => {
+    if (modal.consultation) setConsent(false);
+  }, [modal.consultation]);
+
   useEffect(() => {
     if (!modal.city && !modal.consultation) return;
     const onKey = (e: KeyboardEvent) => {
@@ -37,7 +42,7 @@ export function Modals() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Здесь будет реальная отправка заявки. Сейчас просто имитация.
+    if (!consent) return;
     closeModals();
     alert("Спасибо! Менеджер свяжется с вами в течение 15 минут.");
   };
@@ -124,13 +129,12 @@ export function Modals() {
               <label htmlFor="modal-message">Комментарий (необязательно)</label>
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block">
+            <ConsentCheckbox id="modal-consent" checked={consent} onChange={setConsent} />
+
+            <button type="submit" className="btn btn-primary btn-block" disabled={!consent}>
               Отправить заявку
               <SendIcon />
             </button>
-            <p className="disclaimer">
-              Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a>.
-            </p>
           </form>
         </div>
       </div>
