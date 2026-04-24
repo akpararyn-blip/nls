@@ -9,30 +9,33 @@ export interface CityData {
   address: string;
 }
 
+const UNIFIED_PHONE = "+7 700 339 7777";
+const UNIFIED_WHATSAPP = "+77003397777";
+
 export const CITIES: Record<CityKey, CityData> = {
   Almaty: {
     name: "Алматы",
-    phone: "+7 727 339 77 77",
-    whatsapp: "+77007304591",
+    phone: UNIFIED_PHONE,
+    whatsapp: UNIFIED_WHATSAPP,
     address: "050060 (A15E3X9) Республика Казахстан, г. Алматы, пр. Аль Фараби, 95",
   },
   Astana: {
     name: "Астана",
-    phone: "+7 7172 72 55 55",
-    whatsapp: "+77007304591",
+    phone: UNIFIED_PHONE,
+    whatsapp: UNIFIED_WHATSAPP,
     address: "010000 (Z00Y7B8) Республика Казахстан, г. Астана, Мкр. Караоткель-2, ул. Жылыой 13/1",
   },
   Shymkent: {
     name: "Шымкент",
-    phone: "+7 727 339 77 77",
-    whatsapp: "+77007304591",
+    phone: UNIFIED_PHONE,
+    whatsapp: UNIFIED_WHATSAPP,
     address:
       "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (Улица Рыскулбекова, 13/1)",
   },
   Other: {
     name: "Другие города",
-    phone: "+7 727 339 77 77",
-    whatsapp: "+77007304591",
+    phone: UNIFIED_PHONE,
+    whatsapp: UNIFIED_WHATSAPP,
     address: "г. Алматы, пр. Аль Фараби, 95 (Головной офис)",
   },
 };
