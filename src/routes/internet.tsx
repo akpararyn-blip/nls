@@ -191,12 +191,6 @@ function ExtraServices() {
   return (
     <section className="extra-services-section">
       <div className="container">
-        <div className="section-title">
-          <span className="section-eyebrow">Дополнительные услуги</span>
-          <h2>Всё для вашей IT-инфраструктуры</h2>
-          <p>Полный цикл сопутствующих услуг — от Wi-Fi для гостей до построения корпоративных сетей.</p>
-        </div>
-
         <div className="bento-grid">
           {extraServices.map((s) => {
             const Icon = s.icon;
