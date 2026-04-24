@@ -104,6 +104,7 @@ function DedicatedPage() {
   return (
     <SiteLayout>
       <Hero />
+      <DedicatedPlans />
       <Calculator />
     </SiteLayout>
   );
