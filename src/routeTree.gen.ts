@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VpsRouteImport } from './routes/vps'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ItSksRouteImport } from './routes/it-sks'
 import { Route as InternetRouteImport } from './routes/internet'
 import { Route as HrRouteImport } from './routes/hr'
@@ -23,6 +24,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const VpsRoute = VpsRouteImport.update({
   id: '/vps',
   path: '/vps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ItSksRoute = ItSksRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
+  '/privacy': typeof PrivacyRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
+  '/privacy': typeof PrivacyRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
+  '/privacy': typeof PrivacyRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/hr'
     | '/internet'
     | '/it-sks'
+    | '/privacy'
     | '/vps'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/hr'
     | '/internet'
     | '/it-sks'
+    | '/privacy'
     | '/vps'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/hr'
     | '/internet'
     | '/it-sks'
+    | '/privacy'
     | '/vps'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   HrRoute: typeof HrRoute
   InternetRoute: typeof InternetRoute
   ItSksRoute: typeof ItSksRoute
+  PrivacyRoute: typeof PrivacyRoute
   VpsRoute: typeof VpsRoute
 }
 
@@ -167,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/vps'
       fullPath: '/vps'
       preLoaderRoute: typeof VpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/it-sks': {
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   HrRoute: HrRoute,
   InternetRoute: InternetRoute,
   ItSksRoute: ItSksRoute,
+  PrivacyRoute: PrivacyRoute,
   VpsRoute: VpsRoute,
 }
 export const routeTree = rootRouteImport
