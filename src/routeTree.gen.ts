@@ -13,6 +13,7 @@ import { Route as VpsRouteImport } from './routes/vps'
 import { Route as ItSksRouteImport } from './routes/it-sks'
 import { Route as InternetRouteImport } from './routes/internet'
 import { Route as HrRouteImport } from './routes/hr'
+import { Route as DedicatedRouteImport } from './routes/dedicated'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ColocationFullRouteImport } from './routes/colocation-full'
 import { Route as ColocationRouteImport } from './routes/colocation'
@@ -37,6 +38,11 @@ const InternetRoute = InternetRouteImport.update({
 const HrRoute = HrRouteImport.update({
   id: '/hr',
   path: '/hr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DedicatedRoute = DedicatedRouteImport.update({
+  id: '/dedicated',
+  path: '/dedicated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactsRoute = ContactsRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
   '/it-sks': typeof ItSksRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
+    | '/dedicated'
     | '/hr'
     | '/internet'
     | '/it-sks'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
+    | '/dedicated'
     | '/hr'
     | '/internet'
     | '/it-sks'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
+    | '/dedicated'
     | '/hr'
     | '/internet'
     | '/it-sks'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   ColocationRoute: typeof ColocationRoute
   ColocationFullRoute: typeof ColocationFullRoute
   ContactsRoute: typeof ContactsRoute
+  DedicatedRoute: typeof DedicatedRoute
   HrRoute: typeof HrRoute
   InternetRoute: typeof InternetRoute
   ItSksRoute: typeof ItSksRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/hr'
       fullPath: '/hr'
       preLoaderRoute: typeof HrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dedicated': {
+      id: '/dedicated'
+      path: '/dedicated'
+      fullPath: '/dedicated'
+      preLoaderRoute: typeof DedicatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacts': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   ColocationRoute: ColocationRoute,
   ColocationFullRoute: ColocationFullRoute,
   ContactsRoute: ContactsRoute,
+  DedicatedRoute: DedicatedRoute,
   HrRoute: HrRoute,
   InternetRoute: InternetRoute,
   ItSksRoute: ItSksRoute,
