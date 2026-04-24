@@ -120,7 +120,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="footer-bottom">© 2023 ТОО «NLS Kazakhstan». Все права защищены.</div>
+        <div className="footer-bottom">© {new Date().getFullYear()} ТОО «NLS Kazakhstan». Все права защищены.</div>
       </div>
     </footer>
   );
