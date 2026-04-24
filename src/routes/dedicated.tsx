@@ -245,9 +245,10 @@ function Calculator() {
 
   return (
     <>
-      <section className="calc-section">
+      <section className="calc-section" id="calculator">
         <div className="container">
-          <div className="calc-section-title">
+          <div className="section-title">
+            <span className="section-eyebrow">Конструктор</span>
             <h2>Конфигуратор сервера</h2>
             <p>Выберите параметры и рассчитайте стоимость аренды</p>
           </div>
