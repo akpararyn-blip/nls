@@ -118,7 +118,7 @@ function Tariffs() {
             </p>
             <ul className="tariff-features">
               <li>Симметричный канал связи</li>
-              <li>Бесплатное подключение за 1 день</li>
+              <li>Подпись договора онлайн</li>
               <li>Приоритетная техподдержка 24/7</li>
             </ul>
             <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
