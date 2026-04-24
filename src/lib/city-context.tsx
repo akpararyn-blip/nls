@@ -67,6 +67,7 @@ const STORAGE_KEY = "nls_selected_city";
 export function CityProvider({ children }: { children: React.ReactNode }) {
   const [cityKey, setCityKey] = useState<CityKey>("Almaty");
   const [modal, setModal] = useState<ModalState>({ city: false, consultation: false });
+  const [consultation, setConsultation] = useState<ConsultationOptions>({});
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
@@ -89,6 +90,13 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const openConsultationModal = useCallback(() => {
+    setConsultation({});
+    setModal({ city: false, consultation: true });
+    if (typeof document !== "undefined") document.body.style.overflow = "hidden";
+  }, []);
+
+  const openConsultationModalWith = useCallback((options: ConsultationOptions) => {
+    setConsultation(options);
     setModal({ city: false, consultation: true });
     if (typeof document !== "undefined") document.body.style.overflow = "hidden";
   }, []);
@@ -104,13 +112,25 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
       city: CITIES[cityKey],
       setCity,
       modal,
+      consultation,
       openCityModal,
       openConsultationModal,
+      openConsultationModalWith,
       closeModals,
       mobileNavOpen,
       setMobileNavOpen,
     }),
-    [cityKey, modal, setCity, openCityModal, openConsultationModal, closeModals, mobileNavOpen]
+    [
+      cityKey,
+      modal,
+      consultation,
+      setCity,
+      openCityModal,
+      openConsultationModal,
+      openConsultationModalWith,
+      closeModals,
+      mobileNavOpen,
+    ]
   );
 
   return <CityContext.Provider value={value}>{children}</CityContext.Provider>;
