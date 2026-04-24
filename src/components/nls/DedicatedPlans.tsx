@@ -57,7 +57,7 @@ const plans: Plan[] = [
 ];
 
 export function DedicatedPlans() {
-  const { openConsultationModal } = useCity();
+  const { openConsultationModalWith } = useCity();
 
   return (
     <section className="plans-section">
