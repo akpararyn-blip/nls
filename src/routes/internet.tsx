@@ -207,20 +207,12 @@ function Trust() {
   return (
     <section className="trust-section">
       <div className="container">
-        <div className="trust-header" style={{ textAlign: "center", marginBottom: 60 }}>
+        <div className="section-title">
+          <span className="section-eyebrow">Преимущества</span>
           <h2>
             Почему бизнес выбирает <span style={{ color: "var(--color-orange)" }}>NLS Kazakhstan</span>
           </h2>
-          <p
-            style={{
-              color: "var(--color-text-light)",
-              fontSize: "1.1rem",
-              maxWidth: 600,
-              margin: "15px auto 0",
-            }}
-          >
-            Обеспечиваем стабильность вашей работы на всех уровнях инфраструктуры
-          </p>
+          <p>Обеспечиваем стабильность вашей работы на всех уровнях инфраструктуры.</p>
         </div>
 
         <div className="trust-grid">
