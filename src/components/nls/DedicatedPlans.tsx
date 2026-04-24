@@ -106,7 +106,7 @@ export function DedicatedPlans() {
                 type="button"
                 className="btn btn-primary plan-order-btn"
                 onClick={() =>
-                  openConsultationModal({
+                  openConsultationModalWith({
                     subject: `Заказ тарифа: ${plan.model} (${plan.ram}, ${plan.ssd})`,
                   })
                 }
