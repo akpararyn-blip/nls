@@ -53,7 +53,8 @@ interface CityContextValue {
   modal: ModalState;
   consultation: ConsultationOptions;
   openCityModal: () => void;
-  openConsultationModal: (options?: ConsultationOptions) => void;
+  openConsultationModal: () => void;
+  openConsultationModalWith: (options: ConsultationOptions) => void;
   closeModals: () => void;
   mobileNavOpen: boolean;
   setMobileNavOpen: (open: boolean) => void;
