@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
 import { ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMemo, useState } from "react";
@@ -103,6 +104,7 @@ function DedicatedPage() {
   return (
     <SiteLayout>
       <Hero />
+      <DedicatedPlans />
       <Calculator />
     </SiteLayout>
   );
