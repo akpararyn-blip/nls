@@ -225,22 +225,6 @@ function Calculator() {
               {/* RAM */}
               <div className="calc-field">
                 <label className="calc-field-label">Оперативная память (ОЗУ)</label>
-                <div className="calc-tabs">
-                  <button
-                    type="button"
-                    className={`calc-tab${ramTab === "total" ? " active" : ""}`}
-                    onClick={() => setRamTab("total")}
-                  >
-                    Общий объем
-                  </button>
-                  <button
-                    type="button"
-                    className={`calc-tab${ramTab === "modules" ? " active" : ""}`}
-                    onClick={() => setRamTab("modules")}
-                  >
-                    Модули
-                  </button>
-                </div>
                 <select
                   className="calc-select"
                   value={ramIdx ?? ""}
