@@ -2,25 +2,33 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "NLS — Синхронизация работает" },
+      {
+        name: "description",
+        content:
+          "Тестовая страница NLS для проверки синхронизации Lovable и GitHub.",
+      },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-background px-6">
+      <section className="max-w-xl text-center">
+        <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+          NLS
+        </p>
+        <h1 className="mb-6 text-5xl font-semibold tracking-tight text-foreground sm:text-6xl">
+          Синхронизация с GitHub работает ✅
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Это тестовая страница. Если вы видите её в превью и в коммите вашего
+          репозитория — связка Lovable ↔ GitHub настроена корректно.
+        </p>
+      </section>
+    </main>
+  );
 }
