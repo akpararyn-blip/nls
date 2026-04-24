@@ -9,8 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VpsRouteImport } from './routes/vps'
+import { Route as ItSksRouteImport } from './routes/it-sks'
+import { Route as InternetRouteImport } from './routes/internet'
+import { Route as HrRouteImport } from './routes/hr'
+import { Route as DedicatedRouteImport } from './routes/dedicated'
+import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as ColocationFullRouteImport } from './routes/colocation-full'
+import { Route as ColocationRouteImport } from './routes/colocation'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VpsRoute = VpsRouteImport.update({
+  id: '/vps',
+  path: '/vps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ItSksRoute = ItSksRouteImport.update({
+  id: '/it-sks',
+  path: '/it-sks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InternetRoute = InternetRouteImport.update({
+  id: '/internet',
+  path: '/internet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrRoute = HrRouteImport.update({
+  id: '/hr',
+  path: '/hr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DedicatedRoute = DedicatedRouteImport.update({
+  id: '/dedicated',
+  path: '/dedicated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColocationFullRoute = ColocationFullRouteImport.update({
+  id: '/colocation-full',
+  path: '/colocation-full',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ColocationRoute = ColocationRouteImport.update({
+  id: '/colocation',
+  path: '/colocation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +73,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/colocation': typeof ColocationRoute
+  '/colocation-full': typeof ColocationFullRoute
+  '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
+  '/hr': typeof HrRoute
+  '/internet': typeof InternetRoute
+  '/it-sks': typeof ItSksRoute
+  '/vps': typeof VpsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/colocation': typeof ColocationRoute
+  '/colocation-full': typeof ColocationFullRoute
+  '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
+  '/hr': typeof HrRoute
+  '/internet': typeof InternetRoute
+  '/it-sks': typeof ItSksRoute
+  '/vps': typeof VpsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/colocation': typeof ColocationRoute
+  '/colocation-full': typeof ColocationFullRoute
+  '/contacts': typeof ContactsRoute
+  '/dedicated': typeof DedicatedRoute
+  '/hr': typeof HrRoute
+  '/internet': typeof InternetRoute
+  '/it-sks': typeof ItSksRoute
+  '/vps': typeof VpsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/colocation'
+    | '/colocation-full'
+    | '/contacts'
+    | '/dedicated'
+    | '/hr'
+    | '/internet'
+    | '/it-sks'
+    | '/vps'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/colocation'
+    | '/colocation-full'
+    | '/contacts'
+    | '/dedicated'
+    | '/hr'
+    | '/internet'
+    | '/it-sks'
+    | '/vps'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/colocation'
+    | '/colocation-full'
+    | '/contacts'
+    | '/dedicated'
+    | '/hr'
+    | '/internet'
+    | '/it-sks'
+    | '/vps'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ColocationRoute: typeof ColocationRoute
+  ColocationFullRoute: typeof ColocationFullRoute
+  ContactsRoute: typeof ContactsRoute
+  DedicatedRoute: typeof DedicatedRoute
+  HrRoute: typeof HrRoute
+  InternetRoute: typeof InternetRoute
+  ItSksRoute: typeof ItSksRoute
+  VpsRoute: typeof VpsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vps': {
+      id: '/vps'
+      path: '/vps'
+      fullPath: '/vps'
+      preLoaderRoute: typeof VpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/it-sks': {
+      id: '/it-sks'
+      path: '/it-sks'
+      fullPath: '/it-sks'
+      preLoaderRoute: typeof ItSksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/internet': {
+      id: '/internet'
+      path: '/internet'
+      fullPath: '/internet'
+      preLoaderRoute: typeof InternetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr': {
+      id: '/hr'
+      path: '/hr'
+      fullPath: '/hr'
+      preLoaderRoute: typeof HrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dedicated': {
+      id: '/dedicated'
+      path: '/dedicated'
+      fullPath: '/dedicated'
+      preLoaderRoute: typeof DedicatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colocation-full': {
+      id: '/colocation-full'
+      path: '/colocation-full'
+      fullPath: '/colocation-full'
+      preLoaderRoute: typeof ColocationFullRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colocation': {
+      id: '/colocation'
+      path: '/colocation'
+      fullPath: '/colocation'
+      preLoaderRoute: typeof ColocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +237,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ColocationRoute: ColocationRoute,
+  ColocationFullRoute: ColocationFullRoute,
+  ContactsRoute: ContactsRoute,
+  DedicatedRoute: DedicatedRoute,
+  HrRoute: HrRoute,
+  InternetRoute: InternetRoute,
+  ItSksRoute: ItSksRoute,
+  VpsRoute: VpsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
