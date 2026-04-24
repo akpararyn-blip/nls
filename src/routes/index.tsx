@@ -2,9 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
+import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import heroMain from "@/assets/hero-main.png";
 import datacenterImg from "@/assets/datacenter.png";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -59,7 +60,7 @@ function Hero() {
 
           <ul className="hero-bullets">
             {[
-              "14 лет на рынке телекоммуникаций",
+              "более 18 лет на рынке телекоммуникаций",
               "Более 3000 юридических лиц",
               "Онлайн-оформление за 1 день",
               "6 дата-центров (Алматы, Астана)",
@@ -267,8 +268,10 @@ function UseCases() {
 }
 
 function FinalCTA() {
+  const [consent, setConsent] = useState(false);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!consent) return;
     alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
   };
   return (
@@ -304,14 +307,16 @@ function FinalCTA() {
               <textarea id="message" className="form-control" rows={4} />
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ width: "100%", fontSize: "1.1rem" }}>
+            <ConsentCheckbox id="home-consent" checked={consent} onChange={setConsent} variant="light" />
+
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ width: "100%", fontSize: "1.1rem" }}
+              disabled={!consent}
+            >
               Отправить заявку
             </button>
-
-            <p className="disclaimer">
-              Я согласен на сбор и обработку моих личных данных. Ознакомиться с политикой
-              конфиденциальности.
-            </p>
           </form>
         </div>
       </div>
