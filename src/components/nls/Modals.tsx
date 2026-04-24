@@ -113,7 +113,14 @@ export function Modals() {
               <label htmlFor="modal-phone">Номер телефона</label>
             </div>
             <div className="form-floating">
-              <textarea id="modal-message" className="form-control" placeholder=" " rows={2} />
+              <textarea
+                id="modal-message"
+                className="form-control"
+                placeholder=" "
+                rows={2}
+                defaultValue={consultation.subject ?? ""}
+                key={consultation.subject ?? "empty"}
+              />
               <label htmlFor="modal-message">Комментарий (необязательно)</label>
             </div>
 
