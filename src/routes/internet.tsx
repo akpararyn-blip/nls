@@ -239,7 +239,10 @@ function FinalCTA() {
   return (
     <section className="cta-section">
       <div className="container">
-        <h2>Получите предварительный расчет на подключение под ваш бизнес</h2>
+        <div className="section-title section-title--light">
+          <span className="section-eyebrow">Контакты</span>
+          <h2>Получите предварительный расчёт на подключение под ваш бизнес</h2>
+        </div>
 
         <div className="contact-form">
           <form onSubmit={onSubmit}>
