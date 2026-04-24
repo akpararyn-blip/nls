@@ -92,8 +92,10 @@ function Services() {
   return (
     <section className="services-section">
       <div className="container">
-        <h2>Комплексные IT-решения для бизнеса</h2>
-
+        <div className="section-title">
+          <span className="section-eyebrow">Услуги</span>
+          <h2>Комплексные IT-решения для бизнеса</h2>
+        </div>
         <div className="services-grid">
           <div className="service-card">
             <h3>Интернет для юридических лиц</h3>
@@ -237,18 +239,11 @@ function UseCases() {
   return (
     <section className="usecases-section">
       <div className="container">
-        <h2 style={{ textAlign: "center", marginBottom: 15 }}>Где применяются наши решения</h2>
-        <p
-          style={{
-            textAlign: "center",
-            color: "var(--color-text-light)",
-            maxWidth: 600,
-            margin: "0 auto 50px",
-            fontSize: "1.1rem",
-          }}
-        >
-          Разрабатываем и внедряем индивидуальные IT-стратегии с учетом специфики вашей отрасли
-        </p>
+        <div className="section-title">
+          <span className="section-eyebrow">Кейсы</span>
+          <h2>Где применяются наши решения</h2>
+          <p>Разрабатываем и внедряем индивидуальные IT-стратегии с учётом специфики вашей отрасли.</p>
+        </div>
 
         <div className="usecases-grid">
           {cases.map((c) => (
@@ -279,7 +274,10 @@ function FinalCTA() {
   return (
     <section className="cta-section">
       <div className="container">
-        <h2>Получите расчет IT-решения под ваш бизнес</h2>
+        <div className="section-title section-title--light">
+          <span className="section-eyebrow">Контакты</span>
+          <h2>Получите расчёт IT-решения под ваш бизнес</h2>
+        </div>
 
         <div className="contact-form">
           <form onSubmit={onSubmit}>

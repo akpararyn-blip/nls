@@ -118,7 +118,7 @@ function Tariffs() {
             </p>
             <ul className="tariff-features">
               <li>Симметричный канал связи</li>
-              <li>Бесплатное подключение за 1 день</li>
+              <li>Подпись договора онлайн</li>
               <li>Приоритетная техподдержка 24/7</li>
             </ul>
             <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
@@ -207,20 +207,12 @@ function Trust() {
   return (
     <section className="trust-section">
       <div className="container">
-        <div className="trust-header" style={{ textAlign: "center", marginBottom: 60 }}>
+        <div className="section-title">
+          <span className="section-eyebrow">Преимущества</span>
           <h2>
             Почему бизнес выбирает <span style={{ color: "var(--color-orange)" }}>NLS Kazakhstan</span>
           </h2>
-          <p
-            style={{
-              color: "var(--color-text-light)",
-              fontSize: "1.1rem",
-              maxWidth: 600,
-              margin: "15px auto 0",
-            }}
-          >
-            Обеспечиваем стабильность вашей работы на всех уровнях инфраструктуры
-          </p>
+          <p>Обеспечиваем стабильность вашей работы на всех уровнях инфраструктуры.</p>
         </div>
 
         <div className="trust-grid">
@@ -247,7 +239,10 @@ function FinalCTA() {
   return (
     <section className="cta-section">
       <div className="container">
-        <h2>Получите предварительный расчет на подключение под ваш бизнес</h2>
+        <div className="section-title section-title--light">
+          <span className="section-eyebrow">Контакты</span>
+          <h2>Получите предварительный расчёт на подключение под ваш бизнес</h2>
+        </div>
 
         <div className="contact-form">
           <form onSubmit={onSubmit}>
