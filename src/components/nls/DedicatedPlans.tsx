@@ -62,7 +62,8 @@ export function DedicatedPlans() {
   return (
     <section className="plans-section">
       <div className="container">
-        <div className="plans-head">
+        <div className="section-title">
+          <span className="section-eyebrow">Тарифы</span>
           <h2>Готовые конфигурации</h2>
           <p>Выберите подходящий тариф или соберите свой в конфигураторе ниже</p>
         </div>
