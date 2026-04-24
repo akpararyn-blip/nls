@@ -92,8 +92,10 @@ function Services() {
   return (
     <section className="services-section">
       <div className="container">
-        <h2>Комплексные IT-решения для бизнеса</h2>
-
+        <div className="section-title">
+          <span className="section-eyebrow">Услуги</span>
+          <h2>Комплексные IT-решения для бизнеса</h2>
+        </div>
         <div className="services-grid">
           <div className="service-card">
             <h3>Интернет для юридических лиц</h3>
