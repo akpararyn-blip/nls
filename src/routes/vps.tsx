@@ -76,7 +76,31 @@ function VpsPage() {
       <Tariffs />
       <Calculator />
       <Benefits />
+      <VpsCTA />
     </SiteLayout>
+  );
+}
+
+function VpsCTA() {
+  const { openConsultationModal } = useCity();
+  return (
+    <section className="cta-section">
+      <div className="container">
+        <div className="section-title section-title--light">
+          <span className="section-eyebrow">Готовы начать</span>
+          <h2>Запустите VPS-сервер за 15 минут</h2>
+          <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 720, margin: "0 auto" }}>
+            Подберём конфигурацию под нагрузку, поможем с миграцией и настройкой.
+            Техническая поддержка 24/7 на русском языке.
+          </p>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
+          <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
+            Получить консультацию
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
