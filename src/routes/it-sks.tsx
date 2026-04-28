@@ -293,7 +293,7 @@ function CrossSell() {
                 Настроим рабочие места, почту, серверы и IP-телефонию.
               </li>
             </ul>
-            <Link to="/it-outsourcing" className="btn btn-outline">
+            <Link to="/" className="btn btn-outline">
               Узнать про IT-аутсорсинг
               <ArrowRight size={18} />
             </Link>
