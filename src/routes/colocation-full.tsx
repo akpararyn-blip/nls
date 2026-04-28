@@ -42,10 +42,7 @@ export const Route = createFileRoute("/colocation-full")({
   component: FullRackPage,
 });
 
-function scrollToForm() {
-  const el = document.getElementById("fullrack-form");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+
 
 function FullRackPage() {
   return (
