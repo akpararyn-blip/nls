@@ -4712,12 +4712,18 @@ a.contacts-city-row:hover { color: var(--color-orange); }
 
 /* ===== Floating contact widget shifts up when mobile bar is visible ===== */
 .float-contact {
-  transition: bottom 0.35s ease;
+  transition: bottom 0.35s ease, opacity 0.25s ease, visibility 0.25s ease;
 }
 @media (max-width: 768px) {
   body.has-mobile-bar .float-contact {
     bottom: 84px;
   }
+}
+/* Hide floating contact behind the mobile nav when it's open */
+body.mobile-nav-open .float-contact {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* ===== FAQ open animation ===== */
