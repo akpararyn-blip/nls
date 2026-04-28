@@ -459,9 +459,31 @@ function Configurator() {
   );
 }
 
+function HintTip({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <button
+      type="button"
+      className={`calc-hint-tip${open ? " is-open" : ""}`}
+      onClick={(e) => {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }}
+      onBlur={() => setOpen(false)}
+      aria-label="Подробнее"
+    >
+      <HelpCircle size={12} strokeWidth={2.2} />
+      <span className="calc-hint-bubble" role="tooltip">
+        {text}
+      </span>
+    </button>
+  );
+}
+
 function ColoCounterRow({
   label,
   hint,
+  hintTip,
   unit,
   step,
   min,
@@ -472,6 +494,7 @@ function ColoCounterRow({
 }: {
   label: string;
   hint: string;
+  hintTip?: string;
   unit: string;
   step: number;
   min: number;
@@ -484,7 +507,10 @@ function ColoCounterRow({
     <div className="vps-resource">
       <div className="vps-resource-head">
         <div className="vps-resource-text">
-          <div className="vps-resource-label">{label}</div>
+          <div className="vps-resource-label">
+            {label}
+            {hintTip && <HintTip text={hintTip} />}
+          </div>
           <div className="vps-resource-hint">
             {pricePerStep.toLocaleString("ru-RU")} ₸ / шаг · {hint}
           </div>
