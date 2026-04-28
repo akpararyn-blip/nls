@@ -22,7 +22,7 @@ import {
 export const Route = createFileRoute("/colocation-full")({
   head: () => ({
     meta: [
-      { title: "Аренда серверного шкафа (Full Rack) в ЦОД Tier III — NLS Kazakhstan" },
+      { title: "Аренда серверной стойки (Full Rack) в ЦОД Tier III — NLS Kazakhstan" },
       {
         name: "description",
         content:
@@ -30,12 +30,12 @@ export const Route = createFileRoute("/colocation-full")({
       },
       {
         property: "og:title",
-        content: "Аренда серверного шкафа (Full Rack) — NLS Kazakhstan",
+        content: "Аренда серверной стойки (Full Rack) — NLS Kazakhstan",
       },
       {
         property: "og:description",
         content:
-          "Полноразмерный 19″ шкаф 42U, выделенная мощность, интеллектуальные PDU и резервированные оптические каналы.",
+          "Полноразмерная стойка 19″ 42U, выделенная мощность, интеллектуальные PDU и резервированные оптические каналы.",
       },
     ],
   }),
