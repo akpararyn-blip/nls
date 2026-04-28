@@ -3761,3 +3761,291 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
   color: var(--color-text-light, #5a6b85);
   line-height: 1.6;
 }
+
+/* ===== Colocation page ===== */
+
+/* Меньшее слово в H1 hero */
+.hero-h1-small {
+  display: inline-block;
+  font-size: 0.45em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+/* Сетка преимуществ на 5 карточек (Tier III, охлаждение, FM200, биометрия, климат) */
+.trust-grid--5 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (min-width: 1100px) {
+  .trust-grid--5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .trust-grid--5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .trust-grid--5 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Альтернативный фон секции (чтобы соседние блоки преимуществ визуально различались) */
+.trust-section--alt {
+  background: linear-gradient(180deg, var(--color-bg) 0%, #f4f8fd 100%);
+}
+
+/* === Главные табы конфигуратор / тарифы === */
+.colo-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 32, 96, 0.05);
+  padding: 6px;
+  border-radius: 14px;
+  width: fit-content;
+  margin: 0 auto 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.colo-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.colo-tab:hover {
+  color: var(--color-blue);
+}
+.colo-tab.is-active {
+  background: #fff;
+  color: var(--color-blue);
+  box-shadow: 0 4px 14px rgba(0, 32, 96, 0.12);
+}
+
+/* === Внутренние табы серверов === */
+.colo-server-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  align-items: center;
+}
+.colo-server-tab {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid rgba(0, 32, 96, 0.12);
+  border-radius: 10px;
+  padding: 0 4px 0 0;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+.colo-server-tab.is-active {
+  border-color: var(--color-blue);
+  box-shadow: 0 4px 14px rgba(0, 32, 96, 0.15);
+}
+.colo-server-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: inherit;
+}
+.colo-server-tab.is-active .colo-server-tab-btn {
+  color: var(--color-blue);
+}
+.colo-server-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.colo-server-tab-close:hover {
+  background: rgba(255, 0, 0, 0.08);
+  color: #c1121f;
+}
+.colo-add-server {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1.5px dashed rgba(0, 32, 96, 0.25);
+  border-radius: 10px;
+  color: var(--color-blue);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.colo-add-server:hover {
+  background: rgba(0, 32, 96, 0.04);
+  border-color: var(--color-blue);
+}
+
+/* === Заблокированная строка (Основной Unit) === */
+.colo-row {
+  /* Использует базовый .vps-resource — но этот вариант не требует счётчиков */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1.5px solid rgba(0, 32, 96, 0.1);
+  border-radius: 14px;
+  background: #fff;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.colo-row--locked {
+  background: linear-gradient(135deg, rgba(0, 32, 96, 0.04), rgba(0, 32, 96, 0.01));
+  border-color: rgba(0, 32, 96, 0.18);
+}
+.colo-row-head {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+.colo-row-label {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.colo-row-required {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-blue);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.colo-row-hint {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  line-height: 1.45;
+}
+.colo-row-control {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.colo-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-blue);
+  cursor: not-allowed;
+}
+.colo-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-blue);
+}
+.colo-row-price {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Подстрока итогов для нескольких серверов */
+.summary-subrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(0, 32, 96, 0.12);
+  margin-bottom: 10px;
+}
+.summary-subrow strong {
+  color: var(--color-text);
+}
+
+/* === Прайс-лист === */
+.colo-pricelist {
+  background: #fff;
+  border: 1.5px solid rgba(0, 32, 96, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 32, 96, 0.05);
+}
+.colo-pricelist-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(0, 32, 96, 0.06);
+  flex-wrap: wrap;
+}
+.colo-pricelist-row:nth-child(odd) {
+  background: rgba(0, 32, 96, 0.02);
+}
+.colo-pricelist-row:last-of-type {
+  border-bottom: 0;
+}
+.colo-pricelist-label {
+  flex: 1 1 320px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.colo-pricelist-price {
+  font-weight: 700;
+  color: var(--color-blue);
+  white-space: nowrap;
+  font-size: 1rem;
+}
+.colo-pricelist-note {
+  padding: 14px 24px;
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  background: rgba(0, 32, 96, 0.03);
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .colo-pricelist-row {
+    padding: 14px 16px;
+  }
+  .colo-pricelist-price {
+    font-size: 0.95rem;
+  }
+}
