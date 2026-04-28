@@ -3440,3 +3440,324 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     .vps-resource-control { width: 100%; justify-content: space-between; }
     .vps-resource-value, .vps-resource-input-wrap { flex: 1; min-width: 0; }
 }
+
+/* ============ SKS page ============ */
+
+/* Why matters — compact 5-card grid */
+.sks-why-section {
+  padding: 80px 0;
+  background: var(--color-bg, #f7f9fc);
+}
+.sks-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.sks-why-card {
+  background: #fff;
+  border: 1px solid rgba(0, 51, 153, 0.08);
+  border-radius: 14px;
+  padding: 22px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.sks-why-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -16px rgba(0, 51, 153, 0.25);
+  border-color: rgba(0, 51, 153, 0.2);
+}
+.sks-why-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #003399, #2563eb);
+  color: #fff;
+  margin-bottom: 14px;
+}
+.sks-why-card h3 {
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+  color: #0b1d3a;
+}
+.sks-why-card p {
+  font-size: 0.92rem;
+  color: var(--color-text-light, #5a6b85);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Stages */
+.sks-stages-section {
+  padding: 80px 0;
+}
+.sks-stages-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.sks-stage-card {
+  background: #fff;
+  border: 1px solid rgba(0, 51, 153, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.sks-stage-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -20px rgba(0, 51, 153, 0.3);
+}
+.sks-stage-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.sks-stage-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sks-stage-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(0, 51, 153, 0.92);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+.sks-stage-body {
+  padding: 22px 24px 26px;
+}
+.sks-stage-body h3 {
+  margin: 0 0 10px;
+  color: #0b1d3a;
+  font-size: 1.2rem;
+}
+.sks-stage-body p {
+  margin: 0;
+  color: var(--color-text-light, #5a6b85);
+  line-height: 1.6;
+}
+@media (max-width: 760px) {
+  .sks-stages-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cross-sell */
+.sks-crosssell-section {
+  padding: 60px 0;
+}
+.sks-crosssell-card {
+  background: linear-gradient(135deg, #001a4d 0%, #003399 60%, #1e40af 100%);
+  border-radius: 22px;
+  padding: 48px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.sks-crosssell-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(96, 165, 250, 0.25), transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(59, 130, 246, 0.18), transparent 55%);
+  pointer-events: none;
+}
+.sks-crosssell-body {
+  position: relative;
+  max-width: 760px;
+}
+.sks-crosssell-body .section-eyebrow {
+  color: #93c5fd;
+}
+.sks-crosssell-body h2 {
+  color: #fff;
+  margin: 6px 0 14px;
+}
+.sks-crosssell-body > p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.sks-crosssell-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px;
+  display: grid;
+  gap: 10px;
+}
+.sks-crosssell-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.55;
+}
+.sks-crosssell-list li svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #93c5fd;
+  margin-top: 2px;
+}
+.sks-crosssell-card .btn-outline {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  background: transparent;
+}
+.sks-crosssell-card .btn-outline:hover {
+  background: #fff;
+  color: #003399;
+  border-color: #fff;
+}
+@media (max-width: 640px) {
+  .sks-crosssell-card {
+    padding: 32px 22px;
+  }
+}
+
+/* Process timeline */
+.sks-process-section {
+  padding: 80px 0;
+  background: var(--color-bg, #f7f9fc);
+}
+.sks-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.sks-timeline-item {
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(0, 51, 153, 0.08);
+  border-radius: 14px;
+  padding: 24px 22px 22px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.sks-timeline-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -18px rgba(0, 51, 153, 0.3);
+}
+.sks-timeline-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #003399, #2563eb);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+.sks-timeline-body h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  color: #0b1d3a;
+}
+.sks-timeline-body p {
+  margin: 0;
+  color: var(--color-text-light, #5a6b85);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+/* Audience tags */
+.sks-audience-section {
+  padding: 80px 0;
+}
+.sks-audience-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.sks-audience-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(0, 51, 153, 0.15);
+  color: #0b1d3a;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.sks-audience-tag:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 51, 153, 0.4);
+  box-shadow: 0 8px 20px -12px rgba(0, 51, 153, 0.35);
+}
+.sks-audience-tag svg {
+  color: #003399;
+}
+
+/* FAQ */
+.sks-faq-section {
+  padding: 80px 0;
+  background: var(--color-bg, #f7f9fc);
+}
+.sks-faq-list {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sks-faq-item {
+  background: #fff;
+  border: 1px solid rgba(0, 51, 153, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.sks-faq-item.is-open {
+  border-color: rgba(0, 51, 153, 0.3);
+  box-shadow: 0 10px 24px -16px rgba(0, 51, 153, 0.3);
+}
+.sks-faq-question {
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0b1d3a;
+  cursor: pointer;
+}
+.sks-faq-chevron {
+  color: #003399;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.sks-faq-item.is-open .sks-faq-chevron {
+  transform: rotate(180deg);
+}
+.sks-faq-answer {
+  padding: 0 20px 20px;
+  color: var(--color-text-light, #5a6b85);
+  line-height: 1.6;
+}
