@@ -1724,7 +1724,7 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     
     .mobile-menu-btn { display: block; }
     
-    .datacenter-grid, .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .datacenter-grid { grid-template-columns: 1fr; gap: 40px; }
     
     .services-grid, .trust-grid {
         grid-template-columns: 1fr;
