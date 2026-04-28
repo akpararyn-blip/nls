@@ -4,7 +4,7 @@ import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
-import colocationHero from "@/assets/colocation-hero.png";
+import colocationHero from "@/assets/colocation.png";
 import { useMemo, useState, type FormEvent } from "react";
 import {
   ShieldCheck,

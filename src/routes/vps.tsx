@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
-import vpsHero from "@/assets/vps-hero.png";
+import vpsHero from "@/assets/vpsvds.png";
 import { useMemo, useState, type ChangeEvent } from "react";
 import { Cpu, MemoryStick, HardDrive, Database, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
 

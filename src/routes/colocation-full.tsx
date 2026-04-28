@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
-import fullRackHero from "@/assets/colocation-fullrack-hero.png";
+import fullRackHero from "@/assets/fullrack.png";
 import { useState, type FormEvent } from "react";
 import {
   Server,
