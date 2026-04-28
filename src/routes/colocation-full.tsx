@@ -22,7 +22,7 @@ import {
 export const Route = createFileRoute("/colocation-full")({
   head: () => ({
     meta: [
-      { title: "Аренда серверного шкафа (Full Rack) в ЦОД Tier III — NLS Kazakhstan" },
+      { title: "Аренда серверной стойки (Full Rack) в ЦОД Tier III — NLS Kazakhstan" },
       {
         name: "description",
         content:
@@ -30,22 +30,19 @@ export const Route = createFileRoute("/colocation-full")({
       },
       {
         property: "og:title",
-        content: "Аренда серверного шкафа (Full Rack) — NLS Kazakhstan",
+        content: "Аренда серверной стойки (Full Rack) — NLS Kazakhstan",
       },
       {
         property: "og:description",
         content:
-          "Полноразмерный 19″ шкаф 42U, выделенная мощность, интеллектуальные PDU и резервированные оптические каналы.",
+          "Полноразмерная стойка 19″ 42U, выделенная мощность, интеллектуальные PDU и резервированные оптические каналы.",
       },
     ],
   }),
   component: FullRackPage,
 });
 
-function scrollToForm() {
-  const el = document.getElementById("fullrack-form");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+
 
 function FullRackPage() {
   return (
@@ -60,6 +57,7 @@ function FullRackPage() {
 }
 
 function Hero() {
+  const { openConsultationModalWith } = useCity();
   return (
     <section className="hero">
       <div className="container">
@@ -68,7 +66,7 @@ function Hero() {
             Full Rack · Enterprise
           </span>
           <h1>
-            Аренда серверного шкафа в ЦОД Tier III{" "}
+            Аренда серверной стойки в ЦОД Tier III{" "}
             <span style={{ color: "var(--color-orange)" }}>(Full Rack)</span>
           </h1>
           <p className="hero-subtitle">
@@ -79,7 +77,7 @@ function Hero() {
 
           <ul className="hero-bullets">
             {[
-              "Полноразмерный шкаф 42U в изолированном холодном коридоре",
+              "Полноразмерная стойка 42U в изолированном холодном коридоре",
               "Выделенная мощность под ваше оборудование",
               "Резервированные оптические каналы связи",
             ].map((t) => (
@@ -91,7 +89,15 @@ function Hero() {
           </ul>
 
           <div className="hero-dedicated-actions" style={{ marginTop: 24 }}>
-            <button type="button" className="btn btn-primary" onClick={scrollToForm}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() =>
+                openConsultationModalWith({
+                  subject: "Запрос на аренду стойки (Full Rack 42U)",
+                })
+              }
+            >
               Получить индивидуальный расчёт
             </button>
           </div>
@@ -101,7 +107,7 @@ function Hero() {
           <div className="hero-img-wrapper">
             <img
               src={fullRackHero}
-              alt="Аренда серверного шкафа Full Rack 42U"
+              alt="Аренда серверной стойки Full Rack 42U"
               width={1024}
               height={1024}
             />

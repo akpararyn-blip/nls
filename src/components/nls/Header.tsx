@@ -42,7 +42,7 @@ export function Header() {
             <div className="top-menu">
               <Link to="/about">О компании</Link>
               <Link to="/hr">Вакансии</Link>
-              <a href="#">Услуги для физ. лиц</a>
+              <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">Интернет для физ. лиц</a>
               <Link to="/contacts">Контакты</Link>
             </div>
           </div>
@@ -97,25 +97,34 @@ export function Header() {
                     <ChevronDownIcon width={16} height={16} className="chevron-icon" />
                   </button>
                   <div className="dropdown-menu mega-menu">
-                    <Link to="/internet">Интернет для бизнеса</Link>
-                    <a
-                      href="https://nlsit.kz"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      IT аутсорсинг
-                      <ExternalIcon
-                        width={14}
-                        height={14}
-                        style={{ marginLeft: 4, opacity: 0.8 }}
-                      />
-                    </a>
-                    <Link to="/it-sks">СКС. Монтаж локальных сетей</Link>
-                    <Link to="/dedicated">Аренда сервера Dedicated</Link>
-                    <Link to="/vps">Виртуальный сервер VPS</Link>
-                    <Link to="/colocation">Размещение в ЦОД (Colocation)</Link>
-                    <Link to="/colocation-full">Аренда серверного шкафа</Link>
+                    <div className="mega-menu-group">
+                      <div className="mega-menu-group-title">Интернет</div>
+                      <Link to="/internet">Интернет для бизнеса</Link>
+                    </div>
+                    <div className="mega-menu-group">
+                      <div className="mega-menu-group-title">IT услуги</div>
+                      <a
+                        href="https://nlsit.kz"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        IT аутсорсинг
+                        <ExternalIcon
+                          width={14}
+                          height={14}
+                          style={{ marginLeft: 4, opacity: 0.8 }}
+                        />
+                      </a>
+                      <Link to="/it-sks">СКС. Монтаж сетей</Link>
+                    </div>
+                    <div className="mega-menu-group">
+                      <div className="mega-menu-group-title">Серверы</div>
+                      <Link to="/dedicated">Dedicated сервер</Link>
+                      <Link to="/vps">VPS сервер</Link>
+                      <Link to="/colocation">Colocation</Link>
+                      <Link to="/colocation-full">Аренда стойки</Link>
+                    </div>
                   </div>
                 </li>
               </ul>

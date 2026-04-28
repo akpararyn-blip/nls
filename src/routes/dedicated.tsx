@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
 import { ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
+import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
@@ -183,6 +184,7 @@ function CustomBuildCTA() {
 
 function Calculator() {
   const { openConsultationModal } = useCity();
+  const barVisible = useMobileBarVisibility("calculator");
 
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
   const [ramIdx, setRamIdx] = useState<number | null>(null);
@@ -437,7 +439,7 @@ function Calculator() {
       </section>
 
       {/* Mobile bottom bar */}
-      <div className="mobile-calc-bar">
+      <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
         <button
           type="button"
           className={`mobile-toggle-arrow${mobileExpanded ? " expanded" : ""}`}
