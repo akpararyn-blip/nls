@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
+import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import colocationHero from "@/assets/colocation-hero.png";
 import { useMemo, useState, type FormEvent } from "react";
 import {
@@ -208,6 +209,7 @@ function calcServer(s: ServerCfg) {
 
 function Configurator() {
   const { openConsultationModalWith } = useCity();
+  const barVisible = useMobileBarVisibility("colo-tabs");
   const [tab, setTab] = useState<"calc" | "list">("calc");
   const [servers, setServers] = useState<ServerCfg[]>([newServer()]);
   const [active, setActive] = useState(0);
@@ -420,7 +422,7 @@ function Configurator() {
               </div>
             </div>
 
-            <div className="mobile-calc-bar">
+            <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
               <div className="mobile-bar-main">
                 <div className="mobile-bar-left">
                   <div className="mobile-bar-label">
