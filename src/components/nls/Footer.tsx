@@ -12,19 +12,19 @@ export function Footer() {
     <footer className="main-footer">
       <div className="container">
         <div className="footer-grid">
-          <div className="footer-col" style={{ maxWidth: 300 }}>
-            <img src={logoLightUrl} alt="NLS Logo" style={{ height: 40, marginBottom: 20 }} />
-            <p style={{ fontSize: "0.9rem", color: "#ddd", marginBottom: 20 }}>
-              NLS Kazakhstan единый оператор связи, предоставляющий полный спектр решений в области
-              телекоммуникаций и информационных технологий, которые способны покрыть любые потребности как
-              малого и среднего бизнеса, так и крупной корпорации.
+          {/* About */}
+          <div className="footer-col footer-col--about">
+            <img src={logoLightUrl} alt="NLS Kazakhstan" style={{ height: 40, marginBottom: 20 }} />
+            <p className="footer-about-text">
+              NLS Kazakhstan — единый оператор связи, предоставляющий полный спектр решений в области
+              телекоммуникаций и информационных технологий для бизнеса любого масштаба.
             </p>
-            <div className="social-icons" style={{ display: "flex", gap: 15 }}>
+            <div className="footer-socials">
               <a href="https://www.instagram.com/nlskazakhstan/" target="_blank" rel="noreferrer" aria-label="Instagram">
-                <InstagramIcon width={24} height={24} />
+                <InstagramIcon width={20} height={20} />
               </a>
               <a href="https://www.linkedin.com/company/nlskz/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-                <LinkedinIcon width={24} height={24} />
+                <LinkedinIcon width={20} height={20} />
               </a>
               <a
                 href="https://www.youtube.com/@nlskazakhstan8630"
@@ -32,45 +32,58 @@ export function Footer() {
                 rel="noreferrer"
                 aria-label="YouTube"
               >
-                <YoutubeIcon width={24} height={24} />
+                <YoutubeIcon width={20} height={20} />
               </a>
             </div>
           </div>
 
+          {/* Internet & IT */}
           <div className="footer-col">
-            <h4>Услуги</h4>
+            <h4>Интернет и IT</h4>
             <ul>
               <li>
                 <Link to="/internet">Интернет для бизнеса</Link>
               </li>
               <li>
-                <a
-                  href="https://nlsit.kz"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  IT аутсорсинг
-                  <ExternalIcon width={14} height={14} style={{ marginLeft: 4, opacity: 0.8 }} />
+                <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
+                  Интернет для физ. лиц
+                  <ExternalIcon width={12} height={12} />
                 </a>
               </li>
               <li>
-                <Link to="/it-sks">СКС</Link>
+                <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
+                  IT аутсорсинг
+                  <ExternalIcon width={12} height={12} />
+                </a>
               </li>
               <li>
-                <Link to="/colocation">Размещение оборудования</Link>
-              </li>
-              <li>
-                <Link to="/dedicated">Dedicated серверы</Link>
-              </li>
-              <li>
-                <Link to="/vps">VPS серверы</Link>
+                <Link to="/it-sks">СКС. Монтаж сетей</Link>
               </li>
             </ul>
           </div>
 
+          {/* Servers */}
           <div className="footer-col">
-            <h4>Навигация</h4>
+            <h4>Серверы и ЦОД</h4>
+            <ul>
+              <li>
+                <Link to="/dedicated">Dedicated сервер</Link>
+              </li>
+              <li>
+                <Link to="/vps">VPS сервер</Link>
+              </li>
+              <li>
+                <Link to="/colocation">Colocation</Link>
+              </li>
+              <li>
+                <Link to="/colocation-full">Аренда стойки</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div className="footer-col">
+            <h4>Компания</h4>
             <ul>
               <li>
                 <Link to="/about">О компании</Link>
@@ -81,46 +94,54 @@ export function Footer() {
               <li>
                 <Link to="/contacts">Контакты</Link>
               </li>
+              <li>
+                <Link to="/privacy">Политика конфиденциальности</Link>
+              </li>
             </ul>
           </div>
 
-          <div className="footer-col">
+          {/* Contacts */}
+          <div className="footer-col footer-col--contacts">
             <h4>
               Контакты (<span className="display-city">{city.name}</span>)
             </h4>
             <ul>
               <li>
-                <a
-                  href={phoneHref}
-                  className="display-phone"
-                  style={{ fontWeight: 600, fontSize: "1.1rem", color: "var(--color-orange)" }}
-                >
+                <a href={phoneHref} className="display-phone footer-phone">
                   {city.phone}
                 </a>
               </li>
               <li>
-                <a
-                  href={waHref}
-                  className="display-whatsapp"
-                  style={{ display: "flex", alignItems: "center", gap: 5 }}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={waHref} className="display-whatsapp footer-wa" target="_blank" rel="noreferrer">
                   <WhatsAppIcon width={16} height={16} />
-                  WhatsApp Отдел Продаж
+                  WhatsApp · Отдел продаж
                 </a>
               </li>
-              <li
-                className="display-address"
-                style={{ marginTop: 15, fontSize: "0.9rem", color: "#bbb" }}
-              >
-                {city.address}
+              <li className="footer-contact-row">
+                <span className="footer-contact-label">Продажи:</span>
+                <a href="mailto:sales@nls.kz">sales@nls.kz</a>
               </li>
+              <li className="footer-contact-row">
+                <span className="footer-contact-label">Поддержка:</span>
+                <a href="mailto:support@nls.kz">support@nls.kz</a>
+              </li>
+              <li className="footer-contact-row">
+                <span className="footer-contact-label">HR:</span>
+                <a href="https://wa.me/77081466043" target="_blank" rel="noreferrer">
+                  WhatsApp
+                </a>
+              </li>
+              <li className="display-address footer-address">{city.address}</li>
             </ul>
           </div>
         </div>
 
-        <div className="footer-bottom">© {new Date().getFullYear()} ТОО «NLS Kazakhstan». Все права защищены.</div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} ТОО «NLS Kazakhstan». Все права защищены.</span>
+          <Link to="/privacy" className="footer-bottom-link">
+            Политика конфиденциальности
+          </Link>
+        </div>
       </div>
     </footer>
   );
