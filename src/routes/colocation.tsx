@@ -394,9 +394,13 @@ function Configurator() {
                   </div>
                   <div className="summary-footer">
                     {servers.length > 1 && (
-                      <div className="summary-subrow">
-                        <span>Текущий сервер</span>
-                        <strong>{formatPrice(curCalc.total)} / мес</strong>
+                      <div className="summary-servers-breakdown">
+                        {totals.map((t, i) => (
+                          <div className="summary-subrow" key={i}>
+                            <span>Сервер {i + 1}</span>
+                            <strong>{formatPrice(t.total)} / мес</strong>
+                          </div>
+                        ))}
                       </div>
                     )}
                     <div className="summary-total-row">
