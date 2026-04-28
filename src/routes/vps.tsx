@@ -208,6 +208,7 @@ type ResourceKey = "cpu" | "ram" | "ssd" | "hdd";
 
 function Calculator() {
   const { openConsultationModalWith } = useCity();
+  const barVisible = useMobileBarVisibility("vps-calculator");
 
   const [cpu, setCpu] = useState(2);
   const [ram, setRam] = useState(2);
