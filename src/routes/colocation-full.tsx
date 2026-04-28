@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { EnterpriseDataCenterBlocks } from "@/components/nls/EnterpriseBlocks";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
@@ -50,6 +51,7 @@ function FullRackPage() {
       <Hero />
       <Specs />
       <Advantages />
+      <EnterpriseDataCenterBlocks />
       <Audience />
       <FinalCTA />
     </SiteLayout>

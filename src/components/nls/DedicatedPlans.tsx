@@ -14,7 +14,7 @@ type Plan = {
   popular?: boolean;
 };
 
-const plans: Plan[] = [
+const plansRaw: Plan[] = [
   {
     id: "dl380-g9-64",
     model: "HP DL380 Gen9",
@@ -65,6 +65,11 @@ const plans: Plan[] = [
     price: "269 110",
   },
 ];
+
+const plans: Plan[] = [...plansRaw].sort(
+  (a, b) =>
+    parseInt(a.price.replace(/\s/g, ""), 10) - parseInt(b.price.replace(/\s/g, ""), 10),
+);
 
 // Иконки SVG
 const CpuIcon = () => (
