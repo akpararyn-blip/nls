@@ -184,6 +184,7 @@ function CustomBuildCTA() {
 
 function Calculator() {
   const { openConsultationModal } = useCity();
+  const barVisible = useMobileBarVisibility("calculator");
 
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
   const [ramIdx, setRamIdx] = useState<number | null>(null);
