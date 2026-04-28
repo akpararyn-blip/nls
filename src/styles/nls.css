@@ -4696,3 +4696,12 @@ a.contacts-city-row:hover { color: var(--color-orange); }
     min-width: 640px;
   }
 }
+
+.summary-servers-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed rgba(0, 31, 47, 0.12);
+}
