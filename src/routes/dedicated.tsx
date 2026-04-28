@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
 import { ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
+import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
@@ -437,7 +438,7 @@ function Calculator() {
       </section>
 
       {/* Mobile bottom bar */}
-      <div className="mobile-calc-bar">
+      <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
         <button
           type="button"
           className={`mobile-toggle-arrow${mobileExpanded ? " expanded" : ""}`}
