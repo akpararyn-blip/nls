@@ -1,12 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useCity } from "@/lib/city-context";
-import { ChevronDownIcon, CloseIcon, GlobeIcon, PinIcon } from "./Icons";
+import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
 import logoUrl from "@/assets/logo.svg";
-import { useState } from "react";
 
 export function MobileNav() {
   const { city, mobileNavOpen, setMobileNavOpen, openCityModal } = useCity();
-  const [servicesOpen, setServicesOpen] = useState(false);
 
   const close = () => setMobileNavOpen(false);
 
@@ -51,25 +49,20 @@ export function MobileNav() {
       </div>
       <ul>
         <li>
-          <a
-            href="#"
-            className="mobile-services-toggle"
-            style={{ display: "flex", justifyContent: "space-between" }}
-            onClick={(e) => {
-              e.preventDefault();
-              setServicesOpen((s) => !s);
-            }}
-          >
-            Услуги <ChevronDownIcon width={16} height={16} />
-          </a>
-          <ul className={`sub-menu${servicesOpen ? " open" : ""}`}>
+          <div className="mobile-nav-group-title">Интернет</div>
+          <ul className="mobile-nav-group">
             <li>
               <Link to="/internet" onClick={close}>
                 Интернет для бизнеса
               </Link>
             </li>
+          </ul>
+        </li>
+        <li>
+          <div className="mobile-nav-group-title">IT услуги</div>
+          <ul className="mobile-nav-group">
             <li>
-              <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer">
+              <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
                 IT аутсорсинг
               </a>
             </li>
@@ -78,24 +71,29 @@ export function MobileNav() {
                 СКС. Монтаж сетей
               </Link>
             </li>
+          </ul>
+        </li>
+        <li>
+          <div className="mobile-nav-group-title">Серверы</div>
+          <ul className="mobile-nav-group">
             <li>
               <Link to="/dedicated" onClick={close}>
-                Аренда сервера Dedicated
+                Dedicated сервер
               </Link>
             </li>
             <li>
               <Link to="/vps" onClick={close}>
-                Виртуальный сервер VPS
+                VPS сервер
               </Link>
             </li>
             <li>
               <Link to="/colocation" onClick={close}>
-                Размещение в ЦОД
+                Colocation
               </Link>
             </li>
             <li>
               <Link to="/colocation-full" onClick={close}>
-                Аренда серверного шкафа
+                Аренда стойки
               </Link>
             </li>
           </ul>
@@ -111,8 +109,8 @@ export function MobileNav() {
           </Link>
         </li>
         <li>
-          <a href="#" onClick={close}>
-            Услуги для физ. лиц
+          <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
+            Интернет для физ. лиц
           </a>
         </li>
         <li>
@@ -140,3 +138,4 @@ export function MobileNav() {
     </div>
   );
 }
+
