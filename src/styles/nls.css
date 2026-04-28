@@ -3317,9 +3317,13 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     background: #fff;
     border: 1.5px solid #e2e8f0;
     border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 .vps-resource:hover { border-color: #cbd5e1; }
 
@@ -3327,7 +3331,8 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 14px;
+    flex: 1 1 260px;
+    min-width: 0;
 }
 .vps-resource-icon {
     width: 44px;
@@ -3356,13 +3361,15 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 .vps-resource-control {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
+.vps-resource-flash { flex-basis: 100%; }
+
 .vps-resource-value {
-    min-width: 120px;
+    min-width: 110px;
     height: 44px;
     padding: 0 16px;
     border-radius: 10px;
@@ -3428,7 +3435,8 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 }
 
 @media (max-width: 560px) {
-    .vps-resource-head { margin-bottom: 12px; }
-    .vps-resource-control { justify-content: space-between; }
+    .vps-resource { padding: 14px 16px; gap: 12px; }
+    .vps-resource-head { flex: 1 1 100%; }
+    .vps-resource-control { width: 100%; justify-content: space-between; }
     .vps-resource-value, .vps-resource-input-wrap { flex: 1; min-width: 0; }
 }
