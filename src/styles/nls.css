@@ -4733,7 +4733,7 @@ a.contacts-city-row:hover { color: var(--color-orange); }
 /* Tighter mega menu on smaller desktops */
 @media (max-width: 1100px) {
   .dropdown-menu.mega-menu {
-    min-width: 640px;
+    min-width: 720px;
   }
 }
 
