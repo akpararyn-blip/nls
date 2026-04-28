@@ -1,12 +1,26 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useCity } from "@/lib/city-context";
 import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
+import { Phone } from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
 export function MobileNav() {
   const { city, mobileNavOpen, setMobileNavOpen, openCityModal } = useCity();
 
   const close = () => setMobileNavOpen(false);
+
+  // Toggle body class so the floating contact widget can hide behind the open menu
+  useEffect(() => {
+    if (mobileNavOpen) {
+      document.body.classList.add("mobile-nav-open");
+    } else {
+      document.body.classList.remove("mobile-nav-open");
+    }
+    return () => document.body.classList.remove("mobile-nav-open");
+  }, [mobileNavOpen]);
+
+  const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
 
   return (
     <div className={`mobile-nav${mobileNavOpen ? " active" : ""}`}>
@@ -46,6 +60,10 @@ export function MobileNav() {
           <GlobeIcon width={18} height={18} />
           RU / KZ
         </div>
+        <a href={phoneHref} className="mobile-nav-phone" onClick={close}>
+          <Phone size={18} strokeWidth={2} />
+          <span>{city.phone}</span>
+        </a>
       </div>
       <ul>
         <li>
