@@ -272,7 +272,12 @@ function CrossSell() {
   return (
     <section className="sks-crosssell-section">
       <div className="container">
-        <div className="sks-crosssell-card">
+        <div className="sks-crosssell-card sks-crosssell-card--with-image">
+          <div
+            className="sks-crosssell-image"
+            style={{ backgroundImage: `url(${itTeamImg})` }}
+            aria-hidden="true"
+          />
           <div className="sks-crosssell-body">
             <span className="section-eyebrow">IT-аутсорсинг</span>
             <h2>Комплексные IT-решения</h2>
