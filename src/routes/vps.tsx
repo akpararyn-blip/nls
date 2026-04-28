@@ -304,9 +304,9 @@ function Calculator() {
             <ResourceRow
               icon={<Cpu size={22} strokeWidth={1.8} />}
               label="CPU (2,1 ГГц)"
-              hintLabel={`${PRICE_CPU} ₸ за ядро · шаг 1 ядро`}
+              hintLabel={`${PRICE_CPU} ₸ за ядро`}
               value={cpu}
-              unit="ядер"
+              unit="CPU"
               onMinus={() => setCpu((v) => Math.max(1, v - 1))}
               onPlus={() => setCpu((v) => v + 1)}
             />
@@ -314,7 +314,7 @@ function Calculator() {
             <ResourceRow
               icon={<MemoryStick size={22} strokeWidth={1.8} />}
               label="Оперативная память (RAM)"
-              hintLabel={`${PRICE_RAM} ₸ за 1 ГБ · шаг 1 ГБ`}
+              hintLabel={`${PRICE_RAM} ₸ за 1 ГБ`}
               value={ram}
               unit="ГБ"
               onMinus={() => setRam((v) => Math.max(1, v - 1))}
@@ -324,7 +324,7 @@ function Calculator() {
             <ResourceInputRow
               icon={<HardDrive size={22} strokeWidth={1.8} />}
               label="Накопитель SSD"
-              hintLabel={`${PRICE_SSD} ₸ за 1 ГБ · мин. ${SSD_MIN} ГБ · шаг ${SSD_STEP} ГБ`}
+              hintLabel={`${PRICE_SSD} ₸ за 1 ГБ`}
               inputValue={ssdInput}
               unit="ГБ"
               onMinus={() => stepDisk("ssd", -1)}
@@ -337,7 +337,7 @@ function Calculator() {
             <ResourceInputRow
               icon={<Database size={22} strokeWidth={1.8} />}
               label="Накопитель HDD"
-              hintLabel={`${PRICE_HDD} ₸ за 1 ГБ · мин. ${HDD_MIN} ГБ · шаг ${HDD_STEP} ГБ`}
+              hintLabel={`${PRICE_HDD} ₸ за 1 ГБ`}
               inputValue={hddInput}
               unit="ГБ"
               onMinus={() => stepDisk("hdd", -1)}
