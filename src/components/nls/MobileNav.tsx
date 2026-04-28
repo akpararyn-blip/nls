@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useCity } from "@/lib/city-context";
 import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
+import { Phone } from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
 export function MobileNav() {
