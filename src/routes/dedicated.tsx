@@ -134,8 +134,8 @@ function Hero() {
             Dedicated Servers
           </span>
           <h1>
-            Аренда высокопроизводительных физических серверов в дата-центре{" "}
-            <span style={{ color: "var(--color-orange)" }}>NLS</span>
+            <span style={{ color: "var(--color-orange)" }}>Аренда серверов</span>{" "}
+            в дата-центре Алматы и Астаны
           </h1>
           <p className="hero-subtitle">
             Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственных
