@@ -3,9 +3,10 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
-import sksHero from "@/assets/sks-hero.png";
-import sksBefore from "@/assets/sks-before.jpg";
-import sksAfter from "@/assets/sks-after.jpg";
+import sksHero from "@/assets/sks.png";
+import sksBefore from "@/assets/remontwithsks.png";
+import sksAfter from "@/assets/afterremontsks.png";
+import itTeamImg from "@/assets/it-team.png";
 import { useState, type FormEvent } from "react";
 import {
   Wifi,
@@ -271,7 +272,12 @@ function CrossSell() {
   return (
     <section className="sks-crosssell-section">
       <div className="container">
-        <div className="sks-crosssell-card">
+        <div className="sks-crosssell-card sks-crosssell-card--with-image">
+          <div
+            className="sks-crosssell-image"
+            style={{ backgroundImage: `url(${itTeamImg})` }}
+            aria-hidden="true"
+          />
           <div className="sks-crosssell-body">
             <span className="section-eyebrow">IT-аутсорсинг</span>
             <h2>Комплексные IT-решения</h2>

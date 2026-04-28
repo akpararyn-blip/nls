@@ -4,6 +4,7 @@ import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
 import { ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
+import dedicatedHero from "@/assets/server-dedicated.png";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
@@ -157,6 +158,10 @@ function Hero() {
           <button type="button" className="btn btn-ghost-light" onClick={openConsultationModal}>
             Получить консультацию
           </button>
+        </div>
+
+        <div className="hero-dedicated-visual">
+          <img src={dedicatedHero} alt="Аренда выделенного сервера NLS" loading="eager" />
         </div>
       </div>
     </section>
