@@ -4575,54 +4575,72 @@ a.contacts-city-row:hover { color: var(--color-orange); }
 
 /* ===== Header mega menu — grouped (desktop) ===== */
 .dropdown-menu.mega-menu {
-  min-width: 820px;
+  min-width: 880px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0 8px;
-  padding: 20px 16px;
+  gap: 0;
+  padding: 18px 12px;
 }
 .mega-menu-group {
   display: flex;
   flex-direction: column;
-  padding: 0 8px;
+  padding: 6px 12px;
   position: relative;
 }
 .mega-menu-group + .mega-menu-group::before {
   content: "";
   position: absolute;
-  left: -4px;
-  top: 8px;
-  bottom: 8px;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
   width: 1px;
-  background: rgba(0, 31, 47, 0.06);
+  background: rgba(15, 23, 42, 0.06);
 }
 .mega-menu-group-title {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-orange);
-  padding: 4px 12px 10px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid rgba(0, 31, 47, 0.06);
+  color: #94a3b8; /* dusty gray — clearly not clickable */
+  padding: 6px 12px 4px;
+  margin-bottom: 6px;
   pointer-events: none;
   user-select: none;
 }
-.dropdown-menu.mega-menu .mega-menu-group a {
+/* Unified link row inside mega menu */
+.dropdown-menu.mega-menu .mega-menu-link {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
+  gap: 12px;
+  padding: 9px 12px;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--color-blue-dark);
+  color: #00557b; /* brand deep blue */
   border-radius: 8px;
-  transition: var(--transition-fast);
+  transition: background 0.15s ease, color 0.15s ease;
+  text-decoration: none;
 }
-.dropdown-menu.mega-menu .mega-menu-group a:hover {
-  background: #f5f7fb;
+.dropdown-menu.mega-menu .mega-menu-link .mega-menu-icon {
+  flex-shrink: 0;
+  color: #64748b;
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+.dropdown-menu.mega-menu .mega-menu-link .mega-menu-external {
+  margin-left: auto;
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+.dropdown-menu.mega-menu .mega-menu-link:hover {
+  background: #f1f5fb;
   color: var(--color-orange);
-  padding-left: 12px; /* keep alignment, no shift */
 }
+.dropdown-menu.mega-menu .mega-menu-link:hover .mega-menu-icon {
+  color: var(--color-orange);
+}
+.dropdown-menu.mega-menu .mega-menu-link:hover .mega-menu-external {
+  opacity: 1;
+}
+
 
 /* ===== Mobile nav groups (always expanded) ===== */
 .mobile-nav-group-title {
