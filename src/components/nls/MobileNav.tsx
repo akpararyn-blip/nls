@@ -10,6 +10,18 @@ export function MobileNav() {
 
   const close = () => setMobileNavOpen(false);
 
+  // Toggle body class so the floating contact widget can hide behind the open menu
+  useEffect(() => {
+    if (mobileNavOpen) {
+      document.body.classList.add("mobile-nav-open");
+    } else {
+      document.body.classList.remove("mobile-nav-open");
+    }
+    return () => document.body.classList.remove("mobile-nav-open");
+  }, [mobileNavOpen]);
+
+  const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
+
   return (
     <div className={`mobile-nav${mobileNavOpen ? " active" : ""}`}>
       <div className="mobile-nav-header">
