@@ -9,6 +9,14 @@ import {
   PinIcon,
   YoutubeIcon,
 } from "./Icons";
+import {
+  Wifi,
+  ShieldCheck,
+  Network,
+  Server,
+  Cloud,
+  HardDrive,
+} from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
 export function Header() {
