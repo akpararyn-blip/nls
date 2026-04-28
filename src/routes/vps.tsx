@@ -376,6 +376,26 @@ function Calculator() {
             </div>
           </div>
         </div>
+
+        <div className="mobile-calc-bar">
+          <div className="mobile-bar-main">
+            <div className="mobile-bar-left">
+              <div className="mobile-bar-label">Итого за 1 месяц</div>
+              <div className="mobile-bar-price">{formatPrice(calc.total)}</div>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary calc-order-btn"
+              onClick={() =>
+                openConsultationModalWith({
+                  subject: `Заказ VPS (конфигуратор): CPU x${cpu}, RAM ${ram} ГБ, SSD ${ssd} ГБ, HDD ${hdd} ГБ — ${formatPrice(calc.total)}/мес`,
+                })
+              }
+            >
+              Заказать
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
