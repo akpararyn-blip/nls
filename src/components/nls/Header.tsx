@@ -9,6 +9,14 @@ import {
   PinIcon,
   YoutubeIcon,
 } from "./Icons";
+import {
+  Wifi,
+  ShieldCheck,
+  Network,
+  Server,
+  Cloud,
+  HardDrive,
+} from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
 export function Header() {
@@ -99,7 +107,10 @@ export function Header() {
                   <div className="dropdown-menu mega-menu">
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">Интернет</div>
-                      <Link to="/internet">Интернет для бизнеса</Link>
+                      <Link to="/internet" className="mega-menu-link">
+                        <Wifi className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>Интернет для бизнеса</span>
+                      </Link>
                     </div>
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">IT услуги</div>
@@ -107,23 +118,39 @@ export function Header() {
                         href="https://nlsit.kz"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ display: "flex", alignItems: "center" }}
+                        className="mega-menu-link"
                       >
-                        IT аутсорсинг
+                        <ShieldCheck className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>IT аутсорсинг</span>
                         <ExternalIcon
-                          width={14}
-                          height={14}
-                          style={{ marginLeft: 4, opacity: 0.8 }}
+                          width={13}
+                          height={13}
+                          className="mega-menu-external"
                         />
                       </a>
-                      <Link to="/it-sks">СКС. Монтаж сетей</Link>
+                      <Link to="/it-sks" className="mega-menu-link">
+                        <Network className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>СКС. Монтаж сетей</span>
+                      </Link>
                     </div>
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">Серверы</div>
-                      <Link to="/dedicated">Dedicated сервер</Link>
-                      <Link to="/vps">VPS сервер</Link>
-                      <Link to="/colocation">Colocation</Link>
-                      <Link to="/colocation-full">Аренда стойки</Link>
+                      <Link to="/dedicated" className="mega-menu-link">
+                        <Server className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>Dedicated сервер</span>
+                      </Link>
+                      <Link to="/vps" className="mega-menu-link">
+                        <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>VPS сервер</span>
+                      </Link>
+                      <Link to="/colocation" className="mega-menu-link">
+                        <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>Colocation</span>
+                      </Link>
+                      <Link to="/colocation-full" className="mega-menu-link">
+                        <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>Аренда стойки</span>
+                      </Link>
                     </div>
                   </div>
                 </li>
