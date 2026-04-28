@@ -127,41 +127,45 @@ function Hero() {
     "Поддержка 24/7",
   ];
   return (
-    <section className="hero-dedicated">
+    <section className="hero">
       <div className="container">
-        <div className="hero-dedicated-icon">
-          <ServerIcon />
-        </div>
-        <span className="hero-dedicated-eyebrow">Dedicated Servers</span>
-        <h1>
-          Аренда высокопроизводительных физических серверов в дата-центре{" "}
-          <span style={{ color: "var(--color-orange)" }}>NLS</span>
-        </h1>
-        <p>
-          Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственных дата-центрах
-          NLS в Алматы и Астане с каналом до 100 Мбит/с.
-        </p>
+        <div className="hero-content">
+          <span className="section-eyebrow" style={{ marginBottom: 16, display: "inline-block" }}>
+            Dedicated Servers
+          </span>
+          <h1>
+            Аренда высокопроизводительных физических серверов в дата-центре{" "}
+            <span style={{ color: "var(--color-orange)" }}>NLS</span>
+          </h1>
+          <p className="hero-subtitle">
+            Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственных
+            дата-центрах NLS в Алматы и Астане с каналом до 100 Мбит/с.
+          </p>
 
-        <div className="hero-dedicated-chips">
-          {features.map((f) => (
-            <span className="hero-chip" key={f}>
-              <span className="hero-chip-dot" />
-              {f}
-            </span>
-          ))}
+          <ul className="hero-bullets">
+            {features.map((f) => (
+              <li key={f}>
+                <CheckIcon />
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <div className="hero-dedicated-actions" style={{ marginTop: 24 }}>
+            <button type="button" className="btn btn-primary" onClick={scrollToCalculator}>
+              Собрать сервер
+            </button>
+            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
+              Получить консультацию
+            </button>
+          </div>
         </div>
 
-        <div className="hero-dedicated-actions">
-          <button type="button" className="btn btn-primary" onClick={scrollToCalculator}>
-            Собрать сервер
-          </button>
-          <button type="button" className="btn btn-ghost-light" onClick={openConsultationModal}>
-            Получить консультацию
-          </button>
-        </div>
-
-        <div className="hero-dedicated-visual">
-          <img src={dedicatedHero} alt="Аренда выделенного сервера NLS" loading="eager" />
+        <div className="hero-visual">
+          <div className="hero-img-wrapper">
+            <img src={dedicatedHero} alt="Аренда выделенного сервера NLS" width={1024} height={1024} />
+            <div className="hero-glow" />
+          </div>
         </div>
       </div>
     </section>
