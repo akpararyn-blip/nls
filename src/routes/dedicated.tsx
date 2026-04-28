@@ -114,7 +114,31 @@ function DedicatedPage() {
       <DedicatedPlans />
       <CustomBuildCTA />
       <Calculator />
+      <AfterCalcCTA />
     </SiteLayout>
+  );
+}
+
+function AfterCalcCTA() {
+  const { openConsultationModal } = useCity();
+  return (
+    <section className="cta-section">
+      <div className="container">
+        <div className="section-title section-title--light">
+          <span className="section-eyebrow">Нужна помощь</span>
+          <h2>Подберём конфигурацию под вашу задачу</h2>
+          <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 720, margin: "0 auto" }}>
+            Расскажите о проекте — наши инженеры подберут оптимальный сервер и подготовят
+            индивидуальное предложение в течение 30 минут.
+          </p>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
+          <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
+            Получить консультацию
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 
