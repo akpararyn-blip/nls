@@ -16,6 +16,7 @@ import {
   Server,
   Cloud,
   HardDrive,
+  Container,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
@@ -148,7 +149,7 @@ export function Header() {
                         <span>Colocation</span>
                       </Link>
                       <Link to="/colocation-full" className="mega-menu-link">
-                        <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Аренда стойки</span>
                       </Link>
                     </div>
