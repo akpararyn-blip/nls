@@ -527,9 +527,8 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 }
 
 .dropdown-menu.mega-menu a:hover {
-    background: #f8fafc;
+    background: #f5f7fb;
     color: var(--color-orange);
-    padding-left: 20px;
 }
 
 .mobile-menu-btn {
@@ -4576,30 +4575,53 @@ a.contacts-city-row:hover { color: var(--color-orange); }
 
 /* ===== Header mega menu — grouped (desktop) ===== */
 .dropdown-menu.mega-menu {
-  min-width: 760px;
+  min-width: 820px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px 18px;
-  padding: 22px;
+  gap: 0 8px;
+  padding: 20px 16px;
 }
 .mega-menu-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  padding: 0 8px;
+  position: relative;
+}
+.mega-menu-group + .mega-menu-group::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: rgba(0, 31, 47, 0.06);
 }
 .mega-menu-group-title {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-text-light);
-  padding: 6px 15px 8px;
-  border-bottom: 1px solid rgba(0, 31, 47, 0.06);
+  color: var(--color-orange);
+  padding: 4px 12px 10px;
   margin-bottom: 4px;
+  border-bottom: 1px solid rgba(0, 31, 47, 0.06);
+  pointer-events: none;
+  user-select: none;
 }
 .dropdown-menu.mega-menu .mega-menu-group a {
-  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
   font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-blue-dark);
+  border-radius: 8px;
+  transition: var(--transition-fast);
+}
+.dropdown-menu.mega-menu .mega-menu-group a:hover {
+  background: #f5f7fb;
+  color: var(--color-orange);
+  padding-left: 12px; /* keep alignment, no shift */
 }
 
 /* ===== Mobile nav groups (always expanded) ===== */
