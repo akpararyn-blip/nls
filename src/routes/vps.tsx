@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
+import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import vpsHero from "@/assets/vps-hero.png";
 import { useMemo, useState, type ChangeEvent } from "react";
 import { Cpu, MemoryStick, HardDrive, Database, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
@@ -377,7 +378,7 @@ function Calculator() {
           </div>
         </div>
 
-        <div className="mobile-calc-bar">
+        <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
           <div className="mobile-bar-main">
             <div className="mobile-bar-left">
               <div className="mobile-bar-label">Итого за 1 месяц</div>
