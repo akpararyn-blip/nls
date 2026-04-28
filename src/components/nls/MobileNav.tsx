@@ -60,6 +60,10 @@ export function MobileNav() {
           <GlobeIcon width={18} height={18} />
           RU / KZ
         </div>
+        <a href={phoneHref} className="mobile-nav-phone" onClick={close}>
+          <Phone size={18} strokeWidth={2} />
+          <span>{city.phone}</span>
+        </a>
       </div>
       <ul>
         <li>
