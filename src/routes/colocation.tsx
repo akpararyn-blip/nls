@@ -16,6 +16,7 @@ import {
   Plus,
   X,
   Server as ServerIcon,
+  HelpCircle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/colocation")({
