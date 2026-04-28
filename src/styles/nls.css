@@ -4573,3 +4573,126 @@ a.contacts-city-row:hover { color: var(--color-orange); }
   .contacts-socials-card { grid-template-columns: 1fr; padding: 32px 24px; }
   .contacts-socials-list { justify-content: flex-start; }
 }
+
+/* ===== Header mega menu — grouped (desktop) ===== */
+.dropdown-menu.mega-menu {
+  min-width: 760px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 18px;
+  padding: 22px;
+}
+.mega-menu-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mega-menu-group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  padding: 6px 15px 8px;
+  border-bottom: 1px solid rgba(0, 31, 47, 0.06);
+  margin-bottom: 4px;
+}
+.dropdown-menu.mega-menu .mega-menu-group a {
+  padding: 10px 15px;
+  font-size: 0.95rem;
+}
+
+/* ===== Mobile nav groups (always expanded) ===== */
+.mobile-nav-group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  padding: 14px 0 6px;
+}
+.mobile-nav-group {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-nav-group li a {
+  display: block;
+  padding: 10px 0 10px 12px;
+  color: var(--color-blue-dark);
+  font-weight: 500;
+  border-left: 2px solid rgba(0, 51, 153, 0.08);
+}
+.mobile-nav-group li a:hover {
+  border-left-color: var(--color-orange);
+  color: var(--color-orange);
+}
+
+/* ===== Mobile calc bar — smooth show/hide ===== */
+@media (max-width: 768px) {
+  .mobile-calc-bar {
+    display: block;
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  .mobile-calc-bar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ===== Floating contact widget shifts up when mobile bar is visible ===== */
+.float-contact {
+  transition: bottom 0.35s ease;
+}
+@media (max-width: 768px) {
+  body.has-mobile-bar .float-contact {
+    bottom: 84px;
+  }
+}
+
+/* ===== FAQ open animation ===== */
+.sks-faq-answer {
+  animation: faqExpand 0.28s ease-out;
+  transform-origin: top;
+}
+@keyframes faqExpand {
+  from { opacity: 0; transform: translateY(-6px); max-height: 0; padding-top: 0; padding-bottom: 0; }
+  to   { opacity: 1; transform: translateY(0); max-height: 600px; }
+}
+
+/* ===== Unified section spacing across the site =====
+   Override prior per-section paddings so vertical rhythm is consistent. */
+.trust-section,
+.calc-section,
+.cta-section,
+.sks-faq-section,
+.plans-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+@media (max-width: 768px) {
+  .trust-section,
+  .calc-section,
+  .cta-section,
+  .sks-faq-section,
+  .plans-section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  /* Calc section keeps extra room at the bottom for the fixed mobile bar */
+  .calc-section { padding-bottom: 120px; }
+}
+
+/* Tighter mega menu on smaller desktops */
+@media (max-width: 1100px) {
+  .dropdown-menu.mega-menu {
+    min-width: 640px;
+  }
+}
