@@ -32,6 +32,18 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
+  // На сервисных поддоменах (internet.nls.kz и т.п.) главной должна быть
+  // страница соответствующей услуги.
+  const [servicePath, setServicePath] = useState<string | null>(null);
+  useEffect(() => {
+    if (USE_INTERNAL_ROUTING) return;
+    if (typeof window === "undefined") return;
+    setServicePath(currentDomainPath(window.location.hostname));
+  }, []);
+  if (servicePath) {
+    return <Navigate to={servicePath} replace />;
+  }
+
   return (
     <SiteLayout>
       <Hero />
