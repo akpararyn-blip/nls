@@ -2,11 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
-import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import internetHero from "@/assets/internet-hero2.png";
-import { useState, type FormEvent } from "react";
-import { submitLead } from "@/lib/submitLead";
-import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
+import { LeadForm } from "@/components/forms/LeadForm";
 import {
   Cctv,
   Network,
@@ -302,35 +299,6 @@ function Trust() {
 }
 
 function FinalCTA() {
-  const [consent, setConsent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!consent || submitting) return;
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    setSubmitting(true);
-    try {
-      await submitLead({
-        formName: "Интернет — заявка на подключение",
-        action: "internet_cta",
-        fields: {
-          "Компания / проект": String(fd.get("company") ?? ""),
-          "ФИО": String(fd.get("name") ?? ""),
-          "Телефон": String(fd.get("phone") ?? ""),
-          "Сообщение": String(fd.get("message") ?? ""),
-        },
-      });
-      form.reset();
-      setConsent(false);
-      alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
-    } catch (err) {
-      console.error(err);
-      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
   return (
     <section className="cta-section">
       <div className="container">
@@ -340,43 +308,12 @@ function FinalCTA() {
         </div>
 
         <div className="contact-form">
-          <form onSubmit={onSubmit}>
-            <div className="form-group">
-              <label htmlFor="i-company">Название компании или проекта</label>
-              <input type="text" id="i-company" name="company" className="form-control" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="i-name">ФИО</label>
-              <input type="text" id="i-name" name="name" className="form-control" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="i-phone">Телефон</label>
-              <input
-                type="tel"
-                id="i-phone"
-                name="phone"
-                className="form-control"
-                placeholder="+7 7__ ___ __ __"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="i-message">Сообщение для менеджера (необязательно)</label>
-              <textarea id="i-message" name="message" className="form-control" rows={4} />
-            </div>
-
-            <ConsentCheckbox id="i-consent" checked={consent} onChange={setConsent} />
-
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={{ width: "100%", fontSize: "1.1rem" }}
-              disabled={!consent || submitting}
-            >
-              {submitting ? "Отправка…" : "Отправить заявку"}
-            </button>
-            <RecaptchaNotice />
-          </form>
+          <LeadForm
+            formName="Интернет — заявка на подключение"
+            action="internet_cta"
+            idPrefix="internet"
+            messageLabel="Сообщение для менеджера (необязательно)"
+          />
         </div>
       </div>
     </section>

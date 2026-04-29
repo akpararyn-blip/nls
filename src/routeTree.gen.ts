@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VpsRouteImport } from './routes/vps'
+import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ItSksRouteImport } from './routes/it-sks'
@@ -25,6 +26,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const VpsRoute = VpsRouteImport.update({
   id: '/vps',
   path: '/vps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThankYouRoute = ThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRoutesByTo {
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRoutesById {
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/it-sks'
     | '/login'
     | '/privacy'
+    | '/thank-you'
     | '/vps'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/it-sks'
     | '/login'
     | '/privacy'
+    | '/thank-you'
     | '/vps'
   id:
     | '__root__'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/it-sks'
     | '/login'
     | '/privacy'
+    | '/thank-you'
     | '/vps'
   fileRoutesById: FileRoutesById
 }
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   ItSksRoute: typeof ItSksRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  ThankYouRoute: typeof ThankYouRoute
   VpsRoute: typeof VpsRoute
 }
 
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/vps'
       fullPath: '/vps'
       preLoaderRoute: typeof VpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thank-you': {
+      id: '/thank-you'
+      path: '/thank-you'
+      fullPath: '/thank-you'
+      preLoaderRoute: typeof ThankYouRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -287,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   ItSksRoute: ItSksRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  ThankYouRoute: ThankYouRoute,
   VpsRoute: VpsRoute,
 }
 export const routeTree = rootRouteImport

@@ -54,6 +54,29 @@ function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => vo
   );
 }
 
+function DefaultNotFoundComponent() {
+  return (
+    <div className="not-found-page">
+      <div className="not-found-card">
+        <div className="not-found-code">404</div>
+        <h1>Страница не найдена</h1>
+        <p>
+          Возможно, страница была перемещена или её никогда не существовало.
+          Вернитесь на главную или свяжитесь с нами — мы поможем.
+        </p>
+        <div className="not-found-actions">
+          <a href="/" className="btn btn-primary">
+            На главную
+          </a>
+          <a href="/contacts" className="btn btn-outline">
+            Связаться с нами
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const getRouter = () => {
   const router = createRouter({
     routeTree,
@@ -61,6 +84,7 @@ export const getRouter = () => {
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
     defaultErrorComponent: DefaultErrorComponent,
+    defaultNotFoundComponent: DefaultNotFoundComponent,
   });
 
   return router;

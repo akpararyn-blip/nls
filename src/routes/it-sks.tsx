@@ -8,7 +8,7 @@ import sksBefore from "@/assets/remontwithsks.png";
 import sksAfter from "@/assets/afterremontsks.png";
 import itTeamImg from "@/assets/it-team.png";
 import { useState, type FormEvent } from "react";
-import { submitLead } from "@/lib/submitLead";
+import { LeadForm } from "@/components/forms/LeadForm";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import {
   Wifi,
@@ -459,35 +459,6 @@ function Faq() {
 }
 
 function FinalCTA() {
-  const [consent, setConsent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!consent || submitting) return;
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    setSubmitting(true);
-    try {
-      await submitLead({
-        formName: "СКС / IT-аутсорсинг — заявка на проект",
-        action: "sks_cta",
-        fields: {
-          "Компания / проект": String(fd.get("company") ?? ""),
-          "ФИО": String(fd.get("name") ?? ""),
-          "Телефон": String(fd.get("phone") ?? ""),
-          "Описание задачи": String(fd.get("message") ?? ""),
-        },
-      });
-      form.reset();
-      setConsent(false);
-      alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
-    } catch (err) {
-      console.error(err);
-      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
   return (
     <section className="cta-section">
       <div className="container">
@@ -497,43 +468,14 @@ function FinalCTA() {
         </div>
 
         <div className="contact-form">
-          <form onSubmit={onSubmit}>
-            <div className="form-group">
-              <label htmlFor="sks-company">Название компании или проекта</label>
-              <input type="text" id="sks-company" name="company" className="form-control" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="sks-name">ФИО</label>
-              <input type="text" id="sks-name" name="name" className="form-control" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="sks-phone">Телефон</label>
-              <input
-                type="tel"
-                id="sks-phone"
-                name="phone"
-                className="form-control"
-                placeholder="+7 7__ ___ __ __"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="sks-message">Кратко опишите задачу (необязательно)</label>
-              <textarea id="sks-message" name="message" className="form-control" rows={4} />
-            </div>
-
-            <ConsentCheckbox id="sks-consent" checked={consent} onChange={setConsent} />
-
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={{ width: "100%", fontSize: "1.1rem" }}
-              disabled={!consent || submitting}
-            >
-              {submitting ? "Отправка…" : "Отправить заявку"}
-            </button>
-            <RecaptchaNotice />
-          </form>
+          <LeadForm
+            formName="СКС / IT-аутсорсинг — заявка на проект"
+            action="sks_cta"
+            idPrefix="sks"
+            companyLabel="Название компании или проекта"
+            messageLabel="Кратко опишите задачу (необязательно)"
+            messageFieldKey="Описание задачи"
+          />
         </div>
       </div>
     </section>
