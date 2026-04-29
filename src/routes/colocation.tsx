@@ -492,15 +492,38 @@ function Configurator() {
 
 function HintTip({ text }: { text: string }) {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("touchstart", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("touchstart", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
     <button
+      ref={ref}
       type="button"
       className={`calc-hint-tip${open ? " is-open" : ""}`}
       onClick={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         setOpen((v) => !v);
       }}
-      onBlur={() => setOpen(false)}
       aria-label="Подробнее"
     >
       <HelpCircle size={12} strokeWidth={2.2} />
