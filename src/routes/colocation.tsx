@@ -358,6 +358,18 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
+                  label="Дополнительная розетка"
+                  hint="Не более 500 Вт"
+                  hintTip="Аренда дополнительной резервной розетки сети электропитания для резервного (redundant) блока питания мощностью не более 500 Вт."
+                  unit="шт"
+                  step={1}
+                  min={0}
+                  value={cur.extraSockets}
+                  pricePerStep={PRICE_EXTRA_SOCKET}
+                  onChange={(v) => update(active, { extraSockets: v })}
+                />
+
+                <ColoCounterRow
                   label="Дополнительный Ethernet-порт"
                   hint="Пропускная способность до 100 Mb/s."
                   unit="шт"
