@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useCity, CITIES } from "@/lib/city-context";
+import { SmartLink } from "./SmartLink";
 import { ExternalIcon, InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
 import { StoreBadges } from "./StoreBadges";
 import logoLightUrl from "@/assets/logo-light.svg";
@@ -45,7 +46,7 @@ export function Footer() {
             <h4>Интернет и IT</h4>
             <ul>
               <li>
-                <Link to="/internet">Интернет для бизнеса</Link>
+                <SmartLink to="/internet">Интернет для бизнеса</SmartLink>
               </li>
               <li>
                 <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
@@ -60,7 +61,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link to="/it-sks">СКС. Монтаж сетей</Link>
+                <SmartLink to="/it-sks">СКС. Монтаж сетей</SmartLink>
               </li>
             </ul>
           </div>
@@ -70,16 +71,16 @@ export function Footer() {
             <h4>Серверы и ЦОД</h4>
             <ul>
               <li>
-                <Link to="/dedicated">Dedicated сервер</Link>
+                <SmartLink to="/dedicated">Dedicated сервер</SmartLink>
               </li>
               <li>
-                <Link to="/vps">VPS сервер</Link>
+                <SmartLink to="/vps">VPS сервер</SmartLink>
               </li>
               <li>
-                <Link to="/colocation">Colocation</Link>
+                <SmartLink to="/colocation">Colocation</SmartLink>
               </li>
               <li>
-                <Link to="/colocation-full">Аренда стойки</Link>
+                <SmartLink to="/colocation-full">Аренда стойки</SmartLink>
               </li>
             </ul>
           </div>

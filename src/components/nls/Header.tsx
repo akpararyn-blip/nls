@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useCity } from "@/lib/city-context";
+import { SmartLink } from "./SmartLink";
 import {
   ChevronDownIcon,
   ExternalIcon,
@@ -108,10 +109,10 @@ export function Header() {
                   <div className="dropdown-menu mega-menu">
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">Интернет</div>
-                      <Link to="/internet" className="mega-menu-link">
+                      <SmartLink to="/internet" className="mega-menu-link">
                         <Wifi className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Интернет для бизнеса</span>
-                      </Link>
+                      </SmartLink>
                     </div>
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">IT услуги</div>
@@ -129,29 +130,29 @@ export function Header() {
                           className="mega-menu-external"
                         />
                       </a>
-                      <Link to="/it-sks" className="mega-menu-link">
+                      <SmartLink to="/it-sks" className="mega-menu-link">
                         <Network className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>СКС. Монтаж сетей</span>
-                      </Link>
+                      </SmartLink>
                     </div>
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">Серверы</div>
-                      <Link to="/dedicated" className="mega-menu-link">
+                      <SmartLink to="/dedicated" className="mega-menu-link">
                         <Server className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Dedicated сервер</span>
-                      </Link>
-                      <Link to="/vps" className="mega-menu-link">
+                      </SmartLink>
+                      <SmartLink to="/vps" className="mega-menu-link">
                         <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>VPS сервер</span>
-                      </Link>
-                      <Link to="/colocation" className="mega-menu-link">
+                      </SmartLink>
+                      <SmartLink to="/colocation" className="mega-menu-link">
                         <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Colocation</span>
-                      </Link>
-                      <Link to="/colocation-full" className="mega-menu-link">
+                      </SmartLink>
+                      <SmartLink to="/colocation-full" className="mega-menu-link">
                         <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Аренда стойки</span>
-                      </Link>
+                      </SmartLink>
                     </div>
                   </div>
                 </li>

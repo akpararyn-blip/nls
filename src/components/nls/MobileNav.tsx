@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useCity } from "@/lib/city-context";
+import { SmartLink } from "./SmartLink";
 import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
 import { Phone } from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
@@ -70,9 +71,9 @@ export function MobileNav() {
           <div className="mobile-nav-group-title">Интернет</div>
           <ul className="mobile-nav-group">
             <li>
-              <Link to="/internet" onClick={close}>
+              <SmartLink to="/internet" onClick={close}>
                 Интернет для бизнеса
-              </Link>
+              </SmartLink>
             </li>
           </ul>
         </li>
@@ -85,9 +86,9 @@ export function MobileNav() {
               </a>
             </li>
             <li>
-              <Link to="/it-sks" onClick={close}>
+              <SmartLink to="/it-sks" onClick={close}>
                 СКС. Монтаж сетей
-              </Link>
+              </SmartLink>
             </li>
           </ul>
         </li>
@@ -95,24 +96,24 @@ export function MobileNav() {
           <div className="mobile-nav-group-title">Серверы</div>
           <ul className="mobile-nav-group">
             <li>
-              <Link to="/dedicated" onClick={close}>
+              <SmartLink to="/dedicated" onClick={close}>
                 Dedicated сервер
-              </Link>
+              </SmartLink>
             </li>
             <li>
-              <Link to="/vps" onClick={close}>
+              <SmartLink to="/vps" onClick={close}>
                 VPS сервер
-              </Link>
+              </SmartLink>
             </li>
             <li>
-              <Link to="/colocation" onClick={close}>
+              <SmartLink to="/colocation" onClick={close}>
                 Colocation
-              </Link>
+              </SmartLink>
             </li>
             <li>
-              <Link to="/colocation-full" onClick={close}>
+              <SmartLink to="/colocation-full" onClick={close}>
                 Аренда стойки
-              </Link>
+              </SmartLink>
             </li>
           </ul>
         </li>
