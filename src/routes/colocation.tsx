@@ -44,6 +44,7 @@ export const Route = createFileRoute("/colocation")({
 const PRICE_BASE_UNIT = 28500;
 const PRICE_EXTRA_UNIT = 15000;
 const PRICE_POWER_100W = 2000;
+const PRICE_EXTRA_SOCKET = 2000;
 const PRICE_ETH_PORT = 2500;
 const PRICE_EXTRA_IP = 2250;
 
