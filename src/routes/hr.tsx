@@ -3,6 +3,8 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import hrHero from "@/assets/hr-hero.png";
 import { useState, type FormEvent, type ChangeEvent } from "react";
+import { submitLead } from "@/lib/submitLead";
+import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import {
   MessageCircle,
   Send,
@@ -381,10 +383,30 @@ function ApplyForm() {
     setForm((f) => ({ ...f, [k]: v }));
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [submitting, setSubmitting] = useState(false);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!consent) return;
-    setSubmitted(true);
+    if (!consent || submitting) return;
+    setSubmitting(true);
+    try {
+      await submitLead({
+        formName: "HR — отклик на вакансию",
+        action: "hr_apply",
+        target: "hr",
+        fields: {
+          "Фамилия": form.lastName,
+          "Имя": form.firstName,
+          "Телефон": form.phone,
+          "Должность": form.position,
+        },
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -477,10 +499,11 @@ function ApplyForm() {
                   onChange={setConsent}
                 />
 
-                <button type="submit" className="btn btn-primary btn-block" disabled={!consent}>
-                  Отправить заявку
+                <button type="submit" className="btn btn-primary btn-block" disabled={!consent || submitting}>
+                  {submitting ? "Отправка…" : "Отправить заявку"}
                   <Send size={16} />
                 </button>
+                <RecaptchaNotice />
               </form>
             )}
           </div>
