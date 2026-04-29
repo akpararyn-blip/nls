@@ -1,13 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
-import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import hrHero from "@/assets/hr-hero.png";
-import { useState, type FormEvent, type ChangeEvent } from "react";
-import { submitLead } from "@/lib/submitLead";
-import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
+import { HrApplyForm } from "@/components/forms/HrApplyForm";
 import {
   MessageCircle,
-  Send,
   Sparkles,
   Users,
   Rocket,
