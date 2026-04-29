@@ -51,7 +51,7 @@ export const Route = createFileRoute("/it-sks")({
   component: SksPage,
 });
 
-function SksPage() {
+export function SksPage() {
   return (
     <SiteLayout>
       <Hero />

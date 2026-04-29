@@ -44,7 +44,7 @@ export const Route = createFileRoute("/colocation-full")({
 
 
 
-function FullRackPage() {
+export function FullRackPage() {
   return (
     <SiteLayout>
       <Hero />

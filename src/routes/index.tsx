@@ -1,12 +1,18 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import React, { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import heroMain from "@/assets/hero-main.png";
 import datacenterImg from "@/assets/datacenter.png";
 import { LeadForm } from "@/components/forms/LeadForm";
-import { USE_INTERNAL_ROUTING, currentDomainPath } from "@/config/links";
+import { USE_INTERNAL_ROUTING, currentDomainPath, type ServicePath } from "@/config/links";
+import { InternetPage } from "./internet";
+import { ColocationPage } from "./colocation";
+import { SksPage } from "./it-sks";
+import { DedicatedPage } from "./dedicated";
+import { FullRackPage } from "./colocation-full";
+import { VpsPage } from "./vps";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,17 +37,27 @@ export const Route = createFileRoute("/")({
   component: IndexPage,
 });
 
+const SERVICE_COMPONENTS: Record<ServicePath, () => React.ReactElement> = {
+  "/internet": InternetPage,
+  "/it-sks": SksPage,
+  "/colocation": ColocationPage,
+  "/dedicated": DedicatedPage,
+  "/colocation-full": FullRackPage,
+  "/vps": VpsPage,
+};
+
 function IndexPage() {
-  // На сервисных поддоменах (internet.nls.kz и т.п.) главной должна быть
-  // страница соответствующей услуги.
-  const [servicePath, setServicePath] = useState<string | null>(null);
+  // На сервисных поддоменах (internet.nls.kz и т.п.) на главной показываем
+  // содержимое страницы соответствующей услуги, не меняя URL.
+  const [servicePath, setServicePath] = useState<ServicePath | null>(null);
   useEffect(() => {
     if (USE_INTERNAL_ROUTING) return;
     if (typeof window === "undefined") return;
     setServicePath(currentDomainPath(window.location.hostname));
   }, []);
   if (servicePath) {
-    return <Navigate to={servicePath} replace />;
+    const ServiceComponent = SERVICE_COMPONENTS[servicePath];
+    return <ServiceComponent />;
   }
 
   return (
