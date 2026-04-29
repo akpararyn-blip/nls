@@ -191,6 +191,7 @@ function Advantages() {
 type ServerCfg = {
   extraUnits: number;
   extraPower100w: number; // шагов по 100 Вт
+  extraSockets: number;
   extraEthPorts: number;
   extraIPs: number; // дополнительные IPv4 сверх 1 бесплатного
 };
@@ -198,6 +199,7 @@ type ServerCfg = {
 const newServer = (): ServerCfg => ({
   extraUnits: 0,
   extraPower100w: 0,
+  extraSockets: 0,
   extraEthPorts: 0,
   extraIPs: 0,
 });
@@ -206,9 +208,18 @@ function calcServer(s: ServerCfg) {
   const base = PRICE_BASE_UNIT;
   const extraUnits = s.extraUnits * PRICE_EXTRA_UNIT;
   const power = s.extraPower100w * PRICE_POWER_100W;
+  const sockets = s.extraSockets * PRICE_EXTRA_SOCKET;
   const eth = s.extraEthPorts * PRICE_ETH_PORT;
   const ips = s.extraIPs * PRICE_EXTRA_IP;
-  return { base, extraUnits, power, eth, ips, total: base + extraUnits + power + eth + ips };
+  return {
+    base,
+    extraUnits,
+    power,
+    sockets,
+    eth,
+    ips,
+    total: base + extraUnits + power + sockets + eth + ips,
+  };
 }
 
 function Configurator() {
