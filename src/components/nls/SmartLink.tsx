@@ -1,23 +1,27 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type AnchorHTMLAttributes, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { resolveLink, USE_INTERNAL_ROUTING } from "@/config/links";
 
-interface SmartLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
+interface SmartLinkProps {
   to: string;
   children: ReactNode;
-  /** Дополнительные пропсы для TanStack Link, например activeProps */
-  activeProps?: Record<string, unknown>;
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler;
+  target?: string;
+  rel?: string;
+  "aria-label"?: string;
 }
 
 /**
  * SmartLink — обёртка над <Link>. В обычном режиме работает как Link.
- * В режиме «отдельные поддомены» (USE_INTERNAL_ROUTING = false) автоматически
- * перенаправляет ссылки на услуги на соответствующие поддомены.
+ * В режиме «отдельные поддомены» (USE_INTERNAL_ROUTING = false) ссылки на
+ * услуги автоматически меняются на соответствующие поддомены.
  *
- * Чтобы избежать рассинхрона SSR ↔ клиент, на сервере и в первом рендере
- * всегда отдаём внутренний <Link>, а уже после mount подменяем на внешний href.
+ * На SSR и в первом рендере отдаём внутренний <Link>, чтобы избежать рассинхрона
+ * client/server — после mount уже знаем hostname и можем переключиться.
  */
-export function SmartLink({ to, children, onClick, ...rest }: SmartLinkProps) {
+export function SmartLink({ to, children, ...rest }: SmartLinkProps) {
   const [host, setHost] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -26,10 +30,10 @@ export function SmartLink({ to, children, onClick, ...rest }: SmartLinkProps) {
     }
   }, []);
 
-  // В internal-режиме всегда обычный Link
   if (USE_INTERNAL_ROUTING) {
     return (
-      <Link to={to} onClick={onClick as never} {...(rest as never)}>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      <Link to={to} {...(rest as any)}>
         {children}
       </Link>
     );
@@ -39,11 +43,7 @@ export function SmartLink({ to, children, onClick, ...rest }: SmartLinkProps) {
 
   if (resolved.externalHref) {
     return (
-      <a
-        href={resolved.externalHref}
-        onClick={onClick}
-        {...rest}
-      >
+      <a href={resolved.externalHref} {...rest}>
         {children}
       </a>
     );
@@ -51,7 +51,8 @@ export function SmartLink({ to, children, onClick, ...rest }: SmartLinkProps) {
 
   const internalTo = resolved.internalTo ?? to;
   return (
-    <Link to={internalTo} onClick={onClick as never} {...(rest as never)}>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <Link to={internalTo} {...(rest as any)}>
       {children}
     </Link>
   );
