@@ -1,92 +1,89 @@
-## План
+## Цель
 
-Делю работу на два самостоятельных блока: **(1)** быстрая замена изображений (точечно, без риска), **(2)** редизайн визуального стиля всего сайта (более масштабно, требует согласования направления).
+Все формы сайта должны:
+1. Отправлять заявки в Telegram через `services/telegramApi` (sales — для всех бизнес-форм, hr — для отклика на вакансию).
+2. Защищаться **Google reCAPTCHA v3** (невидимая, токен на каждый submit).
+3. Передавать в сообщение: **название услуги/формы, заголовок страницы и URL**, с которого пришла заявка.
 
----
+## Что сделаю
 
-### Часть 1. Замена изображений (применю сразу после approve)
+### 1. Инфраструктура
 
-Все новые ассеты уже лежат в `src/assets/`. Подменю импорты и `<img src>` на нужных страницах.
+- Переименую `src/services/telegramApi.js` → `src/services/telegramApi.ts` (внутри уже TS-синтаксис, иначе не соберётся).
+- Обновлю `.env.example`: исправлю комментарий с v2 на **v3** для `VITE_RECAPTCHA_SITE_KEY` (ключ остаётся тот же).
+- Добавлю в `src/routes/__root.tsx` подгрузку скрипта reCAPTCHA v3:
+  `https://www.google.com/recaptcha/api.js?render=<VITE_RECAPTCHA_SITE_KEY>` через `links`/`scripts` секции `head()`.
+- Создам два хелпера в `src/lib/`:
+  - `recaptcha.ts` — `executeRecaptcha(action: string): Promise<string>` (ждёт `window.grecaptcha.ready`, вызывает `execute` с site key и action).
+  - `submitLead.ts` — общая функция `submitLead({ formName, fields, target })`:
+    - получает токен reCAPTCHA,
+    - формирует HTML-сообщение в формате:
+      ```
+      🔔 <b>{formName}</b>
+      📄 Страница: {document.title}
+      🔗 URL: {window.location.href}
 
-| Страница / блок | Файл | Новое изображение |
+      <b>Поля:</b>
+      • Компания: ...
+      • ФИО: ...
+      • Телефон: ...
+      • Сообщение: ...
+
+      🤖 reCAPTCHA score: token sent
+      ```
+    - вызывает `sendToTelegram(text, target)` (`'sales'` по умолчанию).
+- Создам глобальный тип `src/types/grecaptcha.d.ts` для `window.grecaptcha`.
+
+### 2. Подключу `submitLead` ко всем формам
+
+Каждый `onSubmit` сделаю `async`, добавлю состояние `submitting` (блокировка кнопки), `try/catch`, `toast`/`alert` об успехе/ошибке. Поля собираю через `FormData`.
+
+| Файл | Имя формы (передаётся в TG) | target |
 |---|---|---|
-| Hero — Dedicated | `src/routes/dedicated.tsx` | `server-dedicated.png` (сейчас hero без картинки — добавлю `.hero-visual`) |
-| Hero — VPS/VDS | `src/routes/vps.tsx` | `vpsvds.png` (заменит `vps-hero.png`) |
-| Hero — Colocation | `src/routes/colocation.tsx` | `colocation.png` (заменит `colocation-hero.png`) |
-| Hero — Аренда стойки | `src/routes/colocation-full.tsx` | `fullrack.png` (заменит `colocation-fullrack-hero.png`) |
-| Hero — IT СКС | `src/routes/it-sks.tsx` | `sks.png` (заменит `sks-hero.png`) |
-| Блок «До ремонта» | `src/routes/it-sks.tsx` | `remontwithsks.png` (заменит `sks-before.jpg`) |
-| Блок «После ремонта» | `src/routes/it-sks.tsx` | `afterremontsks.png` (заменит `sks-after.jpg`) |
-| Блок «Комплексные IT-решения» (CrossSell на it-sks) | `src/routes/it-sks.tsx` + `nls.css` | `it-team.png` — добавлю как фоновое/боковое изображение в `.sks-crosssell-card` с **синим градиентным оверлеем** (`linear-gradient(135deg, rgba(0,85,123,0.92) 0%, rgba(0,31,47,0.78) 60%, rgba(0,85,123,0.4) 100%)`), чтобы изображение гармонично легло на синий фон блока |
+| `src/routes/index.tsx` → `FinalCTA` | "Главная — заявка на IT-решение" | sales |
+| `src/routes/it-sks.tsx` → `FinalCTA` | "СКС — заявка на проект" | sales |
+| `src/routes/internet.tsx` → `FinalCTA` | "Интернет — заявка на подключение" | sales |
+| `src/routes/colocation.tsx` → `FinalCTA` | "Colocation — заявка на размещение" | sales |
+| `src/routes/colocation-full.tsx` → `FinalCTA` | "Аренда стойки — запрос расчёта" | sales |
+| `src/components/nls/Modals.tsx` → консультация | "Модальное окно — консультация" + `consultation.subject` (если есть) | sales |
+| `src/routes/hr.tsx` → `ApplyForm` | "HR — отклик на вакансию" | **hr** |
 
-Старые файлы (`vps-hero.png`, `colocation-hero.png`, `colocation-fullrack-hero.png`, `sks-hero.png`, `sks-before.jpg`, `sks-after.jpg`) пока не удаляю — оставлю на случай отката.
+### 3. UX и безопасность
 
----
+- Кнопка submit — `disabled={!consent || submitting}`, текст меняется на «Отправка…».
+- При ошибке reCAPTCHA или Telegram — показываем понятное сообщение, форма не очищается.
+- Под каждой формой добавлю мелкий disclaimer: «Защищено reCAPTCHA. Применяются [Политика конфиденциальности](https://policies.google.com/privacy) и [Условия использования](https://policies.google.com/terms) Google.» (требование Google для v3).
+- Никаких токенов в коде — только через `import.meta.env.VITE_*`. Если переменные не заданы — `submitLead` пишет понятную ошибку в консоль и показывает alert.
 
-### Часть 2. Редизайн визуального стиля сайта
+### 4. Технические детали
 
-Прежде чем что-то менять, нужно сначала **выбрать направление**. Предлагаю 3 варианта стиля, каждый из которых я применю **глобально** через токены в `:root` и общие классы (`.hero`, `.btn-primary`, `.section-title`, карточки, мега-меню, формы) — то есть единым махом обновится **весь сайт**, без точечных исключений.
+- reCAPTCHA v3 загружается один раз, глобально, через тег `<script async defer>` в shell. Action для каждой формы — слаг (`home_cta`, `sks_cta`, `hr_apply` и т.п.) — пригодится в админке reCAPTCHA для аналитики.
+- Серверной верификации токена пока не делаем (соответствует «временной заглушке» с прямой отправкой в Telegram). Это можно добавить позже как server function.
+- Все вызовы `fetch` к Telegram идут с клиента — токен бота попадает в бандл. Это намеренный временный вариант (как в `.env.example`); в плане отмечу: на следующем шаге желательно вынести в server function `/api/public/lead` и хранить токен как runtime secret.
 
-#### Что именно будет редизайниться (общая программа работ)
+## Файлы, которые буду создавать/менять
 
-1. **Цветовая система и токены** (`src/styles/nls.css :root`):
-   - Расширю палитру: добавлю surface/elevation токены (`--surface-1..3`), акцентные градиенты (`--gradient-primary`, `--gradient-hero`, `--gradient-accent`), новые тени (`--shadow-sm/md/lg/glow`), border-токены.
-   - Введу единый rhythm: `--radius-sm/md/lg/xl`, `--space-*`.
+**Новые:**
+- `src/services/telegramApi.ts` (переименование)
+- `src/lib/recaptcha.ts`
+- `src/lib/submitLead.ts`
+- `src/types/grecaptcha.d.ts`
 
-2. **Типографика**:
-   - Подключу второй шрифт для заголовков (Manrope или Space Grotesk) к существующему Open Sans для текста — это сразу убирает «скучность».
-   - Пересмотрю шкалу размеров и `letter-spacing` у H1/H2/eyebrow.
+**Изменения:**
+- `.env.example` (комментарий v2 → v3)
+- `src/routes/__root.tsx` (загрузка скрипта reCAPTCHA + disclaimer-friendly)
+- `src/routes/index.tsx`
+- `src/routes/it-sks.tsx`
+- `src/routes/internet.tsx`
+- `src/routes/colocation.tsx`
+- `src/routes/colocation-full.tsx`
+- `src/routes/hr.tsx`
+- `src/components/nls/Modals.tsx`
 
-3. **Hero-секции** (общий класс `.hero`, применится ко всем страницам):
-   - Декоративный фон: тонкие сетки/blur-blob`ы оранжево-синие, диагональный градиент.
-   - Бейдж-эйбрау с «pill»-стилем и точкой-индикатором.
-   - Hero-картинка получит общую обёртку с мягкой тенью, бликом и floating-«glass»-карточкой со стат-показателем (опционально).
+**Удаление:** `src/services/telegramApi.js`
 
-4. **Кнопки** (`.btn-primary`, `.btn-outline`, `.btn-ghost`):
-   - Primary: градиент orange→orange-light, мягкое свечение при hover, micro-lift (`translateY(-2px)`).
-   - Outline: новая обводка с hover-fill.
+## Чего НЕ делаю
 
-5. **Карточки** (`.trust-card`, `.sks-why-card`, `.sks-stage-card`, тарифные карточки, FAQ):
-   - Единый стиль: белый surface, hairline-border, мягкая тень, цветной верхний бордер/акцент-полоска при hover, плавная анимация подъёма.
-   - Иконки в круглой плашке с тонким градиентом.
-
-6. **Section dividers**:
-   - Добавлю чередование фонов секций (white → tinted blue-50 → white) и тонкие SVG-разделители вверху/внизу секций.
-
-7. **Мега-меню и хедер**:
-   - Лёгкая стеклянная подложка (`backdrop-filter: blur`), активная ссылка с подчёркиванием-градиентом.
-
-8. **Формы и инпуты**:
-   - Единый стиль фокуса (оранжевая обводка + glow), плавающие лейблы опционально.
-
-9. **Микро-анимации**:
-   - Reveal-on-scroll для секций, hover-эффекты на иконках, плавный скролл.
-
-10. **Mobile bar и плавающие виджеты** — приведу к новому стилю кнопок/теней.
-
-#### Как это попадёт «на весь сайт»
-
-Все правки делаются в **`src/styles/nls.css`** через общие классы и CSS-переменные, которые уже используются на всех страницах (`.hero`, `.section-title`, `.trust-card`, `.btn-*`, `.container`, и т.д.). Никаких страничных переопределений — поэтому смена направления автоматически отразится везде: главная, dedicated, vps, colocation, colocation-full, it-sks, internet, hr, about, contacts, privacy.
-
-#### Что мне нужно от вас перед стартом части 2
-
-Я задам отдельный вопрос с **3 прототипами стилей** (Tailwind-карточки в превью), чтобы вы выбрали направление:
-
-- **A. «Modern Tech»** — глубокий синий с неоновыми акцентами, glassmorphism, тонкие grid-фоны, Space Grotesk для заголовков. Энергичный, IT-инфраструктура.
-- **B. «Premium Editorial»** — много воздуха, крупная типографика Manrope, мягкие пастельные surface-токены, аккуратные тонкие тени. Спокойный, дорогой.
-- **C. «Bold Brand»** — активное использование оранжевого и синего градиентов, крупные hero-блобы, выразительные заголовки, динамичные hover-эффекты. Самый «небанальный».
-
-После выбора — внедряю единый стиль во все общие классы.
-
----
-
-### Порядок выполнения
-
-1. Сначала **Часть 1** (замена изображений) — быстро, безопасно, не зависит от стиля.
-2. Затем спрашиваю про направление редизайна (вопрос с 3 прототипами).
-3. После выбора — **Часть 2** в одном большом проходе по `nls.css` + минимальные правки разметки там, где нужно (например, обёртка hero-картинки, добавление декоративных элементов).
-
-### Файлы, которые будут изменены
-
-**Часть 1:** `dedicated.tsx`, `vps.tsx`, `colocation.tsx`, `colocation-full.tsx`, `it-sks.tsx`, `nls.css` (стили для нового CrossSell-блока с фото).
-**Часть 2:** в основном `nls.css` (большой рефакторинг токенов и общих классов) + точечные правки `Header.tsx`, `Footer.tsx`, `index.tsx` (декоративные элементы hero), и при необходимости небольшие добавления в hero-секции остальных страниц.
+- Не настраиваю серверную верификацию reCAPTCHA secret (нужен бэкенд + secret key — отдельная задача).
+- Не добавляю отдельную UI-кнопку для reCAPTCHA — v3 невидимая, токен запрашивается под капотом при submit.
+- Не трогаю дизайн форм.
