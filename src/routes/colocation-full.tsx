@@ -147,7 +147,7 @@ function Specs() {
           <h2>Что входит в аренду шкафа</h2>
           <p>Решение «под ключ» для размещения большого парка оборудования.</p>
         </div>
-        <div className="trust-grid">
+        <div className="trust-grid trust-grid--5">
           {items.map(({ Icon, h, p }) => (
             <div className="trust-card" key={h}>
               <div className="trust-icon">
@@ -243,7 +243,7 @@ function Audience() {
           <span className="section-eyebrow">Кому подойдёт</span>
           <h2>Аренда шкафа — для задач масштаба Enterprise</h2>
         </div>
-        <div className="trust-grid">
+        <div className="trust-grid trust-grid--5">
           {items.map(({ Icon, h, p }) => (
             <div className="trust-card" key={h}>
               <div className="trust-icon">

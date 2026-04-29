@@ -90,6 +90,7 @@ function Hero() {
 }
 
 function Services() {
+  const { openConsultationModalWith } = useCity();
   return (
     <section className="services-section">
       <div className="container">
@@ -131,6 +132,25 @@ function Services() {
               <li>Full rack colocation</li>
               <li>Виртуальные серверы (VDS/VPS)</li>
             </ul>
+          </div>
+
+          <div className="service-card service-card--cta">
+            <h3>Не знаете, что выбрать?</h3>
+            <p>
+              Получите быструю и бесплатную консультацию инженера. Поможем подобрать оптимальное
+              решение под задачи вашего бизнеса.
+            </p>
+            <button
+              type="button"
+              className="btn btn-primary service-card-cta-btn"
+              onClick={() =>
+                openConsultationModalWith({
+                  subject: "Бесплатная консультация по IT-решениям",
+                })
+              }
+            >
+              Получить консультацию
+            </button>
           </div>
         </div>
       </div>
