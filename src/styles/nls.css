@@ -3954,16 +3954,11 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
   vertical-align: middle;
 }
 
-/* Сетка преимуществ на 5 карточек (Tier III, охлаждение, FM200, биометрия, климат) */
+/* Сетка преимуществ — 3 колонки (Full Rack страница) */
 .trust-grid--5 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-}
-@media (min-width: 1100px) {
-  .trust-grid--5 {
-    grid-template-columns: repeat(5, 1fr);
-  }
 }
 @media (max-width: 900px) {
   .trust-grid--5 {
@@ -5375,8 +5370,14 @@ body::before, body::after { display: none !important; }
 .enterprise-section--alt { background: linear-gradient(180deg, #ffffff 0%, var(--surface-1) 100%); }
 .enterprise-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .enterprise-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .enterprise-grid { grid-template-columns: 1fr; }
 }
 .enterprise-card {
   background: var(--surface-0);
@@ -5443,4 +5444,200 @@ body::before, body::after { display: none !important; }
   font-size: 0.88rem;
   color: var(--color-text-light);
   line-height: 1.5;
+}
+
+/* === Accent consultation card on Services grid === */
+.service-card.service-card--cta {
+  background: linear-gradient(135deg, var(--color-blue, #00557b) 0%, var(--color-blue-dark, #003a55) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 103, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.service-card.service-card--cta::before {
+  background: var(--color-orange);
+  opacity: 1;
+}
+.service-card.service-card--cta::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -80px;
+  bottom: -80px;
+  background: radial-gradient(circle, rgba(255,103,0,0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+.service-card.service-card--cta h3 {
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.service-card.service-card--cta p {
+  color: rgba(255,255,255,0.85);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px;
+}
+.service-card-cta-btn {
+  align-self: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+/* === App download buttons (store badges) === */
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: #000;
+  color: #fff !important;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.12);
+  min-width: 170px;
+}
+.store-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  background: #1a1a1a;
+}
+.store-badge svg { flex-shrink: 0; }
+.store-badge-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.store-badge-text small {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+.store-badge-text strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* === Footer app CTA === */
+.footer-app-cta {
+  margin-top: 60px;
+  margin-bottom: 32px;
+  padding: 28px 32px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,103,0,0.12) 0%, rgba(0,85,123,0.25) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-app-cta-text h4 {
+  color: #fff;
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+.footer-app-cta-text p {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.92rem;
+  margin: 0;
+  max-width: 560px;
+}
+
+/* === Footer 3-city addresses === */
+.footer-cities {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.footer-city-card h5 {
+  color: var(--color-orange);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  letter-spacing: 0.02em;
+}
+.footer-city-card p {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .footer-cities { grid-template-columns: 1fr; gap: 18px; }
+  .footer-app-cta { flex-direction: column; align-items: flex-start; }
+}
+
+/* === Login / App page === */
+.app-page-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, var(--surface-1, #f6f9fc) 0%, #fff 100%);
+}
+.app-page-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+.app-page-content h1 {
+  font-size: 2.6rem;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  color: var(--color-blue-dark);
+}
+.app-page-content .lead {
+  font-size: 1.15rem;
+  color: var(--color-text-light);
+  margin-bottom: 28px;
+  line-height: 1.55;
+}
+.app-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  gap: 12px;
+}
+.app-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--color-blue-dark);
+}
+.app-features li svg {
+  color: var(--color-orange);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.app-page-visual {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.app-page-visual img {
+  max-width: 100%;
+  width: 480px;
+  height: auto;
+  filter: drop-shadow(0 30px 60px rgba(0, 85, 123, 0.25));
+}
+@media (max-width: 900px) {
+  .app-page-grid { grid-template-columns: 1fr; gap: 40px; }
+  .app-page-content h1 { font-size: 2rem; }
 }

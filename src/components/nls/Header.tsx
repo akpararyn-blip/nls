@@ -82,9 +82,9 @@ export function Header() {
                 <div>KZ</div>
               </div>
             </div>
-            <a href="#" className="btn btn-primary" style={{ padding: "4px 12px", fontSize: "0.8rem" }}>
+            <Link to="/login" className="btn btn-primary" style={{ padding: "4px 12px", fontSize: "0.8rem" }}>
               Войти
-            </a>
+            </Link>
           </div>
         </div>
       </div>
