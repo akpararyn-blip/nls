@@ -1,89 +1,124 @@
-# План доработок
+## Что нужно сделать
 
-## 1. Страницы «Спасибо» и 404
+Проект сейчас собирается через `@lovable.dev/vite-tanstack-config`, который под капотом включает плагин TanStack Start + Cloudflare-плагин и выдаёт серверную сборку (`wrangler.jsonc`, server-entry). Для FTP-хостинга нужна чистая статика: `index.html` + `assets/` + готовые HTML-страницы маршрутов, чтобы прямые ссылки и обновление страницы работали без Node-сервера.
 
-**`src/routes/thank-you.tsx`** — страница, на которую редиректит каждая форма после успешной отправки.
-- Заголовок «Спасибо за заявку!», подзаголовок про звонок в течение 15 минут.
-- Иконка-галочка, контакты выбранного города (через `useCity`), кнопки «На главную» и «Позвонить».
-- `head()` с `noindex` и собственными title/description.
+Хорошая новость: серверного кода в проекте нет — все формы шлются прямо из браузера (`fetch` в Telegram API), reCAPTCHA публичная, никакие `createServerFn` / `/api/*` маршруты не используются. То есть функционально приложение уже client-only, надо только переупаковать сборку.
 
-**404** — обновить `notFoundComponent` в `src/routes/__root.tsx`:
-- Брендированная страница 404 (логотип, кнопки «На главную» / «Связаться»).
-- Также добавить `defaultNotFoundComponent` в `src/router.tsx`, чтобы все ненайденные пути ловились единообразно.
+## Подход
 
-После отправки формы вместо `alert(...)` будет `navigate({ to: "/thank-you" })`. Для HR — `navigate({ to: "/thank-you", search: { type: "hr" } })`, страница покажет немного другой текст («Спасибо за отклик»).
+Переключаемся с **TanStack Start (SSR)** на **TanStack Router в режиме SPA + предрендер маршрутов** через официальный плагин `@tanstack/router-plugin/vite`. На выходе получаем папку `dist/` с:
+- `index.html` (SPA-фолбэк),
+- по `index.html` для каждого статического маршрута (`/login/index.html`, `/about/index.html`, `/internet/index.html` и т.д.) — чтобы Apache/Nginx на shared-хостинге отдавал нужную страницу по прямой ссылке без 404,
+- `assets/` со всеми JS/CSS/картинками.
 
-## 2. Единый компонент форм
+Это снимает зависимость от Cloudflare Workers, `nodejs_compat` и server-функций.
 
-Да, вы правы: 5 sales-форм (главная, internet, it-sks, colocation, colocation-full) идентичны по структуре. HR отличается полями (вакансия, резюме, опыт). Делаем папку `src/components/forms/`:
+## Изменения в файлах
 
-- **`LeadForm.tsx`** — универсальная форма для sales-заявок. Пропсы:
-  - `formName: string` (например, «Colocation — заявка на размещение»)
-  - `action: string` (для reCAPTCHA, например `colocation_cta`)
-  - `messageLabel?: string` (по умолчанию «Сообщение для менеджера»)
-  - `idPrefix?: string` (чтобы `id` инпутов не конфликтовали)
-  - Внутри — все 4 поля (компания, ФИО, телефон, сообщение), `ConsentCheckbox`, `RecaptchaNotice`, кнопка, состояние `submitting`, вызов `submitLead`, редирект на `/thank-you`.
-- **`HrApplyForm.tsx`** — отдельная форма для `/hr` (поля + загрузка резюме + `target: "hr"`). Логика та же, но поля свои.
-- **`useLeadForm.ts`** *(опционально)* — хук с общим `onSubmit`, чтобы не дублировать логику между LeadForm и HrApplyForm.
-
-Затем в страницах `index.tsx`, `internet.tsx`, `it-sks.tsx`, `colocation.tsx`, `colocation-full.tsx` блок `<FinalCTA>` упрощается до:
-```tsx
-<LeadForm formName="…" action="…" />
-```
-В `Modals.tsx` модальное окно тоже использует `LeadForm` (с пропом `subject` для подстановки темы).
-В `hr.tsx` — `<HrApplyForm vacancy={…} />`.
-
-## 3. Доменно-зависимая конфигурация ссылок
-
-Создадим `src/config/links.ts` — единственное место, где описано поведение ссылок:
+### 1. `vite.config.ts` — собственная конфигурация без Lovable-обёртки
+Уходим от `@lovable.dev/vite-tanstack-config` (он жёстко тянет `tanstackStart()` + Cloudflare). Новый конфиг:
 
 ```ts
-export const USE_INTERNAL_ROUTING = true; // переключатель
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-export const DOMAIN_MAP = {
-  "internet.nls.kz":      { home: "/internet",        path: "/internet" },
-  "lan.nls.kz":           { home: "/it-sks",          path: "/it-sks" },
-  "colocation.nls.kz":    { home: "/colocation",      path: "/colocation" },
-  "dedicated.nls.kz":     { home: "/dedicated",       path: "/dedicated" },
-  "rack.nls.kz":          { home: "/colocation-full", path: "/colocation-full" },
-  "server.nls.kz":        { home: "/vps",             path: "/vps" },
-} as const;
+export default defineConfig({
+  plugins: [
+    tanstackRouter({
+      target: "react",
+      autoCodeSplitting: true,
+      routesDirectory: "src/routes",
+      generatedRouteTree: "src/routeTree.gen.ts",
+    }),
+    react(),
+    tailwindcss(),
+    tsconfigPaths(),
+  ],
+  build: { outDir: "dist", sourcemap: false },
+  server: { port: 8080, host: true },
+});
 ```
 
-Логика (хелпер `resolveLink(to)`):
-- Если `USE_INTERNAL_ROUTING === true` → возвращаем внутренний путь как есть, всё работает как сейчас.
-- Если `USE_INTERNAL_ROUTING === false`:
-  - Определяем текущий поддомен (`window.location.hostname`).
-  - Главная (`/`) превращается в путь, соответствующий текущему домену (например, на `internet.nls.kz` → `/internet`).
-  - Все ссылки на «чужие» услуги превращаются в **внешние URL** на соответствующие поддомены (https://colocation.nls.kz и т.д.).
-  - Ссылка на «свою» услугу (например, `/internet` на `internet.nls.kz`) ведёт на `/`.
-  - Все остальные пути (`/about`, `/hr`, `/contacts`, `/thank-you` и т.д.) остаются внутренними.
+Никаких `tanstackStart()` и `cloudflare()`.
 
-**Компонент-обёртка `<SmartLink to="…">`** в `src/components/nls/SmartLink.tsx`:
-- Внутри решает, рендерить `<Link>` (TanStack) или обычный `<a href="https://…">` с `target="_blank"`.
-- Все ссылки на услуги в `Header.tsx`, `MobileNav.tsx`, `Footer.tsx`, карточках на главной — переводим на `<SmartLink>`.
+### 2. Новая точка входа SPA
+- `index.html` (в корне) — стандартный Vite-шаблон с `<div id="root">` и `<script type="module" src="/src/main.tsx">`.
+- `src/main.tsx` — создаёт роутер и монтирует `<RouterProvider>` в `#root`.
 
-Так переключение режима — один булеан в `links.ts`, не трогая компоненты.
+### 3. `src/routes/__root.tsx` — упростить
+Убрать `HeadContent`, `Scripts`, `shellComponent`, `links: [{ rel: "stylesheet", href: appCss }]` — это API TanStack Start. В SPA:
+- стили подключаются напрямую `import "./styles.css"` в `main.tsx`,
+- `<head>` живёт в `index.html`,
+- скрипт reCAPTCHA добавляется в `index.html` обычным `<script async defer src="...?render=KEY">` (ключ подставляем через `%VITE_RECAPTCHA_SITE_KEY%` в `index.html` либо инжектим маленьким рантайм-скриптом в `main.tsx`).
 
-### Замечание про SSR
-`window.location.hostname` недоступен на сервере. SmartLink будет:
-- На SSR рендерить безопасный fallback (внутренний `<Link>`), а на клиенте после монтирования заменять на правильный URL через `useEffect` + `useState`. Это гарантирует, что HTML-разметка валидна и ссылка корректна для пользователя.
+`__root.tsx` оставляет только `createRootRoute({ component, notFoundComponent })` с `<Outlet />` внутри `<CityProvider>`.
 
-## Затрагиваемые файлы
+### 4. Per-route `<head>` через `react-helmet-async` или нативно
+TanStack Start `head: () => ({ meta, links, scripts })` перестанет работать. Чтобы не потерять SEO (титулы, OG), добавляем лёгкий хелпер `useDocumentHead({ title, description, ogImage })` на основе `useEffect`, который выставляет `document.title` и мета-теги. На каждой странице меняем `head: () => ({...})` на вызов этого хука в компоненте маршрута. Для предрендеренных страниц мета попадёт прямо в HTML.
 
-**Новые:**
-- `src/routes/thank-you.tsx`
-- `src/components/forms/LeadForm.tsx`
-- `src/components/forms/HrApplyForm.tsx`
-- `src/components/nls/SmartLink.tsx`
-- `src/config/links.ts`
+### 5. Предрендер всех известных маршрутов
+Чтобы прямые ссылки `/login`, `/about`, `/contacts`, `/internet`, `/it-sks`, `/colocation`, `/colocation-full`, `/dedicated`, `/vps`, `/hr`, `/privacy`, `/thank-you` работали без Node-сервера, добавляем простой пост-билд скрипт `scripts/prerender.mjs`, который копирует `dist/index.html` в `dist/<route>/index.html` для каждого маршрута из списка. Apache/Nginx на shared-хостинге сам отдаст правильный файл.
 
-**Изменяемые:**
-- `src/routes/__root.tsx` — брендированный `notFoundComponent`.
-- `src/router.tsx` — `defaultNotFoundComponent`.
-- `src/routes/index.tsx`, `internet.tsx`, `it-sks.tsx`, `colocation.tsx`, `colocation-full.tsx` — заменить `FinalCTA` на `<LeadForm …/>`.
-- `src/routes/hr.tsx` — заменить форму на `<HrApplyForm/>`.
-- `src/components/nls/Modals.tsx` — модалку построить на `LeadForm` (через проп `subject`/`compact`).
-- `src/components/nls/Header.tsx`, `MobileNav.tsx`, `Footer.tsx` и места с карточками услуг (`index.tsx`, `EnterpriseBlocks.tsx`) — заменить `<Link>` для путей услуг на `<SmartLink>`.
+В `package.json`: `"build": "vite build && node scripts/prerender.mjs"`.
 
-После одобрения переключусь в build-режим и реализую.
+### 6. SPA-фолбэк для shared-хостинга
+Чтобы любые неизвестные пути (например, опечатки) не давали серверный 404, добавляем в `dist/` файл `.htaccess` (Apache) — дефолт большинства местных shared-хостингов:
+
+```
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+
+Тот же скрипт `prerender.mjs` положит его в `dist/`. Если хостинг на Nginx — в README пометим, какую `try_files` директиву попросить у админа.
+
+### 7. Удаляем серверные артефакты
+- `wrangler.jsonc` — удалить.
+- `@cloudflare/vite-plugin`, `@tanstack/react-start`, `@lovable.dev/vite-tanstack-config` — удалить из `package.json` (сборка их больше не использует).
+- В `src/router.tsx` ничего менять не нужно — `createRouter` из `@tanstack/react-router` уже правильный API.
+- Импорты `@tanstack/react-router` в коде остаются как есть (`Link`, `useNavigate`, `createFileRoute`, `Outlet`).
+
+### 8. `.env` — продолжает работать
+`VITE_*` переменные подхватываются обычным Vite-сборщиком ровно так же. Никакие `process.env` в коде не используются.
+
+## Что получим
+
+После `npm run build` (или `bun run build`) в папке `dist/` будет:
+```
+dist/
+  index.html              ← главная + SPA-фолбэк
+  about/index.html
+  contacts/index.html
+  internet/index.html
+  it-sks/index.html
+  colocation/index.html
+  colocation-full/index.html
+  dedicated/index.html
+  vps/index.html
+  hr/index.html
+  login/index.html
+  privacy/index.html
+  thank-you/index.html
+  .htaccess               ← rewrite на index.html
+  assets/                 ← JS, CSS, картинки с хешами в именах
+  favicon.svg
+```
+
+Эту папку можно загрузить на любой shared-хостинг через FTP в корень сайта и оно заработает.
+
+## Риски / на что обратить внимание
+
+- **SEO-метаданные**: текущие `head: () => ({...})` в роутах (титулы, OG-теги для `/about`, `/colocation` и т.д.) надо переписать на хук `useDocumentHead`. Иначе поисковики увидят дефолтный заголовок «NLS Kazakhstan» на всех страницах. Это рутинная, но обязательная правка по каждому файлу в `src/routes/`.
+- **Hydration / SSR-данные**: ни одна страница не использует `loader` с серверными данными (всё рендерится на клиенте, формы шлют запросы из браузера) — миграция безопасна.
+- **TanStack Start-специфичные импорты**: `HeadContent`, `Scripts`, `shellComponent`, `head: () => ({ scripts })`, `?url`-импорт CSS как «links» — нужно вычистить. Я составлю полный список затронутых файлов на этапе реализации и поправлю каждый.
+- **Lovable Preview**: после миграции превью внутри Lovable продолжит работать (это всё ещё Vite + React), но фича Lovable «Publish» больше не будет публиковать на Cloudflare — это и есть цель.
+
+## Резюме
+
+Снимаем Cloudflare/SSR-обёртку, переключаемся на классический SPA + статический предрендер маршрутов + `.htaccess` для рерайтов. На выходе — чистая папка `dist/`, которую заливаем по FTP.
