@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
   component: IndexPage,
 });
 
-const SERVICE_COMPONENTS: Record<ServicePath, () => JSX.Element> = {
+const SERVICE_COMPONENTS: Record<ServicePath, () => React.ReactElement> = {
   "/internet": InternetPage,
   "/it-sks": SksPage,
   "/colocation": ColocationPage,
