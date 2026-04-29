@@ -411,6 +411,11 @@ function Configurator() {
                       price={curCalc.power}
                     />
                     <SumLine
+                      title="Доп. розетка"
+                      detail={cur.extraSockets ? `${cur.extraSockets} шт` : "—"}
+                      price={curCalc.sockets}
+                    />
+                    <SumLine
                       title="Доп. Ethernet"
                       detail={cur.extraEthPorts ? `${cur.extraEthPorts} шт` : "—"}
                       price={curCalc.eth}
