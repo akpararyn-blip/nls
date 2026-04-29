@@ -1,10 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import heroMain from "@/assets/hero-main.png";
 import datacenterImg from "@/assets/datacenter.png";
 import { LeadForm } from "@/components/forms/LeadForm";
+import { USE_INTERNAL_ROUTING, currentDomainPath } from "@/config/links";
 
 export const Route = createFileRoute("/")({
   head: () => ({
