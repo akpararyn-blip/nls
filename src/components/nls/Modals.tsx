@@ -125,17 +125,18 @@ export function Modals() {
 
           <form className="modern-form" onSubmit={onSubmit}>
             <div className="form-floating">
-              <input type="text" id="modal-company" className="form-control" placeholder=" " required />
+              <input type="text" id="modal-company" name="company" className="form-control" placeholder=" " required />
               <label htmlFor="modal-company">Название компании или ИИН/БИН</label>
             </div>
             <div className="form-floating">
-              <input type="text" id="modal-name" className="form-control" placeholder=" " required />
+              <input type="text" id="modal-name" name="name" className="form-control" placeholder=" " required />
               <label htmlFor="modal-name">Ваше имя</label>
             </div>
             <div className="form-floating">
               <input
                 type="tel"
                 id="modal-phone"
+                name="phone"
                 className="form-control"
                 placeholder=" "
                 required
@@ -146,6 +147,7 @@ export function Modals() {
             <div className="form-floating">
               <textarea
                 id="modal-message"
+                name="message"
                 className="form-control"
                 placeholder=" "
                 rows={2}
@@ -157,10 +159,11 @@ export function Modals() {
 
             <ConsentCheckbox id="modal-consent" checked={consent} onChange={setConsent} />
 
-            <button type="submit" className="btn btn-primary btn-block" disabled={!consent}>
-              Отправить заявку
+            <button type="submit" className="btn btn-primary btn-block" disabled={!consent || submitting}>
+              {submitting ? "Отправка…" : "Отправить заявку"}
               <SendIcon />
             </button>
+            <RecaptchaNotice />
           </form>
         </div>
       </div>
