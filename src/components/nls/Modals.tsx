@@ -1,9 +1,7 @@
 import { useCity, type CityKey } from "@/lib/city-context";
-import { CloseIcon, SendIcon } from "./Icons";
-import { ConsentCheckbox } from "./ConsentCheckbox";
-import { RecaptchaNotice } from "./RecaptchaNotice";
-import { submitLead } from "@/lib/submitLead";
-import { useEffect, useState, type FormEvent } from "react";
+import { CloseIcon } from "./Icons";
+import { LeadForm } from "@/components/forms/LeadForm";
+import { useEffect } from "react";
 
 const CITY_OPTIONS: { key: CityKey; label: string }[] = [
   { key: "Almaty", label: "Алматы" },
@@ -12,22 +10,8 @@ const CITY_OPTIONS: { key: CityKey; label: string }[] = [
   { key: "Other", label: "Другие города" },
 ];
 
-function formatPhone(value: string) {
-  const digits = value.replace(/\D/g, "").replace(/^7?/, "");
-  const m = digits.match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-  if (!m) return "+7";
-  const [, a, b, c, d] = m;
-  return "+7 " + (a || "") + (b ? " " + b : "") + (c ? "-" + c : "") + (d ? "-" + d : "");
-}
-
 export function Modals() {
   const { modal, closeModals, cityKey, setCity, consultation } = useCity();
-  const [consent, setConsent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (modal.consultation) setConsent(false);
-  }, [modal.consultation]);
 
   useEffect(() => {
     if (!modal.city && !modal.consultation) return;
@@ -37,41 +21,6 @@ export function Modals() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [modal, closeModals]);
-
-  const onPhoneInput = (e: FormEvent<HTMLInputElement>) => {
-    const input = e.currentTarget;
-    input.value = formatPhone(input.value);
-  };
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!consent || submitting) return;
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    setSubmitting(true);
-    try {
-      await submitLead({
-        formName: consultation.subject
-          ? `Модальное окно — ${consultation.subject}`
-          : "Модальное окно — консультация",
-        action: "consultation_modal",
-        fields: {
-          "Компания / ИИН-БИН": String(fd.get("company") ?? ""),
-          "Имя": String(fd.get("name") ?? ""),
-          "Телефон": String(fd.get("phone") ?? ""),
-          "Комментарий": String(fd.get("message") ?? ""),
-          ...(consultation.subject ? { "Тема": consultation.subject } : {}),
-        },
-      });
-      closeModals();
-      alert("Спасибо! Менеджер свяжется с вами в течение 15 минут.");
-    } catch (err) {
-      console.error(err);
-      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <>
@@ -123,48 +72,25 @@ export function Modals() {
             <p>Заполните форму, и наш менеджер свяжется с вами в течение 15 минут.</p>
           </div>
 
-          <form className="modern-form" onSubmit={onSubmit}>
-            <div className="form-floating">
-              <input type="text" id="modal-company" name="company" className="form-control" placeholder=" " required />
-              <label htmlFor="modal-company">Название компании или ИИН/БИН</label>
-            </div>
-            <div className="form-floating">
-              <input type="text" id="modal-name" name="name" className="form-control" placeholder=" " required />
-              <label htmlFor="modal-name">Ваше имя</label>
-            </div>
-            <div className="form-floating">
-              <input
-                type="tel"
-                id="modal-phone"
-                name="phone"
-                className="form-control"
-                placeholder=" "
-                required
-                onInput={onPhoneInput}
-              />
-              <label htmlFor="modal-phone">Номер телефона</label>
-            </div>
-            <div className="form-floating">
-              <textarea
-                id="modal-message"
-                name="message"
-                className="form-control"
-                placeholder=" "
-                rows={2}
-                defaultValue={consultation.subject ?? ""}
-                key={consultation.subject ?? "empty"}
-              />
-              <label htmlFor="modal-message">Комментарий (необязательно)</label>
-            </div>
-
-            <ConsentCheckbox id="modal-consent" checked={consent} onChange={setConsent} />
-
-            <button type="submit" className="btn btn-primary btn-block" disabled={!consent || submitting}>
-              {submitting ? "Отправка…" : "Отправить заявку"}
-              <SendIcon />
-            </button>
-            <RecaptchaNotice />
-          </form>
+          {modal.consultation && (
+            <LeadForm
+              key={consultation.subject ?? "modal"}
+              formName={
+                consultation.subject
+                  ? `Модальное окно — ${consultation.subject}`
+                  : "Модальное окно — консультация"
+              }
+              action="consultation_modal"
+              idPrefix="modal"
+              companyLabel="Название компании или ИИН/БИН"
+              messageLabel="Комментарий (необязательно)"
+              messageFieldKey="Комментарий"
+              messageRows={2}
+              defaultMessage={consultation.subject ?? undefined}
+              subject={consultation.subject ?? undefined}
+              onSuccess={closeModals}
+            />
+          )}
         </div>
       </div>
     </>
