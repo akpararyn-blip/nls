@@ -6,6 +6,8 @@ import { CheckIcon } from "@/components/nls/Icons";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import fullRackHero from "@/assets/fullrack.png";
 import { useState, type FormEvent } from "react";
+import { submitLead } from "@/lib/submitLead";
+import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import {
   Server,
   Zap,
@@ -261,10 +263,33 @@ function Audience() {
 
 function FinalCTA() {
   const [consent, setConsent] = useState(false);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [submitting, setSubmitting] = useState(false);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!consent) return;
-    alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
+    if (!consent || submitting) return;
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    setSubmitting(true);
+    try {
+      await submitLead({
+        formName: "Аренда стойки — запрос расчёта",
+        action: "fullrack_cta",
+        fields: {
+          "Компания": String(fd.get("company") ?? ""),
+          "ФИО": String(fd.get("name") ?? ""),
+          "Телефон": String(fd.get("phone") ?? ""),
+          "Требования": String(fd.get("message") ?? ""),
+        },
+      });
+      form.reset();
+      setConsent(false);
+      alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
+    } catch (err) {
+      console.error(err);
+      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+    } finally {
+      setSubmitting(false);
+    }
   };
   return (
     <section className="cta-section" id="fullrack-form">
@@ -283,17 +308,18 @@ function FinalCTA() {
           <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="fr-company">Название компании</label>
-              <input type="text" id="fr-company" className="form-control" required />
+              <input type="text" id="fr-company" name="company" className="form-control" required />
             </div>
             <div className="form-group">
               <label htmlFor="fr-name">ФИО</label>
-              <input type="text" id="fr-name" className="form-control" required />
+              <input type="text" id="fr-name" name="name" className="form-control" required />
             </div>
             <div className="form-group">
               <label htmlFor="fr-phone">Телефон</label>
               <input
                 type="tel"
                 id="fr-phone"
+                name="phone"
                 className="form-control"
                 placeholder="+7 7__ ___ __ __"
                 required
@@ -301,7 +327,7 @@ function FinalCTA() {
             </div>
             <div className="form-group">
               <label htmlFor="fr-message">Комментарий / требования (мощность, каналы, кол-во шкафов)</label>
-              <textarea id="fr-message" className="form-control" rows={5} />
+              <textarea id="fr-message" name="message" className="form-control" rows={5} />
             </div>
 
             <ConsentCheckbox id="fr-consent" checked={consent} onChange={setConsent} />
@@ -310,10 +336,11 @@ function FinalCTA() {
               type="submit"
               className="btn btn-primary"
               style={{ width: "100%", fontSize: "1.1rem" }}
-              disabled={!consent}
+              disabled={!consent || submitting}
             >
-              Запросить расчёт
+              {submitting ? "Отправка…" : "Запросить расчёт"}
             </button>
+            <RecaptchaNotice />
           </form>
         </div>
       </div>

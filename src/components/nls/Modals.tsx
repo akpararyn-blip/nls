@@ -1,6 +1,8 @@
 import { useCity, type CityKey } from "@/lib/city-context";
 import { CloseIcon, SendIcon } from "./Icons";
 import { ConsentCheckbox } from "./ConsentCheckbox";
+import { RecaptchaNotice } from "./RecaptchaNotice";
+import { submitLead } from "@/lib/submitLead";
 import { useEffect, useState, type FormEvent } from "react";
 
 const CITY_OPTIONS: { key: CityKey; label: string }[] = [
@@ -21,6 +23,7 @@ function formatPhone(value: string) {
 export function Modals() {
   const { modal, closeModals, cityKey, setCity, consultation } = useCity();
   const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (modal.consultation) setConsent(false);
@@ -40,11 +43,34 @@ export function Modals() {
     input.value = formatPhone(input.value);
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!consent) return;
-    closeModals();
-    alert("Спасибо! Менеджер свяжется с вами в течение 15 минут.");
+    if (!consent || submitting) return;
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    setSubmitting(true);
+    try {
+      await submitLead({
+        formName: consultation.subject
+          ? `Модальное окно — ${consultation.subject}`
+          : "Модальное окно — консультация",
+        action: "consultation_modal",
+        fields: {
+          "Компания / ИИН-БИН": String(fd.get("company") ?? ""),
+          "Имя": String(fd.get("name") ?? ""),
+          "Телефон": String(fd.get("phone") ?? ""),
+          "Комментарий": String(fd.get("message") ?? ""),
+          ...(consultation.subject ? { "Тема": consultation.subject } : {}),
+        },
+      });
+      closeModals();
+      alert("Спасибо! Менеджер свяжется с вами в течение 15 минут.");
+    } catch (err) {
+      console.error(err);
+      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -99,17 +125,18 @@ export function Modals() {
 
           <form className="modern-form" onSubmit={onSubmit}>
             <div className="form-floating">
-              <input type="text" id="modal-company" className="form-control" placeholder=" " required />
+              <input type="text" id="modal-company" name="company" className="form-control" placeholder=" " required />
               <label htmlFor="modal-company">Название компании или ИИН/БИН</label>
             </div>
             <div className="form-floating">
-              <input type="text" id="modal-name" className="form-control" placeholder=" " required />
+              <input type="text" id="modal-name" name="name" className="form-control" placeholder=" " required />
               <label htmlFor="modal-name">Ваше имя</label>
             </div>
             <div className="form-floating">
               <input
                 type="tel"
                 id="modal-phone"
+                name="phone"
                 className="form-control"
                 placeholder=" "
                 required
@@ -120,6 +147,7 @@ export function Modals() {
             <div className="form-floating">
               <textarea
                 id="modal-message"
+                name="message"
                 className="form-control"
                 placeholder=" "
                 rows={2}
@@ -131,10 +159,11 @@ export function Modals() {
 
             <ConsentCheckbox id="modal-consent" checked={consent} onChange={setConsent} />
 
-            <button type="submit" className="btn btn-primary btn-block" disabled={!consent}>
-              Отправить заявку
+            <button type="submit" className="btn btn-primary btn-block" disabled={!consent || submitting}>
+              {submitting ? "Отправка…" : "Отправить заявку"}
               <SendIcon />
             </button>
+            <RecaptchaNotice />
           </form>
         </div>
       </div>

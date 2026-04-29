@@ -7,6 +7,8 @@ import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import colocationHero from "@/assets/colocation.png";
 import { useMemo, useState, type FormEvent } from "react";
+import { submitLead } from "@/lib/submitLead";
+import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import {
   ShieldCheck,
   Snowflake,
@@ -645,10 +647,33 @@ function Faq() {
 
 function FinalCTA() {
   const [consent, setConsent] = useState(false);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [submitting, setSubmitting] = useState(false);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!consent) return;
-    alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
+    if (!consent || submitting) return;
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    setSubmitting(true);
+    try {
+      await submitLead({
+        formName: "Colocation — заявка на размещение",
+        action: "colocation_cta",
+        fields: {
+          "Компания": String(fd.get("company") ?? ""),
+          "ФИО": String(fd.get("name") ?? ""),
+          "Телефон": String(fd.get("phone") ?? ""),
+          "Сообщение": String(fd.get("message") ?? ""),
+        },
+      });
+      form.reset();
+      setConsent(false);
+      alert("Заявка отправлена! Менеджер свяжется с вами в течение 15 минут.");
+    } catch (err) {
+      console.error(err);
+      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+    } finally {
+      setSubmitting(false);
+    }
   };
   return (
     <section className="cta-section">
@@ -662,17 +687,18 @@ function FinalCTA() {
           <form onSubmit={onSubmit}>
             <div className="form-group">
               <label htmlFor="colo-company">Название компании</label>
-              <input type="text" id="colo-company" className="form-control" required />
+              <input type="text" id="colo-company" name="company" className="form-control" required />
             </div>
             <div className="form-group">
               <label htmlFor="colo-name">ФИО</label>
-              <input type="text" id="colo-name" className="form-control" required />
+              <input type="text" id="colo-name" name="name" className="form-control" required />
             </div>
             <div className="form-group">
               <label htmlFor="colo-phone">Телефон</label>
               <input
                 type="tel"
                 id="colo-phone"
+                name="phone"
                 className="form-control"
                 placeholder="+7 7__ ___ __ __"
                 required
@@ -680,7 +706,7 @@ function FinalCTA() {
             </div>
             <div className="form-group">
               <label htmlFor="colo-message">Сообщение</label>
-              <textarea id="colo-message" className="form-control" rows={4} />
+              <textarea id="colo-message" name="message" className="form-control" rows={4} />
             </div>
 
             <ConsentCheckbox id="colo-consent" checked={consent} onChange={setConsent} />
@@ -689,10 +715,11 @@ function FinalCTA() {
               type="submit"
               className="btn btn-primary"
               style={{ width: "100%", fontSize: "1.1rem" }}
-              disabled={!consent}
+              disabled={!consent || submitting}
             >
-              Отправить заявку
+              {submitting ? "Отправка…" : "Отправить заявку"}
             </button>
+            <RecaptchaNotice />
           </form>
         </div>
       </div>

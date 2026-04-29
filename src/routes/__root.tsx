@@ -23,8 +23,19 @@ function NotFoundComponent() {
   );
 }
 
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
+
 export const Route = createRootRoute({
   head: () => ({
+    scripts: RECAPTCHA_SITE_KEY
+      ? [
+          {
+            src: `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`,
+            async: true,
+            defer: true,
+          },
+        ]
+      : [],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
