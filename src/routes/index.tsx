@@ -1,10 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import heroMain from "@/assets/hero-main.png";
 import datacenterImg from "@/assets/datacenter.png";
 import { LeadForm } from "@/components/forms/LeadForm";
+import { USE_INTERNAL_ROUTING, currentDomainPath } from "@/config/links";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +32,18 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
+  // На сервисных поддоменах (internet.nls.kz и т.п.) главной должна быть
+  // страница соответствующей услуги.
+  const [servicePath, setServicePath] = useState<string | null>(null);
+  useEffect(() => {
+    if (USE_INTERNAL_ROUTING) return;
+    if (typeof window === "undefined") return;
+    setServicePath(currentDomainPath(window.location.hostname));
+  }, []);
+  if (servicePath) {
+    return <Navigate to={servicePath} replace />;
+  }
+
   return (
     <SiteLayout>
       <Hero />
