@@ -44,6 +44,7 @@ export const Route = createFileRoute("/colocation")({
 const PRICE_BASE_UNIT = 28500;
 const PRICE_EXTRA_UNIT = 15000;
 const PRICE_POWER_100W = 2000;
+const PRICE_EXTRA_SOCKET = 2000;
 const PRICE_ETH_PORT = 2500;
 const PRICE_EXTRA_IP = 2250;
 
@@ -190,6 +191,7 @@ function Advantages() {
 type ServerCfg = {
   extraUnits: number;
   extraPower100w: number; // шагов по 100 Вт
+  extraSockets: number;
   extraEthPorts: number;
   extraIPs: number; // дополнительные IPv4 сверх 1 бесплатного
 };
@@ -197,6 +199,7 @@ type ServerCfg = {
 const newServer = (): ServerCfg => ({
   extraUnits: 0,
   extraPower100w: 0,
+  extraSockets: 0,
   extraEthPorts: 0,
   extraIPs: 0,
 });
@@ -205,9 +208,18 @@ function calcServer(s: ServerCfg) {
   const base = PRICE_BASE_UNIT;
   const extraUnits = s.extraUnits * PRICE_EXTRA_UNIT;
   const power = s.extraPower100w * PRICE_POWER_100W;
+  const sockets = s.extraSockets * PRICE_EXTRA_SOCKET;
   const eth = s.extraEthPorts * PRICE_ETH_PORT;
   const ips = s.extraIPs * PRICE_EXTRA_IP;
-  return { base, extraUnits, power, eth, ips, total: base + extraUnits + power + eth + ips };
+  return {
+    base,
+    extraUnits,
+    power,
+    sockets,
+    eth,
+    ips,
+    total: base + extraUnits + power + sockets + eth + ips,
+  };
 }
 
 function Configurator() {
@@ -346,6 +358,18 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
+                  label="Дополнительная розетка"
+                  hint="Не более 500 Вт"
+                  hintTip="Аренда дополнительной резервной розетки сети электропитания для резервного (redundant) блока питания мощностью не более 500 Вт."
+                  unit="шт"
+                  step={1}
+                  min={0}
+                  value={cur.extraSockets}
+                  pricePerStep={PRICE_EXTRA_SOCKET}
+                  onChange={(v) => update(active, { extraSockets: v })}
+                />
+
+                <ColoCounterRow
                   label="Дополнительный Ethernet-порт"
                   hint="Пропускная способность до 100 Mb/s."
                   unit="шт"
@@ -385,6 +409,11 @@ function Configurator() {
                       title="Доп. мощность"
                       detail={cur.extraPower100w ? `+${cur.extraPower100w * 100} Вт` : "—"}
                       price={curCalc.power}
+                    />
+                    <SumLine
+                      title="Доп. розетка"
+                      detail={cur.extraSockets ? `${cur.extraSockets} шт` : "—"}
+                      price={curCalc.sockets}
                     />
                     <SumLine
                       title="Доп. Ethernet"

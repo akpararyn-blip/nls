@@ -5770,3 +5770,71 @@ body::before, body::after { display: none !important; }
   .not-found-card { padding: 40px 24px; }
   .not-found-code { font-size: 4.5rem; }
 }
+
+/* === Compact modal on mobile === */
+@media (max-width: 600px) {
+    .modal-overlay {
+        align-items: flex-start;
+        padding: 12px;
+        overflow-y: auto;
+    }
+    .modal-content {
+        padding: 28px 20px;
+        width: 100%;
+        max-width: 100%;
+        margin: auto 0;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+    }
+    .form-modal-content {
+        padding: 0;
+    }
+    .form-modal-content .modal-header {
+        padding: 22px 20px 20px;
+    }
+    .modal-header h3 {
+        font-size: 1.25rem;
+        margin-bottom: 6px;
+    }
+    .modal-header p {
+        font-size: 0.85rem;
+        line-height: 1.35;
+    }
+    .modal-header::after {
+        height: 16px;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+    }
+    .form-modal-content > form,
+    .modern-form {
+        padding: 6px 20px 22px;
+    }
+    .form-modal-content .form-group {
+        margin-bottom: 12px;
+    }
+    .form-modal-content .form-group label {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    .form-modal-content .form-control {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+    .form-modal-content textarea.form-control {
+        min-height: 60px;
+    }
+    .form-modal-content .btn {
+        padding: 12px 18px;
+        font-size: 1rem !important;
+    }
+    .form-modal-content .close-modal {
+        width: 32px;
+        height: 32px;
+        top: 10px;
+        right: 10px;
+    }
+    .form-modal-content .close-modal svg {
+        width: 16px;
+        height: 16px;
+    }
+}
