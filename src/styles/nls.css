@@ -5269,12 +5269,21 @@ body::before, body::after { display: none !important; }
   .hero-img-wrapper { max-width: 420px; margin: 0 auto; }
 }
 
-/* --- Dedicated hero: buttons aligned left (not centered) --- */
-.hero-dedicated-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: flex-start;
+/* --- Hero buttons: aligned left on desktop, centered on mobile --- */
+@media (min-width: 769px) {
+  .hero-dedicated-actions,
+  .hr-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 768px) {
+  .hero-dedicated-actions,
+  .hr-hero-actions {
+    justify-content: center;
+  }
 }
 
 /* --- "Не нашли подходящую конфигурацию" — tighter spacing --- */
