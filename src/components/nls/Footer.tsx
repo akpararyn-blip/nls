@@ -1,12 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { useCity } from "@/lib/city-context";
+import { useCity, CITIES } from "@/lib/city-context";
 import { ExternalIcon, InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
+import { StoreBadges } from "./StoreBadges";
 import logoLightUrl from "@/assets/logo-light.svg";
 
 export function Footer() {
   const { city } = useCity();
   const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
   const waHref = `https://wa.me/${city.whatsapp.replace("+", "")}`;
+
+  const cities = [CITIES.Almaty, CITIES.Astana, CITIES.Shymkent];
 
   return (
     <footer className="main-footer">
@@ -95,6 +98,9 @@ export function Footer() {
                 <Link to="/contacts">Контакты</Link>
               </li>
               <li>
+                <Link to="/login">Личный кабинет</Link>
+              </li>
+              <li>
                 <Link to="/privacy">Политика конфиденциальности</Link>
               </li>
             </ul>
@@ -102,9 +108,7 @@ export function Footer() {
 
           {/* Contacts */}
           <div className="footer-col footer-col--contacts">
-            <h4>
-              Контакты (<span className="display-city">{city.name}</span>)
-            </h4>
+            <h4>Контакты</h4>
             <ul>
               <li>
                 <a href={phoneHref} className="display-phone footer-phone">
@@ -131,9 +135,27 @@ export function Footer() {
                   WhatsApp
                 </a>
               </li>
-              <li className="display-address footer-address">{city.address}</li>
             </ul>
           </div>
+        </div>
+
+        {/* App download CTA */}
+        <div className="footer-app-cta">
+          <div className="footer-app-cta-text">
+            <h4>Личный кабинет в кармане</h4>
+            <p>Устанавливайте приложение и используйте личный кабинет с удобством.</p>
+          </div>
+          <StoreBadges />
+        </div>
+
+        {/* Cities & addresses */}
+        <div className="footer-cities">
+          {cities.map((c) => (
+            <div className="footer-city-card" key={c.name}>
+              <h5>{c.name}</h5>
+              <p>{c.address}</p>
+            </div>
+          ))}
         </div>
 
         <div className="footer-bottom">
