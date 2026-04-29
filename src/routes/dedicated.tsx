@@ -107,7 +107,7 @@ function scrollToCalculator() {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function DedicatedPage() {
+export function DedicatedPage() {
   return (
     <SiteLayout>
       <Hero />

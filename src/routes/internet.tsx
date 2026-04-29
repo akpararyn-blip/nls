@@ -36,7 +36,7 @@ export const Route = createFileRoute("/internet")({
   component: InternetPage,
 });
 
-function InternetPage() {
+export function InternetPage() {
   return (
     <SiteLayout>
       <Hero />

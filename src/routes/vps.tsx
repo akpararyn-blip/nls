@@ -69,7 +69,7 @@ function scrollToTariffs() {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function VpsPage() {
+export function VpsPage() {
   return (
     <SiteLayout>
       <Hero />

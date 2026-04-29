@@ -56,7 +56,7 @@ function scrollToTabs() {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function ColocationPage() {
+export function ColocationPage() {
   return (
     <SiteLayout>
       <Hero />
