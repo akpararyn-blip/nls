@@ -1,12 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useCity, CITIES } from "@/lib/city-context";
+import { useT } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
-import { ExternalIcon, InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
+import { InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
 import { StoreBadges } from "./StoreBadges";
 import logoLightUrl from "@/assets/logo-light.svg";
 
 export function Footer() {
   const { city } = useCity();
+  const t = useT();
   const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
   const waHref = `https://wa.me/${city.whatsapp.replace("+", "")}`;
 
@@ -20,8 +22,10 @@ export function Footer() {
           <div className="footer-col footer-col--about">
             <img src={logoLightUrl} alt="NLS Kazakhstan" style={{ height: 40, marginBottom: 20 }} />
             <p className="footer-about-text">
-              NLS Kazakhstan — единый оператор связи, предоставляющий полный спектр решений в области
-              телекоммуникаций и информационных технологий для бизнеса любого масштаба.
+              {t(
+                "NLS Kazakhstan — единый оператор связи, предоставляющий полный спектр решений в области телекоммуникаций и информационных технологий для бизнеса любого масштаба.",
+                "NLS Kazakhstan — телекоммуникация және ақпараттық технологиялар саласындағы шешімдердің толық спектрін кез келген ауқымдағы бизнеске ұсынатын біріккен байланыс операторы."
+              )}
             </p>
             <div className="footer-socials">
               <a href="https://www.instagram.com/nlskazakhstan/" target="_blank" rel="noreferrer" aria-label="Instagram">
@@ -43,73 +47,73 @@ export function Footer() {
 
           {/* Internet & IT */}
           <div className="footer-col">
-            <h4>Интернет и IT</h4>
+            <h4>{t("Интернет и IT", "Интернет және IT")}</h4>
             <ul>
               <li>
-                <SmartLink to="/internet">Интернет для бизнеса</SmartLink>
+                <SmartLink to="/internet">
+                  {t("Интернет для бизнеса", "Бизнеске арналған интернет")}
+                </SmartLink>
               </li>
               <li>
                 <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
-                  Интернет для физических лиц
-                  
+                  {t("Интернет для физических лиц", "Жеке тұлғаларға арналған интернет")}
                 </a>
               </li>
               <li>
                 <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
-                  IT аутсорсинг
-                  
+                  {t("IT аутсорсинг", "IT аутсорсинг")}
                 </a>
               </li>
               <li>
-                <SmartLink to="/it-sks">СКС. Монтаж сетей</SmartLink>
+                <SmartLink to="/it-sks">{t("СКС. Монтаж сетей", "СКС. Желілерді құру")}</SmartLink>
               </li>
             </ul>
           </div>
 
           {/* Servers */}
           <div className="footer-col">
-            <h4>Серверы и ЦОД</h4>
+            <h4>{t("Серверы и ЦОД", "Серверлер және ДӨО")}</h4>
             <ul>
               <li>
-                <SmartLink to="/dedicated">Dedicated сервер</SmartLink>
+                <SmartLink to="/dedicated">{t("Dedicated сервер", "Dedicated сервер")}</SmartLink>
               </li>
               <li>
-                <SmartLink to="/vps">VPS/VDS сервер</SmartLink>
+                <SmartLink to="/vps">{t("VPS/VDS сервер", "VPS/VDS сервер")}</SmartLink>
               </li>
               <li>
                 <SmartLink to="/colocation">Colocation</SmartLink>
               </li>
               <li>
-                <SmartLink to="/colocation-full">Аренда стойки</SmartLink>
+                <SmartLink to="/colocation-full">{t("Аренда стойки", "Стойканы жалға алу")}</SmartLink>
               </li>
             </ul>
           </div>
 
           {/* Company */}
           <div className="footer-col">
-            <h4>Компания</h4>
+            <h4>{t("Компания", "Компания")}</h4>
             <ul>
               <li>
-                <Link to="/about">О компании</Link>
+                <Link to="/about">{t("О компании", "Компания туралы")}</Link>
               </li>
               <li>
-                <Link to="/hr">Вакансии</Link>
+                <Link to="/hr">{t("Вакансии", "Бос орындар")}</Link>
               </li>
               <li>
-                <Link to="/contacts">Контакты</Link>
+                <Link to="/contacts">{t("Контакты", "Байланыс")}</Link>
               </li>
               <li>
-                <Link to="/login">Личный кабинет</Link>
+                <Link to="/login">{t("Личный кабинет", "Жеке кабинет")}</Link>
               </li>
               <li>
-                <Link to="/privacy">Политика конфиденциальности</Link>
+                <Link to="/privacy">{t("Политика конфиденциальности", "Құпиялылық саясаты")}</Link>
               </li>
             </ul>
           </div>
 
           {/* Contacts */}
           <div className="footer-col footer-col--contacts">
-            <h4>Контакты</h4>
+            <h4>{t("Контакты", "Байланыс")}</h4>
             <ul>
               <li>
                 <a href={phoneHref} className="display-phone footer-phone">
@@ -119,15 +123,15 @@ export function Footer() {
               <li>
                 <a href={waHref} className="display-whatsapp footer-wa" target="_blank" rel="noreferrer">
                   <WhatsAppIcon width={16} height={16} />
-                  WhatsApp · Отдел продаж
+                  {t("WhatsApp · Отдел продаж", "WhatsApp · Сату бөлімі")}
                 </a>
               </li>
               <li className="footer-contact-row">
-                <span className="footer-contact-label">Продажи:</span>
+                <span className="footer-contact-label">{t("Продажи:", "Сату:")}</span>
                 <a href="mailto:sales@nls.kz">sales@nls.kz</a>
               </li>
               <li className="footer-contact-row">
-                <span className="footer-contact-label">Поддержка:</span>
+                <span className="footer-contact-label">{t("Поддержка:", "Қолдау:")}</span>
                 <a href="mailto:support@nls.kz">support@nls.kz</a>
               </li>
               <li className="footer-contact-row">
@@ -143,8 +147,13 @@ export function Footer() {
         {/* App download CTA */}
         <div className="footer-app-cta">
           <div className="footer-app-cta-text">
-            <h4>Личный кабинет в кармане</h4>
-            <p>Устанавливайте приложение и используйте личный кабинет с удобством.</p>
+            <h4>{t("Личный кабинет в кармане", "Жеке кабинет қалтаңызда")}</h4>
+            <p>
+              {t(
+                "Устанавливайте приложение и используйте личный кабинет с удобством.",
+                "Қосымшаны орнатып, жеке кабинетті ыңғайлы пайдаланыңыз."
+              )}
+            </p>
           </div>
           <StoreBadges />
         </div>
@@ -160,9 +169,12 @@ export function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} ТОО «NLS Kazakhstan». Все права защищены.</span>
+          <span>
+            © {new Date().getFullYear()}{" "}
+            {t("ТОО «NLS Kazakhstan». Все права защищены.", "«NLS Kazakhstan» ЖШС. Барлық құқықтар қорғалған.")}
+          </span>
           <Link to="/privacy" className="footer-bottom-link">
-            Политика конфиденциальности
+            {t("Политика конфиденциальности", "Құпиялылық саясаты")}
           </Link>
         </div>
       </div>
