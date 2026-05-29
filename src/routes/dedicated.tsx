@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
@@ -481,6 +482,7 @@ function Calculator() {
               Цены без учета НДС
             </p>
           </div>
+          <CalculatorDisclaimer />
         </div>
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">

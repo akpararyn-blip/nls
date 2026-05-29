@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { EnterpriseDataCenterBlocks } from "@/components/nls/EnterpriseBlocks";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
@@ -455,6 +456,7 @@ function Configurator() {
                     </button>
                   </div>
                 </div>
+                <CalculatorDisclaimer />
               </div>
             </div>
 
