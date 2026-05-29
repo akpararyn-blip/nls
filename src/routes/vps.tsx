@@ -406,6 +406,7 @@ function Calculator() {
                 </button>
               </div>
             </div>
+            <CalculatorDisclaimer />
           </div>
         </div>
 
