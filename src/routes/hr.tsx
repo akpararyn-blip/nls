@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { useT } from "@/lib/lang-context";
 import hrHero from "@/assets/hr-hero.png";
 import { HrApplyForm } from "@/components/forms/HrApplyForm";
 import {
@@ -57,6 +58,7 @@ function HrPage() {
 }
 
 function Hero() {
+  const t = useT();
   const scrollToForm = () => {
     document.getElementById("hr-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -66,17 +68,19 @@ function Hero() {
       <div className="container">
         <div className="hero-content">
           <h1>
-            Стань частью <span style={{ color: "var(--color-orange)" }}>NLS Kazakhstan</span>
+            {t("Стань частью", "Бөлігі бол")} <span style={{ color: "var(--color-orange)" }}>NLS Kazakhstan</span>
           </h1>
           <p className="hero-subtitle">
-            Мы строим крутую команду единого оператора связи. Интересные проекты, амбициозные задачи и
-            возможность реализовать свои идеи в стабильной компании.
+            {t(
+              "Мы строим крутую команду единого оператора связи. Интересные проекты, амбициозные задачи и возможность реализовать свои идеи в стабильной компании.",
+              "Біз біртұтас байланыс операторының күшті командасын құрып жатырмыз. Қызықты жобалар, амбициялы тапсырмалар және тұрақты компанияда өз идеяларыңды жүзеге асыру мүмкіндігі."
+            )}
           </p>
 
           <div className="hr-hero-actions">
             <a
               href={`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
-                "Здравствуйте! Интересует вакансия в NLS Kazakhstan."
+                t("Здравствуйте! Интересует вакансия в NLS Kazakhstan.", "Сәлеметсіз бе! NLS Kazakhstan-дағы бос орынға қызығушылық танытамын.")
               )}`}
               target="_blank"
               rel="noreferrer"
@@ -86,14 +90,14 @@ function Hero() {
               WhatsApp {WHATSAPP_DISPLAY}
             </a>
             <button type="button" className="btn btn-primary" onClick={scrollToForm}>
-              Оставить заявку
+              {t("Оставить заявку", "Өтінім қалдыру")}
             </button>
           </div>
         </div>
 
         <div className="hero-visual">
           <div className="hero-img-wrapper">
-            <img src={hrHero} alt="Команда NLS Kazakhstan" />
+            <img src={hrHero} alt="NLS Kazakhstan" />
             <div className="hero-glow" />
           </div>
         </div>
@@ -103,24 +107,31 @@ function Hero() {
 }
 
 function Values() {
+  const t = useT();
   const items = [
     {
       icon: <Rocket size={28} />,
-      title: "Что мы делаем",
-      text:
+      title: t("Что мы делаем", "Біз не істейміз"),
+      text: t(
         "Создаём продукты, которые помогают тысячам компаний в Казахстане — от начинающего бизнеса до крупных промышленных и финансовых гигантов. Интернет, телефония, IT-инфраструктура и облачные сервисы для тех, кто строит будущее.",
+        "Қазақстандағы мыңдаған компанияға — жаңа бастап келе жатқан бизнестен ірі өнеркәсіптік және қаржы алыптарына дейін көмектесетін өнімдер жасаймыз. Болашақты құратындарға арналған интернет, телефония, IT-инфрақұрылым және бұлтты қызметтер."
+      ),
     },
     {
       icon: <Users size={28} />,
-      title: "С кем мы делаем",
-      text:
+      title: t("С кем мы делаем", "Кіммен бірге істейміз"),
+      text: t(
         "Сильные и смелые люди с общими целями. Команда из 1000+ специалистов, в которой каждый отвечает за результат и помогает соседу довести проект до финала.",
+        "Ортақ мақсаттары бар күшті әрі батыл адамдар. Әркім нәтиже үшін жауап беретін және әріптесіне жобаны аяғына жеткізуге көмектесетін 1000+ маманнан тұратын команда."
+      ),
     },
     {
       icon: <Sparkles size={28} />,
-      title: "Как мы делаем",
-      text:
+      title: t("Как мы делаем", "Қалай істейміз"),
+      text: t(
         "Осознанно подходим к технологиям и процессам. Без бюрократии, без бесконечных согласований — работаем на результат и быстро принимаем решения.",
+        "Технологиялар мен процестерге саналы түрде қараймыз. Бюрократиясыз, шексіз келісімдерсіз — нәтижеге жұмыс істеп, шешімдерді жылдам қабылдаймыз."
+      ),
     },
   ];
 
@@ -128,8 +139,8 @@ function Values() {
     <section className="hr-values-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Почему NLS</span>
-          <h2>Нам важно</h2>
+          <span className="section-eyebrow">{t("Почему NLS", "Неліктен NLS")}</span>
+          <h2>{t("Нам важно", "Бізге маңызды")}</h2>
         </div>
         <div className="hr-values-grid">
           {items.map((it) => (
@@ -146,42 +157,46 @@ function Values() {
 }
 
 function About() {
+  const t = useT();
   return (
     <section className="hr-about-section">
       <div className="container">
         <div className="hr-about-grid">
           <div className="hr-about-text">
-            <span className="section-eyebrow">О компании</span>
-            <h2>NLS Kazakhstan — единый оператор связи</h2>
+            <span className="section-eyebrow">{t("О компании", "Компания туралы")}</span>
+            <h2>{t("NLS Kazakhstan — единый оператор связи", "NLS Kazakhstan — біртұтас байланыс операторы")}</h2>
             <p>
-              NLS Kazakhstan — опытный B2B-оператор связи с 18-летним стажем (с 2008 года). Предлагаем
-              комплексные IT и телеком-решения для бизнеса любого масштаба в Казахстане.
+              {t(
+                "NLS Kazakhstan — опытный B2B-оператор связи с 18-летним стажем (с 2008 года). Предлагаем комплексные IT и телеком-решения для бизнеса любого масштаба в Казахстане.",
+                "NLS Kazakhstan — 18 жылдық тәжірибесі бар (2008 жылдан бастап) тәжірибелі B2B байланыс операторы. Қазақстандағы кез келген ауқымдағы бизнеске кешенді IT және телеком шешімдерін ұсынамыз."
+              )}
             </p>
             <p>
-              Команда из более чем 1000 специалистов обеспечивает высокое качество услуг: интернет,
-              телефония, видеонаблюдение, IT-аутсорсинг и облачная инфраструктура — с фокусом на снижение
-              затрат клиентов.
+              {t(
+                "Команда из более чем 1000 специалистов обеспечивает высокое качество услуг: интернет, телефония, видеонаблюдение, IT-аутсорсинг и облачная инфраструктура — с фокусом на снижение затрат клиентов.",
+                "1000-нан астам маман қызметтердің жоғары сапасын қамтамасыз етеді: интернет, телефония, бейнебақылау, IT-аутсорсинг және бұлтты инфрақұрылым — клиенттер шығынын азайтуға назар аудара отырып."
+              )}
             </p>
             <div className="hr-about-cities">
               <div className="hr-city">
                 <Building2 size={18} />
                 <div>
-                  <strong>Алматы</strong>
-                  <span>пр. Аль-Фараби 95</span>
+                  <strong>{t("Алматы", "Алматы")}</strong>
+                  <span>{t("пр. Аль-Фараби 95", "Әл-Фараби даңғ. 95")}</span>
                 </div>
               </div>
               <div className="hr-city">
                 <Building2 size={18} />
                 <div>
-                  <strong>Астана</strong>
-                  <span>мкр. Жылыой 13/1</span>
+                  <strong>{t("Астана", "Астана")}</strong>
+                  <span>{t("мкр. Жылыой 13/1", "Жылыой ы/а 13/1")}</span>
                 </div>
               </div>
               <div className="hr-city">
                 <Building2 size={18} />
                 <div>
-                  <strong>Шымкент</strong>
-                  <span>мкр. Малый Самал 1695</span>
+                  <strong>{t("Шымкент", "Шымкент")}</strong>
+                  <span>{t("мкр. Малый Самал 1695", "Кіші Самал ы/а 1695")}</span>
                 </div>
               </div>
             </div>
@@ -189,19 +204,19 @@ function About() {
           <div className="hr-about-stats">
             <div className="hr-stat">
               <div className="hr-stat-num">18+</div>
-              <div className="hr-stat-label">лет на рынке</div>
+              <div className="hr-stat-label">{t("лет на рынке", "нарықта жыл")}</div>
             </div>
             <div className="hr-stat">
               <div className="hr-stat-num">1 000+</div>
-              <div className="hr-stat-label">специалистов</div>
+              <div className="hr-stat-label">{t("специалистов", "маман")}</div>
             </div>
             <div className="hr-stat">
               <div className="hr-stat-num">15 000+</div>
-              <div className="hr-stat-label">клиентов B2B</div>
+              <div className="hr-stat-label">{t("клиентов B2B", "B2B клиент")}</div>
             </div>
             <div className="hr-stat">
               <div className="hr-stat-num">3</div>
-              <div className="hr-stat-label">города присутствия</div>
+              <div className="hr-stat-label">{t("города присутствия", "қатысу қаласы")}</div>
             </div>
           </div>
         </div>
@@ -211,19 +226,20 @@ function About() {
 }
 
 function Offer() {
+  const t = useT();
   const offers = [
-    { icon: <Rocket size={22} />, text: "Интересные и амбициозные проекты" },
-    { icon: <Sparkles size={22} />, text: "Возможность реализовать собственные идеи и инновационные подходы" },
-    { icon: <TrendingUp size={22} />, text: "Конкурентоспособная заработная плата" },
-    { icon: <Heart size={22} />, text: "Развитие в стабильной компании с перспективами карьерного роста" },
-    { icon: <CheckCircle2 size={22} />, text: "Оформление согласно ТК РК" },
+    { icon: <Rocket size={22} />, text: t("Интересные и амбициозные проекты", "Қызықты әрі амбициялы жобалар") },
+    { icon: <Sparkles size={22} />, text: t("Возможность реализовать собственные идеи и инновационные подходы", "Жеке идеялар мен инновациялық тәсілдерді жүзеге асыру мүмкіндігі") },
+    { icon: <TrendingUp size={22} />, text: t("Конкурентоспособная заработная плата", "Бәсекеге қабілетті жалақы") },
+    { icon: <Heart size={22} />, text: t("Развитие в стабильной компании с перспективами карьерного роста", "Мансаптық өсу перспективасы бар тұрақты компанияда даму") },
+    { icon: <CheckCircle2 size={22} />, text: t("Оформление согласно ТК РК", "ҚР ЕК сәйкес ресімдеу") },
   ];
   return (
     <section className="hr-offer-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Условия</span>
-          <h2>Что мы предлагаем</h2>
+          <span className="section-eyebrow">{t("Условия", "Шарттар")}</span>
+          <h2>{t("Что мы предлагаем", "Біз не ұсынамыз")}</h2>
         </div>
         <div className="hr-offer-grid">
           {offers.map((o, i) => (
@@ -239,29 +255,35 @@ function Offer() {
 }
 
 function Stages() {
+  const t = useT();
   const stages = [
     {
       n: 1,
-      title: "Интервью с HR",
-      desc: "Расскажем о компании и позиции, а ты поделись предыдущим опытом работы и достижениями.",
-      time: "5–10 минут",
-      where: "Телефон",
+      title: t("Интервью с HR", "HR-мен сұхбат"),
+      desc: t("Расскажем о компании и позиции, а ты поделись предыдущим опытом работы и достижениями.", "Компания мен позиция туралы айтамыз, ал сен алдыңғы жұмыс тәжірибең мен жетістіктеріңмен бөліс."),
+      time: t("5–10 минут", "5–10 минут"),
+      where: t("Телефон", "Телефон"),
       icon: <Phone size={16} />,
     },
     {
       n: 2,
-      title: "Интервью с руководителем",
-      desc:
+      title: t("Интервью с руководителем", "Басшымен сұхбат"),
+      desc: t(
         "HR вместе с руководителем проверят нужные навыки и оценят кандидата по нашим грейдам. Это клёвая возможность проявить себя и узнать подробнее о задачах.",
-      time: "60 минут",
+        "HR басшымен бірге қажетті дағдыларды тексеріп, үміткерді біздің грейдтер бойынша бағалайды. Бұл өзіңді көрсетудің және тапсырмалар туралы толық білудің тамаша мүмкіндігі."
+      ),
+      time: t("60 минут", "60 минут"),
       where: "Kenes NLS",
       icon: <Video size={16} />,
     },
     {
       n: 3,
-      title: "Финальное интервью",
-      desc: "Оценим, насколько мы друг другу подходим по культуре. Расскажем о команде и процессах внутри компании.",
-      time: "60 минут",
+      title: t("Финальное интервью", "Қорытынды сұхбат"),
+      desc: t(
+        "Оценим, насколько мы друг другу подходим по культуре. Расскажем о команде и процессах внутри компании.",
+        "Мәдениет бойынша бір-бірімізге қаншалықты сәйкес келетінімізді бағалаймыз. Команда және компания ішіндегі процестер туралы айтамыз."
+      ),
+      time: t("60 минут", "60 минут"),
       where: "Kenes NLS",
       icon: <Video size={16} />,
     },
@@ -271,10 +293,10 @@ function Stages() {
     <section className="hr-stages-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Процесс</span>
-          <h2>Этапы собеседования</h2>
+          <span className="section-eyebrow">{t("Процесс", "Процесс")}</span>
+          <h2>{t("Этапы собеседования", "Әңгімелесу кезеңдері")}</h2>
           <p className="hr-stages-note">
-            Этапы зависят от должности, но обычно выглядят так:
+            {t("Этапы зависят от должности, но обычно выглядят так:", "Кезеңдер лауазымға тәуелді, бірақ әдетте былай болады:")}
           </p>
         </div>
 
@@ -301,33 +323,39 @@ function Stages() {
 }
 
 function Tips() {
+  const t = useT();
   const tips = [
     {
       icon: <Search size={22} />,
-      title: "Изучи вакансию",
-      items: ["Стек технологий", "Задачи и требования", "Подготовь список вопросов"],
+      title: t("Изучи вакансию", "Бос орынды зертте"),
+      items: [t("Стек технологий", "Технологиялар стегі"), t("Задачи и требования", "Тапсырмалар мен талаптар"), t("Подготовь список вопросов", "Сұрақтар тізімін дайында")],
     },
     {
       icon: <Home size={22} />,
-      title: "Подготовь место для интервью",
-      items: ["Тихое", "Светлое", "Стабильное подключение к интернету", "Рассчитай время на дорогу (оффлайн-встреча)"],
+      title: t("Подготовь место для интервью", "Сұхбатқа орын дайында"),
+      items: [
+        t("Тихое", "Тыныш"),
+        t("Светлое", "Жарық"),
+        t("Стабильное подключение к интернету", "Тұрақты интернет байланысы"),
+        t("Рассчитай время на дорогу (оффлайн-встреча)", "Жолға уақытты есепте (офлайн-кездесу)"),
+      ],
     },
     {
       icon: <Heart size={22} />,
-      title: "Будь честен",
-      items: ["Чувствуй себя комфортно и уверенно", "Не знаешь ответ — так и говори"],
+      title: t("Будь честен", "Шыншыл бол"),
+      items: [t("Чувствуй себя комфортно и уверенно", "Өзіңді жайлы әрі сенімді сезін"), t("Не знаешь ответ — так и говори", "Жауабын білмесең — солай айт")],
     },
     {
       icon: <Building2 size={22} />,
-      title: "Исследуй компанию",
-      items: ["Историю", "Факты", "Новости", "Команду"],
+      title: t("Исследуй компанию", "Компанияны зертте"),
+      items: [t("Историю", "Тарихын"), t("Факты", "Фактілерді"), t("Новости", "Жаңалықтарды"), t("Команду", "Команданы")],
     },
     {
       icon: <ListChecks size={22} />,
-      title: "Покажи компетентность",
+      title: t("Покажи компетентность", "Құзыреттілікті көрсет"),
       items: [
-        "Подготовь заранее цифры и результаты твоей работы",
-        "Не бойся задавать вопросы HR",
+        t("Подготовь заранее цифры и результаты твоей работы", "Жұмысыңның сандары мен нәтижелерін алдын ала дайында"),
+        t("Не бойся задавать вопросы HR", "HR-ге сұрақ қоюдан қорықпа"),
       ],
     },
   ];
@@ -336,16 +364,16 @@ function Tips() {
     <section className="hr-tips-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Полезное</span>
-          <h2>Советы кандидатам</h2>
+          <span className="section-eyebrow">{t("Полезное", "Пайдалы")}</span>
+          <h2>{t("Советы кандидатам", "Үміткерлерге кеңестер")}</h2>
         </div>
         <div className="hr-tips-grid">
-          {tips.map((t) => (
-            <div className="hr-tip-card" key={t.title}>
-              <div className="hr-tip-icon">{t.icon}</div>
-              <h3>{t.title}</h3>
+          {tips.map((tip) => (
+            <div className="hr-tip-card" key={tip.title}>
+              <div className="hr-tip-icon">{tip.icon}</div>
+              <h3>{tip.title}</h3>
               <ul>
-                {t.items.map((it) => (
+                {tip.items.map((it) => (
                   <li key={it}>
                     <CheckCircle2 size={14} />
                     <span>{it}</span>
@@ -361,16 +389,19 @@ function Tips() {
 }
 
 function ApplyForm() {
+  const t = useT();
   return (
     <section className="hr-apply-section" id="hr-form">
       <div className="container">
         <div className="hr-apply-card">
           <div className="hr-apply-left">
-            <span className="section-eyebrow section-eyebrow--light">Откликнуться</span>
-            <h2>Отправь заявку — и мы свяжемся</h2>
+            <span className="section-eyebrow section-eyebrow--light">{t("Откликнуться", "Өтініш беру")}</span>
+            <h2>{t("Отправь заявку — и мы свяжемся", "Өтінім жібер — біз байланысамыз")}</h2>
             <p>
-              Расскажи коротко, на какую позицию ты претендуешь. Наш HR-менеджер ответит в течение
-              рабочего дня.
+              {t(
+                "Расскажи коротко, на какую позицию ты претендуешь. Наш HR-менеджер ответит в течение рабочего дня.",
+                "Қандай позицияға үміткер екеніңді қысқаша айт. HR-менеджеріміз жұмыс күні ішінде жауап береді."
+              )}
             </p>
 
             <div className="hr-apply-contacts">
