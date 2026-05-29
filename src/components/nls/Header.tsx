@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { useCity } from "@/lib/city-context";
+import { useLang } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
 import {
   ChevronDownIcon,
@@ -23,6 +25,27 @@ import logoUrl from "@/assets/logo.svg";
 
 export function Header() {
   const { city, openCityModal, openConsultationModal, setMobileNavOpen } = useCity();
+  const { lang, setLang, t } = useLang();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!langOpen) return;
+    const onDoc = (e: MouseEvent | TouchEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setLangOpen(false);
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("touchstart", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("touchstart", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [langOpen]);
 
   const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
 
@@ -50,10 +73,12 @@ export function Header() {
               <span className="display-city">{city.name}</span>
             </button>
             <div className="top-menu">
-              <Link to="/about">О компании</Link>
-              <Link to="/hr">Вакансии</Link>
-              <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">Интернет для физических лиц</a>
-              <Link to="/contacts">Контакты</Link>
+              <Link to="/about">{t("О компании", "Компания туралы")}</Link>
+              <Link to="/hr">{t("Вакансии", "Бос орындар")}</Link>
+              <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">
+                {t("Интернет для физических лиц", "Жеке тұлғаларға арналған интернет")}
+              </a>
+              <Link to="/contacts">{t("Контакты", "Байланыс")}</Link>
             </div>
           </div>
           <div className="top-bar-right">
@@ -73,18 +98,48 @@ export function Header() {
                 <YoutubeIcon width={18} height={18} />
               </a>
             </div>
-            <div className="lang-switcher">
-              <div className="lang-current">
-                <span>RU</span>
+            <div
+              className={`lang-switcher${langOpen ? " open" : ""}`}
+              ref={langRef}
+            >
+              <button
+                type="button"
+                className="lang-current"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLangOpen((v) => !v);
+                }}
+                aria-haspopup="listbox"
+                aria-expanded={langOpen}
+              >
+                <span>{lang.toUpperCase()}</span>
                 <ChevronDownIcon width={14} height={14} />
-              </div>
-              <div className="lang-dropdown">
-                <div>RU</div>
-                <div>KZ</div>
+              </button>
+              <div className="lang-dropdown" role="listbox">
+                <div
+                  role="option"
+                  aria-selected={lang === "ru"}
+                  onClick={() => {
+                    setLang("ru");
+                    setLangOpen(false);
+                  }}
+                >
+                  RU
+                </div>
+                <div
+                  role="option"
+                  aria-selected={lang === "kz"}
+                  onClick={() => {
+                    setLang("kz");
+                    setLangOpen(false);
+                  }}
+                >
+                  KZ
+                </div>
               </div>
             </div>
             <Link to="/login" className="btn btn-primary" style={{ padding: "4px 12px", fontSize: "0.8rem" }}>
-              Войти
+              {t("Войти", "Кіру")}
             </Link>
           </div>
         </div>
@@ -103,19 +158,19 @@ export function Header() {
                 <li className="services-nav-item">
                   <button type="button" className="services-dropdown-btn modern-catalog-btn">
                     <MenuIcon className="catalog-icon" />
-                    Услуги
+                    {t("Услуги", "Қызметтер")}
                     <ChevronDownIcon width={16} height={16} className="chevron-icon" />
                   </button>
                   <div className="dropdown-menu mega-menu">
                     <div className="mega-menu-group">
-                      <div className="mega-menu-group-title">Интернет</div>
+                      <div className="mega-menu-group-title">{t("Интернет", "Интернет")}</div>
                       <SmartLink to="/internet" className="mega-menu-link">
                         <Wifi className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>Интернет для бизнеса</span>
+                        <span>{t("Интернет для бизнеса", "Бизнеске арналған интернет")}</span>
                       </SmartLink>
                     </div>
                     <div className="mega-menu-group">
-                      <div className="mega-menu-group-title">IT услуги</div>
+                      <div className="mega-menu-group-title">{t("IT услуги", "IT қызметтері")}</div>
                       <a
                         href="https://nlsit.kz"
                         target="_blank"
@@ -123,7 +178,7 @@ export function Header() {
                         className="mega-menu-link"
                       >
                         <ShieldCheck className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>IT аутсорсинг</span>
+                        <span>{t("IT аутсорсинг", "IT аутсорсинг")}</span>
                         <ExternalIcon
                           width={13}
                           height={13}
@@ -132,18 +187,18 @@ export function Header() {
                       </a>
                       <SmartLink to="/it-sks" className="mega-menu-link">
                         <Network className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>СКС. Монтаж сетей</span>
+                        <span>{t("СКС. Монтаж сетей", "СКС. Желілерді құру")}</span>
                       </SmartLink>
                     </div>
                     <div className="mega-menu-group">
-                      <div className="mega-menu-group-title">Серверы</div>
+                      <div className="mega-menu-group-title">{t("Серверы", "Серверлер")}</div>
                       <SmartLink to="/dedicated" className="mega-menu-link">
                         <Server className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>Dedicated сервер</span>
+                        <span>{t("Dedicated сервер", "Dedicated сервер")}</span>
                       </SmartLink>
                       <SmartLink to="/vps" className="mega-menu-link">
                         <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>VPS/VDS сервер</span>
+                        <span>{t("VPS/VDS сервер", "VPS/VDS сервер")}</span>
                       </SmartLink>
                       <SmartLink to="/colocation" className="mega-menu-link">
                         <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
@@ -151,7 +206,7 @@ export function Header() {
                       </SmartLink>
                       <SmartLink to="/colocation-full" className="mega-menu-link">
                         <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>Аренда стойки</span>
+                        <span>{t("Аренда стойки", "Стойканы жалға алу")}</span>
                       </SmartLink>
                     </div>
                   </div>
@@ -162,17 +217,22 @@ export function Header() {
 
           <div className="header-right">
             <div className="header-contact">
-              <span className="contact-label">Отдел продаж</span>
+              <span className="contact-label">{t("Отдел продаж", "Сату бөлімі")}</span>
               <a href={phoneHref} className="phone-link display-phone">
                 {city.phone}
               </a>
             </div>
             <button type="button" className="btn btn-primary header-cta" onClick={openConsultationModal}>
-              Консультация
+              {t("Консультация", "Кеңес алу")}
             </button>
           </div>
 
-          <button type="button" className="mobile-menu-btn" onClick={() => setMobileNavOpen(true)} aria-label="Меню">
+          <button
+            type="button"
+            className="mobile-menu-btn"
+            onClick={() => setMobileNavOpen(true)}
+            aria-label={t("Меню", "Мәзір")}
+          >
             <MenuIcon width={24} height={24} />
           </button>
         </div>

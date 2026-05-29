@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { useCity } from "@/lib/city-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
@@ -406,6 +407,7 @@ function Calculator() {
                 </button>
               </div>
             </div>
+            <CalculatorDisclaimer />
           </div>
         </div>
 
