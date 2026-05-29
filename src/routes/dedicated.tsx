@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { useCity } from "@/lib/city-context";
+import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import dedicatedHero from "@/assets/server-dedicated.png";
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/dedicated")({
       {
         name: "description",
         content:
-          "Аренда выделенных серверов в дата-центре NLS. Конфигуратор: CPU, RAM, накопители, сеть, ПО. Серверы в Алматы и Астане.",
+          "Аренда выделенных серверов в дата-центре NLS. Конфигуратор: CPU, RAM, накопители, сеть, ПО. Серверы в Алматы и Астане. NLS дата-орталығында бөлінген серверлерді жалдау.",
       },
       { property: "og:title", content: "Аренда Dedicated сервера — NLS Kazakhstan" },
       {
@@ -28,7 +29,6 @@ export const Route = createFileRoute("/dedicated")({
   component: DedicatedPage,
 });
 
-// === Pricing data (как в исходном dedicated.js) ===
 type Option = { name: string; price: number };
 
 const cpuOptions: Option[] = [
@@ -84,7 +84,7 @@ function formatPrice(num: number) {
 
 interface DynamicRow {
   id: number;
-  index: number | null; // index в массиве опций или null
+  index: number | null;
 }
 
 function useDynamic() {
@@ -122,20 +122,23 @@ export function DedicatedPage() {
 
 function AfterCalcCTA() {
   const { openConsultationModal } = useCity();
+  const t = useT();
   return (
     <section className="cta-section">
       <div className="container">
         <div className="section-title section-title--light">
-          <span className="section-eyebrow">Нужна помощь</span>
-          <h2>Подберём конфигурацию под вашу задачу</h2>
+          <span className="section-eyebrow">{t("Нужна помощь", "Көмек керек")}</span>
+          <h2>{t("Подберём конфигурацию под вашу задачу", "Тапсырмаңызға сай конфигурацияны таңдаймыз")}</h2>
           <p style={{ color: "rgba(255,255,255,0.85)", maxWidth: 720, margin: "0 auto" }}>
-            Расскажите о проекте — наши инженеры подберут оптимальный сервер и подготовят
-            индивидуальное предложение в течение 30 минут.
+            {t(
+              "Расскажите о проекте — наши инженеры подберут оптимальный сервер и подготовят индивидуальное предложение в течение 30 минут.",
+              "Жоба туралы айтып беріңіз — инженерлеріміз оңтайлы серверді таңдап, 30 минут ішінде жеке ұсыныс дайындайды."
+            )}
           </p>
         </div>
         <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
           <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
-            Получить консультацию
+            {t("Получить консультацию", "Кеңес алу")}
           </button>
         </div>
       </div>
@@ -145,11 +148,12 @@ function AfterCalcCTA() {
 
 function Hero() {
   const { openConsultationModal } = useCity();
+  const t = useT();
   const features = [
-    "До 10 000 Мбит/с",
-    "Собственный ЦОД Tier III",
-    "Настройка под задачу",
-    "Поддержка 24/7",
+    t("До 10 000 Мбит/с", "10 000 Мбит/с дейін"),
+    t("Собственный ЦОД Tier III", "Меншікті Tier III ЦОД"),
+    t("Настройка под задачу", "Тапсырмаға баптау"),
+    t("Поддержка 24/7", "24/7 қолдау"),
   ];
   return (
     <section className="hero">
@@ -159,12 +163,14 @@ function Hero() {
             Dedicated Servers
           </span>
           <h1>
-            <span style={{ color: "var(--color-orange)" }}>Аренда серверов</span>{" "}
-            в дата-центре NLS
+            <span style={{ color: "var(--color-orange)" }}>{t("Аренда серверов", "Серверлерді жалдау")}</span>{" "}
+            {t("в дата-центре NLS", "NLS дата-орталығында")}
           </h1>
           <p className="hero-subtitle">
-            Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственном
-            дата-центре NLS.
+            {t(
+              "Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственном дата-центре NLS.",
+              "Дайын конфигурациялар және сіздің тапсырмаларыңызға арнап құрастыру. Серверлер NLS меншікті дата-орталығында орналастырылған."
+            )}
           </p>
 
           <ul className="hero-bullets">
@@ -178,17 +184,17 @@ function Hero() {
 
           <div className="hero-dedicated-actions" style={{ marginTop: 24 }}>
             <button type="button" className="btn btn-primary" onClick={scrollToCalculator}>
-              Собрать сервер
+              {t("Собрать сервер", "Серверді құрастыру")}
             </button>
             <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
-              Получить консультацию
+              {t("Получить консультацию", "Кеңес алу")}
             </button>
           </div>
         </div>
 
         <div className="hero-visual">
           <div className="hero-img-wrapper">
-            <img src={dedicatedHero} alt="Аренда выделенного сервера NLS" width={1024} height={1024} />
+            <img src={dedicatedHero} alt={t("Аренда выделенного сервера NLS", "NLS бөлінген серверін жалдау")} width={1024} height={1024} />
             <div className="hero-glow" />
           </div>
         </div>
@@ -198,16 +204,22 @@ function Hero() {
 }
 
 function CustomBuildCTA() {
+  const t = useT();
   return (
     <section className="custom-build-cta">
       <div className="container">
         <div className="custom-build-card">
           <div className="custom-build-text">
-            <h3>Не нашли подходящую конфигурацию?</h3>
-            <p>Соберите сервер под свои задачи в конфигураторе — выберите процессор, память, накопители и сеть.</p>
+            <h3>{t("Не нашли подходящую конфигурацию?", "Сәйкес конфигурация табылмады ма?")}</h3>
+            <p>
+              {t(
+                "Соберите сервер под свои задачи в конфигураторе — выберите процессор, память, накопители и сеть.",
+                "Конфигураторда өз тапсырмаңызға сай серверді құрастырыңыз — процессорды, жадыны, жинақтаушыларды және желіні таңдаңыз."
+              )}
+            </p>
           </div>
           <button type="button" className="btn btn-primary custom-build-btn" onClick={scrollToCalculator}>
-            Собрать свой сервер
+            {t("Собрать свой сервер", "Өз серверімді құрастыру")}
             <span aria-hidden className="custom-build-arrow">↓</span>
           </button>
         </div>
@@ -218,6 +230,7 @@ function CustomBuildCTA() {
 
 function Calculator() {
   const { openConsultationModal } = useCity();
+  const t = useT();
   const barVisible = useMobileBarVisibility("calculator");
 
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
@@ -255,9 +268,9 @@ function Calculator() {
     const priceIp = (ipCount - 1) * IP_PRICE;
 
     const extras: Option[] = [];
-    if (priceRaid) extras.push({ name: "Аппаратный RAID", price: RAID_PRICE });
+    if (priceRaid) extras.push({ name: t("Аппаратный RAID", "Аппараттық RAID"), price: RAID_PRICE });
     if (priceIpmi) extras.push({ name: "IPMI", price: IPMI_PRICE });
-    if (priceIp) extras.push({ name: `IP адрес x${ipCount} (1 бесплатный)`, price: priceIp });
+    if (priceIp) extras.push({ name: t(`IP адрес x${ipCount} (1 бесплатный)`, `IP мекенжай x${ipCount} (1 тегін)`), price: priceIp });
 
     const total =
       priceCpu + priceRam + priceStorage + priceRaid + priceIpmi + priceIp + priceNetwork + priceSoftware;
@@ -277,30 +290,28 @@ function Calculator() {
       priceSoftware,
       total,
     };
-  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows]);
+  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, t]);
 
   return (
     <>
       <section className="calc-section" id="calculator">
         <div className="container">
           <div className="section-title">
-            <span className="section-eyebrow">Конструктор</span>
-            <h2>Конфигуратор сервера</h2>
-            <p>Выберите параметры и рассчитайте стоимость аренды</p>
+            <span className="section-eyebrow">{t("Конструктор", "Құрастырғыш")}</span>
+            <h2>{t("Конфигуратор сервера", "Сервер конфигураторы")}</h2>
+            <p>{t("Выберите параметры и рассчитайте стоимость аренды", "Параметрлерді таңдап, жалдау құнын есептеңіз")}</p>
           </div>
           <div className="calc-grid">
-            {/* Form */}
             <div className="calc-form">
-              {/* CPU */}
               <div className="calc-field">
-                <label className="calc-field-label">Процессор</label>
+                <label className="calc-field-label">{t("Процессор", "Процессор")}</label>
                 <select
                   className="calc-select"
                   value={cpuIdx ?? ""}
                   onChange={(e) => setCpuIdx(e.target.value === "" ? null : Number(e.target.value))}
                 >
                   <option value="" disabled>
-                    Выберите процессор
+                    {t("Выберите процессор", "Процессорды таңдаңыз")}
                   </option>
                   {cpuOptions.map((o, i) => (
                     <option key={i} value={i}>
@@ -310,16 +321,15 @@ function Calculator() {
                 </select>
               </div>
 
-              {/* RAM */}
               <div className="calc-field">
-                <label className="calc-field-label">Оперативная память (ОЗУ)</label>
+                <label className="calc-field-label">{t("Оперативная память (ОЗУ)", "Жедел жады (ЖЖҚ)")}</label>
                 <select
                   className="calc-select"
                   value={ramIdx ?? ""}
                   onChange={(e) => setRamIdx(e.target.value === "" ? null : Number(e.target.value))}
                 >
                   <option value="" disabled>
-                    Выберите объем ОЗУ
+                    {t("Выберите объем ОЗУ", "ЖЖҚ көлемін таңдаңыз")}
                   </option>
                   {ramOptions.map((o, i) => (
                     <option key={i} value={i}>
@@ -329,11 +339,10 @@ function Calculator() {
                 </select>
               </div>
 
-              {/* Storage */}
               <DynamicSection
-                label="Накопители"
-                addLabel="Добавить накопитель"
-                placeholder="Выберите накопитель"
+                label={t("Накопители", "Жинақтаушылар")}
+                addLabel={t("Добавить накопитель", "Жинақтаушы қосу")}
+                placeholder={t("Выберите накопитель", "Жинақтаушыны таңдаңыз")}
                 options={storageOptions}
                 rows={storage.rows}
                 onAdd={storage.add}
@@ -341,13 +350,12 @@ function Calculator() {
                 onRemove={storage.remove}
               />
 
-              {/* Extras */}
               <div className="calc-field">
-                <label className="calc-field-label">Дополнительно</label>
+                <label className="calc-field-label">{t("Дополнительно", "Қосымша")}</label>
                 <div className="calc-toggles">
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
-                      Аппаратный RAID <span className="calc-toggle-price">9 000 ₸/мес</span>
+                      {t("Аппаратный RAID", "Аппараттық RAID")} <span className="calc-toggle-price">9 000 {t("₸/мес", "₸/ай")}</span>
                     </div>
                     <label className="toggle-switch">
                       <input type="checkbox" checked={raid} onChange={(e) => setRaid(e.target.checked)} />
@@ -356,7 +364,7 @@ function Calculator() {
                   </div>
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
-                      Аппаратный IPMI <span className="calc-toggle-price">3 000 ₸/мес</span>
+                      {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">3 000 {t("₸/мес", "₸/ай")}</span>
                     </div>
                     <label className="toggle-switch">
                       <input type="checkbox" checked={ipmi} onChange={(e) => setIpmi(e.target.checked)} />
@@ -366,9 +374,8 @@ function Calculator() {
                 </div>
               </div>
 
-              {/* IP */}
               <div className="calc-field">
-                <label className="calc-field-label">IP адрес (IPv4)</label>
+                <label className="calc-field-label">{t("IP адрес (IPv4)", "IP мекенжай (IPv4)")}</label>
                 <div className="calc-counter-wrap">
                   <div className="calc-counter">
                     <button
@@ -389,69 +396,63 @@ function Calculator() {
                   </div>
                   <span className={`ip-info ${ipCount === 1 ? "free" : "paid"}`}>
                     {ipCount === 1
-                      ? "1 Публичный IPv4 бесплатно"
-                      : `${ipCount} адресов — доплата ${formatPrice((ipCount - 1) * IP_PRICE)}`}
+                      ? t("1 Публичный IPv4 бесплатно", "1 публикалық IPv4 тегін")
+                      : t(`${ipCount} адресов — доплата ${formatPrice((ipCount - 1) * IP_PRICE)}`, `${ipCount} мекенжай — қосымша төлем ${formatPrice((ipCount - 1) * IP_PRICE)}`)}
                   </span>
                 </div>
               </div>
 
-              {/* Network */}
               <DynamicSection
-                label="Сетевой порт"
-                addLabel="Добавить порт"
-                placeholder="Выберите порт"
+                label={t("Сетевой порт", "Желілік порт")}
+                addLabel={t("Добавить порт", "Порт қосу")}
+                placeholder={t("Выберите порт", "Портты таңдаңыз")}
                 options={networkOptions}
                 rows={network.rows}
                 onAdd={network.add}
                 onChange={network.update}
                 onRemove={network.remove}
               />
-
-              {/* Установка ПО — услуга снята, скрыто */}
             </div>
 
 
-            {/* Summary */}
             <div className="calc-summary">
               <div className="summary-card">
-                <div className="summary-header">Ваша конфигурация</div>
+                <div className="summary-header">{t("Ваша конфигурация", "Сіздің конфигурацияңыз")}</div>
                 <div className="summary-body">
                   <SummarySection
-                    title="Процессор"
+                    title={t("Процессор", "Процессор")}
                     total={calc.priceCpu}
                     items={calc.cpu ? [calc.cpu] : []}
                   />
                   <SummarySection
-                    title="ОЗУ"
+                    title={t("ОЗУ", "ЖЖҚ")}
                     total={calc.priceRam}
                     items={calc.ram ? [calc.ram] : []}
                   />
                   <SummarySection
-                    title="Накопители"
+                    title={t("Накопители", "Жинақтаушылар")}
                     total={calc.priceStorage}
                     items={calc.storageItems}
                   />
                   <SummarySection
-                    title="Дополнительно"
+                    title={t("Дополнительно", "Қосымша")}
                     total={calc.extrasTotal}
                     items={calc.extras}
                   />
                   <SummarySection
-                    title="Сетевой порт"
+                    title={t("Сетевой порт", "Желілік порт")}
                     total={calc.priceNetwork}
                     items={calc.networkItems}
                   />
-                  {/* Установка ПО — услуга снята */}
-
                 </div>
                 <div className="summary-footer">
                   <div className="summary-total-row">
-                    <span className="summary-total-label">Итого за 1 месяц</span>
+                    <span className="summary-total-label">{t("Итого за 1 месяц", "1 айға барлығы")}</span>
                     <span className="summary-total-amount">{formatPrice(calc.total)}</span>
                   </div>
-                  <p className="summary-vat">Цены всех услуг указаны без учета НДС</p>
+                  <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
                   <button type="button" className="btn btn-primary calc-order-btn" onClick={openConsultationModal}>
-                    Заказать
+                    {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
               </div>
@@ -460,37 +461,36 @@ function Calculator() {
         </div>
       </section>
 
-      {/* Mobile bottom bar */}
       <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
         <button
           type="button"
           className={`mobile-toggle-arrow${mobileExpanded ? " expanded" : ""}`}
           onClick={() => setMobileExpanded((e) => !e)}
-          aria-label="Раскрыть детали"
+          aria-label={t("Раскрыть детали", "Толығырақ ашу")}
         >
           <ChevronUpIcon />
         </button>
         <div className={`mobile-summary-detail${mobileExpanded ? " expanded" : ""}`}>
           <div className="mobile-summary-inner">
-            <SummarySection title="Процессор" total={calc.priceCpu} items={calc.cpu ? [calc.cpu] : []} />
-            <SummarySection title="ОЗУ" total={calc.priceRam} items={calc.ram ? [calc.ram] : []} />
-            <SummarySection title="Накопители" total={calc.priceStorage} items={calc.storageItems} />
-            <SummarySection title="Дополнительно" total={calc.extrasTotal} items={calc.extras} />
-            <SummarySection title="Сетевой порт" total={calc.priceNetwork} items={calc.networkItems} />
+            <SummarySection title={t("Процессор", "Процессор")} total={calc.priceCpu} items={calc.cpu ? [calc.cpu] : []} />
+            <SummarySection title={t("ОЗУ", "ЖЖҚ")} total={calc.priceRam} items={calc.ram ? [calc.ram] : []} />
+            <SummarySection title={t("Накопители", "Жинақтаушылар")} total={calc.priceStorage} items={calc.storageItems} />
+            <SummarySection title={t("Дополнительно", "Қосымша")} total={calc.extrasTotal} items={calc.extras} />
+            <SummarySection title={t("Сетевой порт", "Желілік порт")} total={calc.priceNetwork} items={calc.networkItems} />
 
             <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", marginTop: 8 }}>
-              Цены без учета НДС
+              {t("Цены без учета НДС", "Бағалар ҚҚС-сыз")}
             </p>
           </div>
           <CalculatorDisclaimer />
         </div>
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">
-            <div className="mobile-bar-label">Итого за 1 месяц</div>
+            <div className="mobile-bar-label">{t("Итого за 1 месяц", "1 айға барлығы")}</div>
             <div className="mobile-bar-price">{formatPrice(calc.total)}</div>
           </div>
           <button type="button" className="btn btn-primary calc-order-btn" onClick={openConsultationModal}>
-            Заказать
+            {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>
       </div>
@@ -517,6 +517,7 @@ function DynamicSection({
   onChange: (id: number, index: number | null) => void;
   onRemove: (id: number) => void;
 }) {
+  const t = useT();
   return (
     <div className="calc-field">
       <label className="calc-field-label">{label}</label>
@@ -542,7 +543,7 @@ function DynamicSection({
                 </option>
               ))}
             </select>
-            <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title="Удалить">
+            <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title={t("Удалить", "Жою")}>
               <CloseIcon width={18} height={18} />
             </button>
           </div>
