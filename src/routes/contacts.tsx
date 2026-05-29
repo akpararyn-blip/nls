@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { useT } from "@/lib/lang-context";
 import {
   Phone,
   MapPin,
@@ -38,36 +39,6 @@ const UNIFIED_PHONE_TEL = "+77003397777";
 const SALES_WA_DISPLAY = "+7 700 730 45 91";
 const SALES_WA_NUMBER = "77007304591";
 
-const CITIES = [
-  {
-    key: "almaty",
-    name: "Алматы",
-    phoneDisplay: "+7 727 339 77 77",
-    phoneTel: "+77273397777",
-    address:
-      "050060 (A15E3X9) Республика Казахстан, г. Алматы, пр. Аль-Фараби, 95",
-    map: "https://www.google.com/maps?q=пр.+Аль-Фараби+95,+Алматы&output=embed",
-  },
-  {
-    key: "astana",
-    name: "Астана",
-    phoneDisplay: "+7 7172 72 55 55",
-    phoneTel: "+771727 25555",
-    address:
-      "010000 (Z00Y7B8) Республика Казахстан, г. Астана, мкр. Караоткель-2, ул. Жылыой 13/1",
-    map: "https://www.google.com/maps?q=ул.+Жылыой+13/1,+Астана&output=embed",
-  },
-  {
-    key: "shymkent",
-    name: "Шымкент",
-    phoneDisplay: "+7 700 339 77 77",
-    phoneTel: "+77003397777",
-    address:
-      "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (ул. Рыскулбекова, 13/1)",
-    map: "https://www.google.com/maps?q=ул.+Рыскулбекова+13/1,+Шымкент&output=embed",
-  },
-];
-
 function ContactsPage() {
   return (
     <SiteLayout>
@@ -80,14 +51,17 @@ function ContactsPage() {
 }
 
 function ContactsHero() {
+  const t = useT();
   return (
     <section className="contacts-hero">
       <div className="container">
-        <span className="section-eyebrow">Контакты</span>
-        <h1>Свяжитесь с нами удобным способом</h1>
+        <span className="section-eyebrow">{t("Контакты", "Байланыс")}</span>
+        <h1>{t("Свяжитесь с нами удобным способом", "Бізбен ыңғайлы тәсілмен байланысыңыз")}</h1>
         <p className="contacts-hero-sub">
-          Единый номер для всех городов Казахстана. Работаем 24/7 для подключённых клиентов и в
-          рабочее время для новых заявок.
+          {t(
+            "Единый номер для всех городов Казахстана. Работаем 24/7 для подключённых клиентов и в рабочее время для новых заявок.",
+            "Қазақстанның барлық қалалары үшін біртұтас нөмір. Қосылған клиенттер үшін 24/7, жаңа өтінімдер үшін жұмыс уақытында жұмыс істейміз."
+          )}
         </p>
 
         <div className="contacts-hero-grid">
@@ -96,7 +70,7 @@ function ContactsHero() {
               <Phone size={24} />
             </div>
             <div>
-              <span>Единый номер</span>
+              <span>{t("Единый номер", "Біртұтас нөмір")}</span>
               <strong>{UNIFIED_PHONE_DISPLAY}</strong>
             </div>
           </a>
@@ -105,7 +79,7 @@ function ContactsHero() {
               <Headphones size={24} />
             </div>
             <div>
-              <span>Отдел продаж</span>
+              <span>{t("Отдел продаж", "Сату бөлімі")}</span>
               <strong>+7 727 339 77 77</strong>
             </div>
           </a>
@@ -119,7 +93,7 @@ function ContactsHero() {
               <MessageCircle size={24} />
             </div>
             <div>
-              <span>WhatsApp продаж</span>
+              <span>{t("WhatsApp продаж", "Сатудың WhatsApp")}</span>
               <strong>{SALES_WA_DISPLAY}</strong>
             </div>
           </a>
@@ -130,13 +104,49 @@ function ContactsHero() {
 }
 
 function CitiesSection() {
+  const t = useT();
+  const CITIES = [
+    {
+      key: "almaty",
+      name: t("Алматы", "Алматы"),
+      phoneDisplay: "+7 727 339 77 77",
+      phoneTel: "+77273397777",
+      address: t(
+        "050060 (A15E3X9) Республика Казахстан, г. Алматы, пр. Аль-Фараби, 95",
+        "050060 (A15E3X9) Қазақстан Республикасы, Алматы қ., Әл-Фараби даңғ., 95"
+      ),
+      map: "https://www.google.com/maps?q=пр.+Аль-Фараби+95,+Алматы&output=embed",
+    },
+    {
+      key: "astana",
+      name: t("Астана", "Астана"),
+      phoneDisplay: "+7 7172 72 55 55",
+      phoneTel: "+771727 25555",
+      address: t(
+        "010000 (Z00Y7B8) Республика Казахстан, г. Астана, мкр. Караоткель-2, ул. Жылыой 13/1",
+        "010000 (Z00Y7B8) Қазақстан Республикасы, Астана қ., Қараөткел-2 ы/а, Жылыой к-сі 13/1"
+      ),
+      map: "https://www.google.com/maps?q=ул.+Жылыой+13/1,+Астана&output=embed",
+    },
+    {
+      key: "shymkent",
+      name: t("Шымкент", "Шымкент"),
+      phoneDisplay: "+7 700 339 77 77",
+      phoneTel: "+77003397777",
+      address: t(
+        "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (ул. Рыскулбекова, 13/1)",
+        "160021 Қазақстан Республикасы, Шымкент қ., Тұран ауданы, Кіші Самал ы/а, 1695 үй (Рысқұлбеков к-сі, 13/1)"
+      ),
+      map: "https://www.google.com/maps?q=ул.+Рыскулбекова+13/1,+Шымкент&output=embed",
+    },
+  ];
   return (
     <section className="contacts-cities-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Офисы</span>
-          <h2>Контакты по городам</h2>
-          <p>Приезжайте на встречу или свяжитесь с региональным менеджером.</p>
+          <span className="section-eyebrow">{t("Офисы", "Кеңселер")}</span>
+          <h2>{t("Контакты по городам", "Қалалар бойынша байланыс")}</h2>
+          <p>{t("Приезжайте на встречу или свяжитесь с региональным менеджером.", "Кездесуге келіңіз немесе аймақтық менеджермен байланысыңыз.")}</p>
         </div>
 
         <div className="contacts-cities-grid">
@@ -146,7 +156,7 @@ function CitiesSection() {
                 <iframe
                   src={c.map}
                   loading="lazy"
-                  title={`Карта офиса ${c.name}`}
+                  title={`${t("Карта офиса", "Кеңсе картасы")} ${c.name}`}
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
@@ -176,12 +186,13 @@ function CitiesSection() {
 }
 
 function DepartmentsSection() {
+  const t = useT();
   return (
     <section className="contacts-departments-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Отделы</span>
-          <h2>Прямая связь с нужным отделом</h2>
+          <span className="section-eyebrow">{t("Отделы", "Бөлімдер")}</span>
+          <h2>{t("Прямая связь с нужным отделом", "Қажетті бөліммен тікелей байланыс")}</h2>
         </div>
 
         <div className="contacts-departments-grid">
@@ -189,8 +200,8 @@ function DepartmentsSection() {
             <div className="contacts-dept-icon contacts-dept-icon--blue">
               <Headphones size={26} />
             </div>
-            <h3>Отдел поддержки</h3>
-            <p>Помогаем подключённым клиентам в режиме 24/7.</p>
+            <h3>{t("Отдел поддержки", "Қолдау бөлімі")}</h3>
+            <p>{t("Помогаем подключённым клиентам в режиме 24/7.", "Қосылған клиенттерге 24/7 режимінде көмектесеміз.")}</p>
             <a href="mailto:support@nls.kz" className="contacts-dept-link">
               <Mail size={16} />
               support@nls.kz
@@ -201,8 +212,8 @@ function DepartmentsSection() {
             <div className="contacts-dept-icon contacts-dept-icon--orange">
               <Briefcase size={26} />
             </div>
-            <h3>Отдел продаж</h3>
-            <p>Подберём услуги и подготовим коммерческое предложение.</p>
+            <h3>{t("Отдел продаж", "Сату бөлімі")}</h3>
+            <p>{t("Подберём услуги и подготовим коммерческое предложение.", "Қызметтерді таңдап, коммерциялық ұсыныс дайындаймыз.")}</p>
             <a href="mailto:sales@nls.kz" className="contacts-dept-link">
               <Mail size={16} />
               sales@nls.kz
@@ -213,8 +224,8 @@ function DepartmentsSection() {
             <div className="contacts-dept-icon contacts-dept-icon--green">
               <Users size={26} />
             </div>
-            <h3>Отдел HR</h3>
-            <p>Открытые вакансии и сотрудничество с кандидатами.</p>
+            <h3>{t("Отдел HR", "HR бөлімі")}</h3>
+            <p>{t("Открытые вакансии и сотрудничество с кандидатами.", "Ашық бос орындар және үміткерлермен ынтымақтастық.")}</p>
             <a
               href="https://wa.me/77081466043"
               target="_blank"
@@ -232,43 +243,26 @@ function DepartmentsSection() {
 }
 
 function SocialsSection() {
+  const t = useT();
   return (
     <section className="contacts-socials-section">
       <div className="container">
         <div className="contacts-socials-card">
           <div>
-            <span className="section-eyebrow section-eyebrow--light">Соцсети</span>
-            <h2>Мы в социальных сетях</h2>
-            <p>Подписывайтесь — публикуем кейсы, новости и приглашения на мероприятия.</p>
+            <span className="section-eyebrow section-eyebrow--light">{t("Соцсети", "Әлеуметтік желілер")}</span>
+            <h2>{t("Мы в социальных сетях", "Біз әлеуметтік желілердеміз")}</h2>
+            <p>{t("Подписывайтесь — публикуем кейсы, новости и приглашения на мероприятия.", "Жазылыңыз — кейстер, жаңалықтар мен іс-шараларға шақыртулар жариялаймыз.")}</p>
           </div>
           <div className="contacts-socials-list">
-            <a
-              href="https://www.instagram.com/nlskazakhstan/"
-              target="_blank"
-              rel="noreferrer"
-              className="contacts-social"
-              aria-label="Instagram"
-            >
+            <a href="https://www.instagram.com/nlskazakhstan/" target="_blank" rel="noreferrer" className="contacts-social" aria-label="Instagram">
               <Instagram size={22} />
               <span>Instagram</span>
             </a>
-            <a
-              href="https://www.linkedin.com/company/nlskz/"
-              target="_blank"
-              rel="noreferrer"
-              className="contacts-social"
-              aria-label="LinkedIn"
-            >
+            <a href="https://www.linkedin.com/company/nlskz/" target="_blank" rel="noreferrer" className="contacts-social" aria-label="LinkedIn">
               <Linkedin size={22} />
               <span>LinkedIn</span>
             </a>
-            <a
-              href="https://www.youtube.com/@nlskazakhstan8630"
-              target="_blank"
-              rel="noreferrer"
-              className="contacts-social"
-              aria-label="YouTube"
-            >
+            <a href="https://www.youtube.com/@nlskazakhstan8630" target="_blank" rel="noreferrer" className="contacts-social" aria-label="YouTube">
               <Youtube size={22} />
               <span>YouTube</span>
             </a>
