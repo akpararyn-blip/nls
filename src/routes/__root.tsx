@@ -1,22 +1,26 @@
 import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
 import { CityProvider } from "@/lib/city-context";
+import { LangProvider, useT } from "@/lib/lang-context";
 
 function NotFoundComponent() {
+  const t = useT();
   return (
     <div className="not-found-page">
       <div className="not-found-card">
         <div className="not-found-code">404</div>
-        <h1>Страница не найдена</h1>
+        <h1>{t("Страница не найдена", "Бет табылмады")}</h1>
         <p>
-          Возможно, страница была перемещена или её никогда не существовало.
-          Вернитесь на главную или свяжитесь с нами — мы поможем.
+          {t(
+            "Возможно, страница была перемещена или её никогда не существовало. Вернитесь на главную или свяжитесь с нами — мы поможем.",
+            "Бұл бет жылжытылған немесе мүлдем болмаған шығар. Басты бетке оралыңыз немесе бізбен байланысыңыз — біз көмектесеміз."
+          )}
         </p>
         <div className="not-found-actions">
           <Link to="/" className="btn btn-primary">
-            На главную
+            {t("На главную", "Басты бетке")}
           </Link>
           <Link to="/contacts" className="btn btn-outline">
-            Связаться с нами
+            {t("Связаться с нами", "Бізбен байланысу")}
           </Link>
         </div>
       </div>
@@ -43,8 +47,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <CityProvider>
-      <Outlet />
-    </CityProvider>
+    <LangProvider>
+      <CityProvider>
+        <Outlet />
+      </CityProvider>
+    </LangProvider>
   );
 }
+
