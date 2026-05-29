@@ -3,10 +3,11 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { EnterpriseDataCenterBlocks } from "@/components/nls/EnterpriseBlocks";
 import { useCity } from "@/lib/city-context";
+import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import colocationHero from "@/assets/colocation.png";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LeadForm } from "@/components/forms/LeadForm";
 import {
   ShieldCheck,
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/colocation")({
       {
         name: "description",
         content:
-          "Размещение оборудования в собственном дата-центре уровня Tier III в Казахстане. Бесперебойное питание, охлаждение и безопасность 24/7.",
+          "Размещение оборудования в собственном дата-центре уровня Tier III в Казахстане. Бесперебойное питание, охлаждение и безопасность 24/7. Серверлерді ЦОД-та орналастыру.",
       },
       { property: "og:title", content: "Размещение серверов в ЦОД (Colocation) — NLS Kazakhstan" },
       {
@@ -41,7 +42,6 @@ export const Route = createFileRoute("/colocation")({
   component: ColocationPage,
 });
 
-// === Цены ===
 const PRICE_BASE_UNIT = 28500;
 const PRICE_EXTRA_UNIT = 15000;
 const PRICE_POWER_100W = 2000;
@@ -73,6 +73,12 @@ export function ColocationPage() {
 
 function Hero() {
   const { openConsultationModal } = useCity();
+  const t = useT();
+  const bullets = [
+    t("Доступность 99,982% по SLA", "SLA бойынша 99,982% қолжетімділік"),
+    t("Бесперебойная работа оборудования (аптайм)", "Жабдықтың үздіксіз жұмысы (аптайм)"),
+    t("Круглосуточная поддержка и мониторинг", "Тәулік бойы қолдау және мониторинг"),
+  ];
   return (
     <section className="hero">
       <div className="container">
@@ -81,35 +87,31 @@ function Hero() {
             Colocation · Tier III
           </span>
           <h1>
-            Размещение серверов <br />
-            в надёжном ЦОД
-            <br />
-            
+            {t("Размещение серверов", "Серверлерді")} <br />
+            {t("в надёжном ЦОД", "сенімді ЦОД-та орналастыру")}
           </h1>
           <p className="hero-subtitle">
-            Разместите ваше оборудование в нашем собственном дата-центре уровня Tier III в
-            Казахстане. Обеспечиваем бесперебойное питание, охлаждение и безопасность 24/7.
+            {t(
+              "Разместите ваше оборудование в нашем собственном дата-центре уровня Tier III в Казахстане. Обеспечиваем бесперебойное питание, охлаждение и безопасность 24/7.",
+              "Жабдықтарыңызды Қазақстандағы Tier III деңгейлі меншікті дата-орталығымызда орналастырыңыз. Үздіксіз қуат көзін, салқындатуды және 24/7 қауіпсіздікті қамтамасыз етеміз."
+            )}
           </p>
 
           <ul className="hero-bullets">
-            {[
-              "Доступность 99,982% по SLA",
-              "Бесперебойная работа оборудования (аптайм)",
-              "Круглосуточная поддержка и мониторинг",
-            ].map((t) => (
-              <li key={t}>
+            {bullets.map((tx) => (
+              <li key={tx}>
                 <CheckIcon />
-                {t}
+                {tx}
               </li>
             ))}
           </ul>
 
           <div className="hero-dedicated-actions" style={{ marginTop: 24 }}>
             <button type="button" className="btn btn-primary" onClick={scrollToTabs}>
-              Рассчитать стоимость
+              {t("Рассчитать стоимость", "Құнын есептеу")}
             </button>
             <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
-              Получить консультацию
+              {t("Получить консультацию", "Кеңес алу")}
             </button>
           </div>
         </div>
@@ -118,7 +120,7 @@ function Hero() {
           <div className="hero-img-wrapper">
             <img
               src={colocationHero}
-              alt="Colocation — размещение оборудования в ЦОД"
+              alt={t("Colocation — размещение оборудования в ЦОД", "Colocation — жабдықты ЦОД-та орналастыру")}
               width={1024}
               height={1024}
             />
@@ -131,43 +133,56 @@ function Hero() {
 }
 
 function Advantages() {
+  const t = useT();
   const items = [
     {
       Icon: ShieldCheck,
-      h: "Отказоустойчивость Tier III",
-      p: "Многоуровневая архитектура N+1, два независимых энерговвода, ИБП и дизель-генераторы с автозапуском.",
+      h: t("Отказоустойчивость Tier III", "Tier III бас тартуға төзімділік"),
+      p: t(
+        "Многоуровневая архитектура N+1, два независимых энерговвода, ИБП и дизель-генераторы с автозапуском.",
+        "N+1 көп деңгейлі архитектурасы, екі тәуелсіз энергия енгізілімі, ИБП және автоқосылатын дизель-генераторлар."
+      ),
     },
     {
       Icon: Snowflake,
-      h: "Изолированный холодный коридор",
-      p: "24 серверных шкафа с автоматическим открытием потолка и прецизионным охлаждением (InRow по 35 кВт).",
+      h: t("Изолированный холодный коридор", "Оқшауланған суық дәліз"),
+      p: t(
+        "24 серверных шкафа с автоматическим открытием потолка и прецизионным охлаждением (InRow по 35 кВт).",
+        "Төбенің автоматты ашылуы және прецизионды салқындатумен 24 серверлік шкаф (InRow 35 кВт)."
+      ),
     },
     {
       Icon: Flame,
-      h: "Газовое пожаротушение",
-      p: "Система FM200 (гептафторпропан). Мгновенно подавляет возгорание на молекулярном уровне, безопасна для оборудования.",
+      h: t("Газовое пожаротушение", "Газды өрт сөндіру"),
+      p: t(
+        "Система FM200 (гептафторпропан). Мгновенно подавляет возгорание на молекулярном уровне, безопасна для оборудования.",
+        "FM200 жүйесі (гептафторпропан). Молекулалық деңгейде өртті лезде басады, жабдық үшін қауіпсіз."
+      ),
     },
     {
       Icon: Fingerprint,
-      h: "Биометрический контроль",
-      p: "7 уровней доступа (Face ID, RFID, отпечаток пальца) и круглосуточное видеонаблюдение с архивом 30 дней.",
+      h: t("Биометрический контроль", "Биометриялық бақылау"),
+      p: t(
+        "7 уровней доступа (Face ID, RFID, отпечаток пальца) и круглосуточное видеонаблюдение с архивом 30 дней.",
+        "7 деңгейлі қолжетімділік (Face ID, RFID, саусақ ізі) және 30 күндік мұрағатпен тәулік бойы видеобақылау."
+      ),
     },
     {
       Icon: Thermometer,
-      h: "Климат-контроль",
-      p: "Адаптация к климату от −40 °C до +45 °C. Непрерывный мониторинг температуры и влажности.",
+      h: t("Климат-контроль", "Климат-бақылау"),
+      p: t(
+        "Адаптация к климату от −40 °C до +45 °C. Непрерывный мониторинг температуры и влажности.",
+        "−40 °C-тан +45 °C-қа дейінгі климатқа бейімделу. Температура мен ылғалдылықты үздіксіз мониторингтеу."
+      ),
     },
   ];
   return (
     <section className="trust-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Инфраструктура</span>
-          <h2>
-            Технологии и безопасность{" "}
-            
-          </h2>
-          <p>Собственный дата-центр уровня Tier III с резервированием по всем подсистемам.</p>
+          <span className="section-eyebrow">{t("Инфраструктура", "Инфрақұрылым")}</span>
+          <h2>{t("Технологии и безопасность", "Технологиялар және қауіпсіздік")}</h2>
+          <p>{t("Собственный дата-центр уровня Tier III с резервированием по всем подсистемам.", "Барлық ішкі жүйелер бойынша резервтелген Tier III деңгейлі меншікті дата-орталық.")}</p>
         </div>
 
         <div className="trust-grid trust-grid--5">
@@ -189,10 +204,10 @@ function Advantages() {
 // ====== Calculator (tabs) ======
 type ServerCfg = {
   extraUnits: number;
-  extraPower100w: number; // шагов по 100 Вт
+  extraPower100w: number;
   extraSockets: number;
   extraEthPorts: number;
-  extraIPs: number; // дополнительные IPv4 сверх 1 бесплатного
+  extraIPs: number;
 };
 
 const newServer = (): ServerCfg => ({
@@ -223,6 +238,7 @@ function calcServer(s: ServerCfg) {
 
 function Configurator() {
   const { openConsultationModalWith } = useCity();
+  const t = useT();
   const barVisible = useMobileBarVisibility("colo-tabs");
   const [tab, setTab] = useState<"calc" | "list">("calc");
   const [servers, setServers] = useState<ServerCfg[]>([newServer()]);
@@ -244,7 +260,7 @@ function Configurator() {
   };
 
   const totals = useMemo(() => servers.map(calcServer), [servers]);
-  const grandTotal = totals.reduce((acc, t) => acc + t.total, 0);
+  const grandTotal = totals.reduce((acc, tot) => acc + tot.total, 0);
 
   const cur = servers[active];
   const curCalc = totals[active];
@@ -253,9 +269,9 @@ function Configurator() {
     <section className="calc-section" id="colo-tabs">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Расчёт стоимости</span>
-          <h2>Конфигуратор и тарифы Colocation</h2>
-          <p>Канал до 100 Мбит/с и безлимитный трафик включены в стоимость по умолчанию.</p>
+          <span className="section-eyebrow">{t("Расчёт стоимости", "Құнын есептеу")}</span>
+          <h2>{t("Конфигуратор и тарифы Colocation", "Colocation конфигураторы және тарифтері")}</h2>
+          <p>{t("Канал до 100 Мбит/с и безлимитный трафик включены в стоимость по умолчанию.", "100 Мбит/с дейінгі арна және шектеусіз трафик әдепкі бойынша құнға кіреді.")}</p>
         </div>
 
         <div className="colo-tabs">
@@ -264,14 +280,14 @@ function Configurator() {
             className={`colo-tab${tab === "calc" ? " is-active" : ""}`}
             onClick={() => setTab("calc")}
           >
-            Конфигуратор размещения
+            {t("Конфигуратор размещения", "Орналастыру конфигураторы")}
           </button>
           <button
             type="button"
             className={`colo-tab${tab === "list" ? " is-active" : ""}`}
             onClick={() => setTab("list")}
           >
-            Тарифы списком
+            {t("Тарифы списком", "Тарифтер тізімі")}
           </button>
         </div>
 
@@ -289,14 +305,14 @@ function Configurator() {
                     onClick={() => setActive(i)}
                   >
                     <ServerIcon size={16} strokeWidth={1.8} />
-                    Сервер {i + 1}
+                    {t("Сервер", "Сервер")} {i + 1}
                   </button>
                   {servers.length > 1 && (
                     <button
                       type="button"
                       className="colo-server-tab-close"
                       onClick={() => removeServer(i)}
-                      aria-label={`Удалить сервер ${i + 1}`}
+                      aria-label={t(`Удалить сервер ${i + 1}`, `${i + 1} серверді жою`)}
                     >
                       <X size={14} />
                     </button>
@@ -305,38 +321,43 @@ function Configurator() {
               ))}
               {servers.length < 3 && (
                 <button type="button" className="colo-add-server" onClick={addServer}>
-                  <Plus size={16} /> Добавить ещё сервер
+                  <Plus size={16} /> {t("Добавить ещё сервер", "Тағы сервер қосу")}
                 </button>
               )}
             </div>
 
             <div className="calc-grid">
               <div className="calc-form">
-                {/* Основной Unit — обязательный */}
                 <div className="colo-row colo-row--locked">
                   <div className="colo-row-head">
                     <div className="colo-row-label">
-                      Основной Unit{" "}
-                      <span className="colo-row-required">обязательно</span>
+                      {t("Основной Unit", "Негізгі Unit")}{" "}
+                      <span className="colo-row-required">{t("обязательно", "міндетті")}</span>
                     </div>
                     <div className="colo-row-hint">
-                      Размещение оборудования до 1 Unit, БП до 500 Вт и 1 розетка электропитания.
+                      {t(
+                        "Размещение оборудования до 1 Unit, БП до 500 Вт и 1 розетка электропитания.",
+                        "1 Unit дейінгі жабдықты, 500 Вт дейінгі БП және 1 электр розеткасын орналастыру."
+                      )}
                     </div>
                   </div>
                   <div className="colo-row-control">
                     <label className="colo-checkbox">
                       <input type="checkbox" checked disabled readOnly />
-                      <span>Включено</span>
+                      <span>{t("Включено", "Қосылған")}</span>
                     </label>
-                    <div className="colo-row-price">{formatPrice(PRICE_BASE_UNIT)} / мес</div>
+                    <div className="colo-row-price">{formatPrice(PRICE_BASE_UNIT)} / {t("мес", "ай")}</div>
                   </div>
                 </div>
 
                 <ColoCounterRow
-                  label="Дополнительный Unit"
-                  hint="Розетка электропитания не предоставляется"
-                  hintTip="Нужен, если сервер по размеру больше 1 unit или нужно разместить коммутатор. Розетка электропитания не предоставляется."
-                  unit="шт"
+                  label={t("Дополнительный Unit", "Қосымша Unit")}
+                  hint={t("Розетка электропитания не предоставляется", "Электр розеткасы берілмейді")}
+                  hintTip={t(
+                    "Нужен, если сервер по размеру больше 1 unit или нужно разместить коммутатор. Розетка электропитания не предоставляется.",
+                    "Сервер 1 unit-тен үлкен болса немесе коммутаторды орналастыру қажет болғанда керек. Электр розеткасы берілмейді."
+                  )}
+                  unit={t("шт", "дана")}
                   step={1}
                   min={0}
                   value={cur.extraUnits}
@@ -345,10 +366,13 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
-                  label="Дополнительная мощность электропитания"
-                  hint="Сверх базовых 500 Вт"
-                  hintTip="Если мощность вашего блока питания превышает базовые 500 Вт."
-                  unit="× 100 Вт"
+                  label={t("Дополнительная мощность электропитания", "Қосымша электр қуаты")}
+                  hint={t("Сверх базовых 500 Вт", "Базалық 500 Вт-тан жоғары")}
+                  hintTip={t(
+                    "Если мощность вашего блока питания превышает базовые 500 Вт.",
+                    "Сіздің блок қуатыңыз базалық 500 Вт-тан асатын болса."
+                  )}
+                  unit={t("× 100 Вт", "× 100 Вт")}
                   step={1}
                   min={0}
                   value={cur.extraPower100w}
@@ -357,10 +381,13 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
-                  label="Дополнительная розетка"
-                  hint="Не более 500 Вт"
-                  hintTip="Аренда дополнительной резервной розетки сети электропитания для резервного (redundant) блока питания мощностью не более 500 Вт."
-                  unit="шт"
+                  label={t("Дополнительная розетка", "Қосымша розетка")}
+                  hint={t("Не более 500 Вт", "500 Вт-тан көп емес")}
+                  hintTip={t(
+                    "Аренда дополнительной резервной розетки сети электропитания для резервного (redundant) блока питания мощностью не более 500 Вт.",
+                    "500 Вт-тан көп емес қуаттылықтағы резервтік (redundant) блок қуат үшін қосымша электр розеткасын жалдау."
+                  )}
+                  unit={t("шт", "дана")}
                   step={1}
                   min={0}
                   value={cur.extraSockets}
@@ -369,9 +396,9 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
-                  label="Дополнительный Ethernet-порт"
-                  hint="Пропускная способность до 100 Mb/s."
-                  unit="шт"
+                  label={t("Дополнительный Ethernet-порт", "Қосымша Ethernet-порт")}
+                  hint={t("Пропускная способность до 100 Mb/s.", "100 Mb/s дейінгі өткізу қабілеті.")}
+                  unit={t("шт", "дана")}
                   step={1}
                   min={0}
                   value={cur.extraEthPorts}
@@ -380,14 +407,14 @@ function Configurator() {
                 />
 
                 <ColoCounterRow
-                  label="Дополнительный IPv4-адрес"
-                  hint="Первый IPv4-адрес предоставляется бесплатно."
-                  unit="шт"
+                  label={t("Дополнительный IPv4-адрес", "Қосымша IPv4-мекенжай")}
+                  hint={t("Первый IPv4-адрес предоставляется бесплатно.", "Бірінші IPv4-мекенжай тегін беріледі.")}
+                  unit={t("шт", "дана")}
                   step={1}
                   min={0}
                   value={cur.extraIPs}
                   pricePerStep={PRICE_EXTRA_IP}
-                  baseLabel="1 шт включена"
+                  baseLabel={t("1 шт включена", "1 дана қосылған")}
                   onChange={(v) => update(active, { extraIPs: v })}
                 />
               </div>
@@ -395,54 +422,54 @@ function Configurator() {
               <div className="calc-summary">
                 <div className="summary-card">
                   <div className="summary-header">
-                    Сервер {active + 1} — конфигурация
+                    {t("Сервер", "Сервер")} {active + 1} — {t("конфигурация", "конфигурация")}
                   </div>
                   <div className="summary-body">
-                    <SumLine title="Основной Unit" detail="до 1U, БП 500 Вт, 1 розетка" price={curCalc.base} />
+                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("до 1U, БП 500 Вт, 1 розетка", "1U дейін, БП 500 Вт, 1 розетка")} price={curCalc.base} />
                     <SumLine
-                      title="Доп. Unit"
-                      detail={cur.extraUnits ? `${cur.extraUnits} шт` : "—"}
+                      title={t("Доп. Unit", "Қос. Unit")}
+                      detail={cur.extraUnits ? `${cur.extraUnits} ${t("шт", "дана")}` : "—"}
                       price={curCalc.extraUnits}
                     />
                     <SumLine
-                      title="Доп. мощность"
+                      title={t("Доп. мощность", "Қос. қуат")}
                       detail={cur.extraPower100w ? `+${cur.extraPower100w * 100} Вт` : "—"}
                       price={curCalc.power}
                     />
                     <SumLine
-                      title="Доп. розетка"
-                      detail={cur.extraSockets ? `${cur.extraSockets} шт` : "—"}
+                      title={t("Доп. розетка", "Қос. розетка")}
+                      detail={cur.extraSockets ? `${cur.extraSockets} ${t("шт", "дана")}` : "—"}
                       price={curCalc.sockets}
                     />
                     <SumLine
-                      title="Доп. Ethernet"
-                      detail={cur.extraEthPorts ? `${cur.extraEthPorts} шт` : "—"}
+                      title={t("Доп. Ethernet", "Қос. Ethernet")}
+                      detail={cur.extraEthPorts ? `${cur.extraEthPorts} ${t("шт", "дана")}` : "—"}
                       price={curCalc.eth}
                     />
                     <SumLine
-                      title="Доп. IPv4"
-                      detail={cur.extraIPs ? `${cur.extraIPs} шт сверх включённого` : "1 шт включена"}
+                      title={t("Доп. IPv4", "Қос. IPv4")}
+                      detail={cur.extraIPs ? t(`${cur.extraIPs} шт сверх включённого`, `Қосылғаннан тыс ${cur.extraIPs} дана`) : t("1 шт включена", "1 дана қосылған")}
                       price={curCalc.ips}
                     />
                   </div>
                   <div className="summary-footer">
                     {servers.length > 1 && (
                       <div className="summary-servers-breakdown">
-                        {totals.map((t, i) => (
+                        {totals.map((tot, i) => (
                           <div className="summary-subrow" key={i}>
-                            <span>Сервер {i + 1}</span>
-                            <strong>{formatPrice(t.total)} / мес</strong>
+                            <span>{t("Сервер", "Сервер")} {i + 1}</span>
+                            <strong>{formatPrice(tot.total)} / {t("мес", "ай")}</strong>
                           </div>
                         ))}
                       </div>
                     )}
                     <div className="summary-total-row">
                       <span className="summary-total-label">
-                        Итого ({servers.length} серв.)
+                        {t(`Итого (${servers.length} серв.)`, `Барлығы (${servers.length} серв.)`)}
                       </span>
                       <span className="summary-total-amount">{formatPrice(grandTotal)}</span>
                     </div>
-                    <p className="summary-vat">Цены указаны без учёта НДС</p>
+                    <p className="summary-vat">{t("Цены указаны без учёта НДС", "Бағалар ҚҚС-сыз көрсетілген")}</p>
                     <button
                       type="button"
                       className="btn btn-primary calc-order-btn"
@@ -452,7 +479,7 @@ function Configurator() {
                         })
                       }
                     >
-                      Заказать
+                      {t("Заказать", "Тапсырыс беру")}
                     </button>
                   </div>
                 </div>
@@ -464,7 +491,7 @@ function Configurator() {
               <div className="mobile-bar-main">
                 <div className="mobile-bar-left">
                   <div className="mobile-bar-label">
-                    Итого за {servers.length} серв., 1 мес
+                    {t(`Итого за ${servers.length} серв., 1 мес`, `${servers.length} серв. үшін барлығы, 1 ай`)}
                   </div>
                   <div className="mobile-bar-price">{formatPrice(grandTotal)}</div>
                 </div>
@@ -477,7 +504,7 @@ function Configurator() {
                     })
                   }
                 >
-                  Заказать
+                  {t("Заказать", "Тапсырыс беру")}
                 </button>
               </div>
             </div>
@@ -491,6 +518,7 @@ function Configurator() {
 }
 
 function HintTip({ text }: { text: string }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -524,7 +552,7 @@ function HintTip({ text }: { text: string }) {
         e.stopPropagation();
         setOpen((v) => !v);
       }}
-      aria-label="Подробнее"
+      aria-label={t("Подробнее", "Толығырақ")}
     >
       <HelpCircle size={12} strokeWidth={2.2} />
       <span className="calc-hint-bubble" role="tooltip">
@@ -557,6 +585,7 @@ function ColoCounterRow({
   baseLabel?: string;
   onChange: (v: number) => void;
 }) {
+  const t = useT();
   return (
     <div className="vps-resource">
       <div className="vps-resource-head">
@@ -566,7 +595,7 @@ function ColoCounterRow({
             {hintTip && <HintTip text={hintTip} />}
           </div>
           <div className="vps-resource-hint">
-            {pricePerStep.toLocaleString("ru-RU")} ₸ / шаг · {hint}
+            {pricePerStep.toLocaleString("ru-RU")} ₸ / {t("шаг", "қадам")} · {hint}
           </div>
         </div>
       </div>
@@ -590,7 +619,7 @@ function ColoCounterRow({
           +
         </button>
       </div>
-      {baseLabel && value === 0 && <div className="vps-resource-flash">{baseLabel} — бесплатно</div>}
+      {baseLabel && value === 0 && <div className="vps-resource-flash">{baseLabel} — {t("бесплатно", "тегін")}</div>}
     </div>
   );
 }
@@ -609,26 +638,31 @@ function SumLine({ title, detail, price }: { title: string; detail: string; pric
   );
 }
 
-const priceListItems: { label: string; price: string }[] = [
-  { label: "Установка сервера в дата-центр", price: "Бесплатно" },
-  {
-    label:
-      "Размещение 19″ оборудования (до 1 Unit, БП до 500 Вт, 1 розетка) — абонентская плата за месяц",
-    price: "28 500 ₸",
-  },
-  {
-    label: "Размещение дополнительного 19″ оборудования, за 1 Unit (без розетки)",
-    price: "15 000 ₸",
-  },
-  { label: "Дополнительный Ethernet-порт коммутатора (100 Mb/s)", price: "2 500 ₸" },
-  { label: "Розетка электропитания для БП до 500 Вт", price: "Бесплатно" },
-  { label: "Превышение потребляемой мощности — за каждые 100 Вт", price: "2 000 ₸" },
-  { label: "Аренда доп. розетки для резервного (redundant) БП до 500 Вт", price: "2 000 ₸" },
-  { label: "Аренда IPv4-адреса (1 шт)", price: "Бесплатно" },
-  { label: "Аренда дополнительного IPv4-адреса", price: "2 250 ₸ / шт" },
-];
-
 function PriceList() {
+  const t = useT();
+  const priceListItems: { label: string; price: string }[] = [
+    { label: t("Установка сервера в дата-центр", "Серверді дата-орталыққа орнату"), price: t("Бесплатно", "Тегін") },
+    {
+      label: t(
+        "Размещение 19″ оборудования (до 1 Unit, БП до 500 Вт, 1 розетка) — абонентская плата за месяц",
+        "19″ жабдықты орналастыру (1 Unit дейін, 500 Вт дейін БП, 1 розетка) — айлық абоненттік төлем"
+      ),
+      price: "28 500 ₸",
+    },
+    {
+      label: t(
+        "Размещение дополнительного 19″ оборудования, за 1 Unit (без розетки)",
+        "Қосымша 19″ жабдықты орналастыру, 1 Unit үшін (розеткасыз)"
+      ),
+      price: "15 000 ₸",
+    },
+    { label: t("Дополнительный Ethernet-порт коммутатора (100 Mb/s)", "Қосымша коммутатор Ethernet-порты (100 Mb/s)"), price: "2 500 ₸" },
+    { label: t("Розетка электропитания для БП до 500 Вт", "500 Вт дейінгі БП-ға электр розеткасы"), price: t("Бесплатно", "Тегін") },
+    { label: t("Превышение потребляемой мощности — за каждые 100 Вт", "Тұтынылатын қуаттың асып кетуі — әр 100 Вт үшін"), price: "2 000 ₸" },
+    { label: t("Аренда доп. розетки для резервного (redundant) БП до 500 Вт", "500 Вт дейінгі резервтік (redundant) БП-ға қос. розетка жалдау"), price: "2 000 ₸" },
+    { label: t("Аренда IPv4-адреса (1 шт)", "IPv4-мекенжай жалдау (1 дана)"), price: t("Бесплатно", "Тегін") },
+    { label: t("Аренда дополнительного IPv4-адреса", "Қосымша IPv4-мекенжай жалдау"), price: t("2 250 ₸ / шт", "2 250 ₸ / дана") },
+  ];
   return (
     <div className="colo-pricelist">
       {priceListItems.map((item) => (
@@ -637,38 +671,50 @@ function PriceList() {
           <span className="colo-pricelist-price">{item.price}</span>
         </div>
       ))}
-      <p className="colo-pricelist-note">Цены указаны за месяц, без учёта НДС.</p>
+      <p className="colo-pricelist-note">{t("Цены указаны за месяц, без учёта НДС.", "Бағалар айына, ҚҚС-сыз көрсетілген.")}</p>
     </div>
   );
 }
 
-const faqItems = [
-  {
-    q: "Включён ли интернет-канал в базовую стоимость?",
-    a: "Да, в базовую стоимость (28 500 ₸) уже включён выделенный Ethernet-канал до 100 Мбит/с с безлимитным трафиком, а также один статический IPv4-адрес.",
-  },
-  {
-    q: "Что делать, если моему серверу нужно больше 500 Вт питания?",
-    a: "Вы можете докупить необходимую мощность. Каждые дополнительные 100 Вт сверх базовых 500 Вт стоят 2 000 ₸/мес. Укажите это в конфигураторе при расчёте.",
-  },
-  {
-    q: "Как обеспечивается физическая безопасность оборудования?",
-    a: "Доступ в ЦОД строго регламентирован. Мы используем 7 уровней контроля доступа, включая Face ID, RFID-карты и биометрию по отпечатку пальца. Ведётся круглосуточное видеонаблюдение (HD-камеры) с хранением архива до 30 дней.",
-  },
-  {
-    q: "Могу ли я арендовать целый шкаф?",
-    a: "Да, для масштабных проектов у нас предусмотрена услуга Full Rack Colocation (аренда стойки целиком на 42 Unit). Для неё действуют индивидуальные тарифы — оставьте заявку для расчёта.",
-  },
-];
-
 function Faq() {
+  const t = useT();
+  const faqItems = [
+    {
+      q: t("Включён ли интернет-канал в базовую стоимость?", "Интернет-арна базалық құнға кіреді ме?"),
+      a: t(
+        "Да, в базовую стоимость (28 500 ₸) уже включён выделенный Ethernet-канал до 100 Мбит/с с безлимитным трафиком, а также один статический IPv4-адрес.",
+        "Иә, базалық құнға (28 500 ₸) 100 Мбит/с дейінгі бөлінген Ethernet-арна шектеусіз трафикпен, сондай-ақ бір статикалық IPv4-мекенжай кіреді."
+      ),
+    },
+    {
+      q: t("Что делать, если моему серверу нужно больше 500 Вт питания?", "Серверіме 500 Вт-тан көп қуат қажет болса не істеуім керек?"),
+      a: t(
+        "Вы можете докупить необходимую мощность. Каждые дополнительные 100 Вт сверх базовых 500 Вт стоят 2 000 ₸/мес. Укажите это в конфигураторе при расчёте.",
+        "Қажетті қуатты қосымша сатып ала аласыз. Базалық 500 Вт-тан тыс әрбір қосымша 100 Вт 2 000 ₸/ай тұрады. Есептеу кезінде мұны конфигураторда көрсетіңіз."
+      ),
+    },
+    {
+      q: t("Как обеспечивается физическая безопасность оборудования?", "Жабдықтың физикалық қауіпсіздігі қалай қамтамасыз етіледі?"),
+      a: t(
+        "Доступ в ЦОД строго регламентирован. Мы используем 7 уровней контроля доступа, включая Face ID, RFID-карты и биометрию по отпечатку пальца. Ведётся круглосуточное видеонаблюдение (HD-камеры) с хранением архива до 30 дней.",
+        "ЦОД-қа кіру қатаң реттелген. Біз Face ID, RFID-карта және саусақ ізі бойынша биометрияны қоса алғанда, 7 деңгейлі қолжетімділік бақылауын қолданамыз. 30 күнге дейін мұрағатты сақтаумен тәулік бойы видеобақылау (HD-камералар) жүргізіледі."
+      ),
+    },
+    {
+      q: t("Могу ли я арендовать целый шкаф?", "Шкафты толығымен жалдай аламын ба?"),
+      a: t(
+        "Да, для масштабных проектов у нас предусмотрена услуга Full Rack Colocation (аренда стойки целиком на 42 Unit). Для неё действуют индивидуальные тарифы — оставьте заявку для расчёта.",
+        "Иә, ауқымды жобалар үшін бізде Full Rack Colocation қызметі бар (42 Unit-ке стойканы толық жалдау). Оған жеке тарифтер қолданылады — есептеу үшін өтінім қалдырыңыз."
+      ),
+    },
+  ];
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="sks-faq-section">
       <div className="container">
         <div className="section-title">
           <span className="section-eyebrow">FAQ</span>
-          <h2>Частые вопросы</h2>
+          <h2>{t("Частые вопросы", "Жиі қойылатын сұрақтар")}</h2>
         </div>
 
         <div className="sks-faq-list">
@@ -696,12 +742,13 @@ function Faq() {
 }
 
 function FinalCTA() {
+  const t = useT();
   return (
     <section className="cta-section">
       <div className="container">
         <div className="section-title section-title--light">
-          <span className="section-eyebrow">Заявка</span>
-          <h2>Оставьте заявку на размещение оборудования</h2>
+          <span className="section-eyebrow">{t("Заявка", "Өтінім")}</span>
+          <h2>{t("Оставьте заявку на размещение оборудования", "Жабдықты орналастыру үшін өтінім қалдырыңыз")}</h2>
         </div>
 
         <div className="contact-form">
@@ -709,8 +756,8 @@ function FinalCTA() {
             formName="Colocation — заявка на размещение"
             action="colocation_cta"
             idPrefix="colo"
-            companyLabel="Название компании"
-            messageLabel="Сообщение"
+            companyLabel={t("Название компании", "Компания атауы")}
+            messageLabel={t("Сообщение", "Хабарлама")}
           />
         </div>
       </div>
