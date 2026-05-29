@@ -1,50 +1,36 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import { submitLead } from "@/lib/submitLead";
+import { formatKzPhone } from "@/lib/phone-mask";
+import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
+import { useT } from "@/lib/lang-context";
 
 export interface LeadFormProps {
-  /** Имя формы для Telegram (например, «Главная — заявка на IT-решение») */
   formName: string;
-  /** action для reCAPTCHA v3, латиница и подчёркивания */
   action: string;
-  /** Префикс id-полей, чтобы не было конфликтов на странице с несколькими формами */
   idPrefix?: string;
-  /** Подпись для поля компании */
   companyLabel?: string;
-  /** Подпись для поля сообщения */
   messageLabel?: string;
-  /** Ключ для поля сообщения в Telegram */
   messageFieldKey?: string;
-  /** Текст кнопки */
   submitLabel?: string;
-  /** Высота textarea */
   messageRows?: number;
-  /** Преднаполненный текст в комментарии (используется в модалке) */
   defaultMessage?: string;
-  /** Дополнительная тема, которая попадёт в Telegram (для модалки) */
   subject?: string;
-  /** Стиль кнопки */
   fullWidthButton?: boolean;
-  /** Колбэк после успешной отправки (если не нужен редирект) */
   onSuccess?: () => void;
-  /** Не делать редирект на /thank-you (по умолчанию редирект включён) */
   noRedirect?: boolean;
 }
 
-/**
- * Универсальная форма заявки. Используется на главной и страницах услуг,
- * а также внутри модального окна консультации.
- */
 export function LeadForm({
   formName,
   action,
   idPrefix = "lead",
-  companyLabel = "Название компании или проекта",
-  messageLabel = "Сообщение для менеджера",
-  messageFieldKey = "Сообщение",
-  submitLabel = "Отправить заявку",
+  companyLabel,
+  messageLabel,
+  messageFieldKey,
+  submitLabel,
   messageRows = 4,
   defaultMessage,
   subject,
@@ -53,16 +39,27 @@ export function LeadForm({
   noRedirect,
 }: LeadFormProps) {
   const navigate = useNavigate();
+  const t = useT();
+
+  const lblCompany = companyLabel ?? t("Название компании или проекта", "Компания немесе жоба атауы");
+  const lblMessage = messageLabel ?? t("Сообщение для менеджера", "Менеджер үшін хабарлама");
+  const keyMessage = messageFieldKey ?? "Сообщение";
+  const lblSubmit = submitLabel ?? t("Отправить заявку", "Өтінім жіберу");
+
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [phone, setPhone] = useState("");
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  // Если меняется тема (модалка с темой), обновляем textarea
   useEffect(() => {
     if (defaultMessage !== undefined && messageRef.current) {
       messageRef.current.value = defaultMessage;
     }
   }, [defaultMessage]);
+
+  const onPhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPhone(formatKzPhone(e.target.value));
+  };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,18 +68,29 @@ export function LeadForm({
     const fd = new FormData(form);
     setSubmitting(true);
     try {
-      await submitLead({
+      const fields: Record<string, string> = {
+        [lblCompany]: String(fd.get("company") ?? ""),
+        [t("ФИО", "Аты-жөні")]: String(fd.get("name") ?? ""),
+        [t("Телефон", "Телефон")]: phone,
+        [keyMessage]: String(fd.get("message") ?? ""),
+        ...(subject ? { [t("Тема", "Тақырып")]: subject } : {}),
+      };
+
+      await submitLead({ formName, action, fields });
+
+      // Сохраняем заявку для страницы thank-you
+      const orderNumber = generateOrderNumber();
+      saveLastOrder({
+        number: orderNumber,
         formName,
-        action,
-        fields: {
-          [companyLabel]: String(fd.get("company") ?? ""),
-          "ФИО": String(fd.get("name") ?? ""),
-          "Телефон": String(fd.get("phone") ?? ""),
-          [messageFieldKey]: String(fd.get("message") ?? ""),
-          ...(subject ? { Тема: subject } : {}),
-        },
+        subject,
+        fields,
+        from: typeof window !== "undefined" ? window.location.pathname : "/",
+        at: new Date().toISOString(),
       });
+
       form.reset();
+      setPhone("");
       setConsent(false);
       if (onSuccess) onSuccess();
       if (!noRedirect) {
@@ -90,7 +98,7 @@ export function LeadForm({
       }
     } catch (err) {
       console.error(err);
-      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+      alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));
     } finally {
       setSubmitting(false);
     }
@@ -101,26 +109,28 @@ export function LeadForm({
   return (
     <form onSubmit={onSubmit}>
       <div className="form-group">
-        <label htmlFor={id("company")}>{companyLabel}</label>
+        <label htmlFor={id("company")}>{lblCompany}</label>
         <input type="text" id={id("company")} name="company" className="form-control" required />
       </div>
       <div className="form-group">
-        <label htmlFor={id("name")}>ФИО</label>
+        <label htmlFor={id("name")}>{t("ФИО", "Аты-жөні")}</label>
         <input type="text" id={id("name")} name="name" className="form-control" required />
       </div>
       <div className="form-group">
-        <label htmlFor={id("phone")}>Телефон</label>
+        <label htmlFor={id("phone")}>{t("Телефон", "Телефон")}</label>
         <input
           type="tel"
           id={id("phone")}
           name="phone"
           className="form-control"
-          placeholder="+7 7__ ___ __ __"
+          placeholder="+7 700 000 00 00"
+          value={phone}
+          onChange={onPhoneChange}
           required
         />
       </div>
       <div className="form-group">
-        <label htmlFor={id("message")}>{messageLabel}</label>
+        <label htmlFor={id("message")}>{lblMessage}</label>
         <textarea
           id={id("message")}
           name="message"
@@ -139,7 +149,7 @@ export function LeadForm({
         style={fullWidthButton ? { width: "100%", fontSize: "1.1rem" } : undefined}
         disabled={!consent || submitting}
       >
-        {submitting ? "Отправка…" : submitLabel}
+        {submitting ? t("Отправка…", "Жіберілуде…") : lblSubmit}
       </button>
       <RecaptchaNotice />
     </form>
