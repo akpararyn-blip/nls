@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useCity } from "@/lib/city-context";
+import { useLang } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
 import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
 import { Phone } from "lucide-react";
@@ -8,16 +9,13 @@ import logoUrl from "@/assets/logo.svg";
 
 export function MobileNav() {
   const { city, mobileNavOpen, setMobileNavOpen, openCityModal } = useCity();
+  const { lang, setLang, t } = useLang();
 
   const close = () => setMobileNavOpen(false);
 
-  // Toggle body class so the floating contact widget can hide behind the open menu
   useEffect(() => {
-    if (mobileNavOpen) {
-      document.body.classList.add("mobile-nav-open");
-    } else {
-      document.body.classList.remove("mobile-nav-open");
-    }
+    if (mobileNavOpen) document.body.classList.add("mobile-nav-open");
+    else document.body.classList.remove("mobile-nav-open");
     return () => document.body.classList.remove("mobile-nav-open");
   }, [mobileNavOpen]);
 
@@ -27,7 +25,12 @@ export function MobileNav() {
     <div className={`mobile-nav${mobileNavOpen ? " active" : ""}`}>
       <div className="mobile-nav-header">
         <img src={logoUrl} alt="Logo" style={{ height: 30 }} />
-        <button type="button" className="mobile-close-btn" onClick={close} aria-label="Закрыть">
+        <button
+          type="button"
+          className="mobile-close-btn"
+          onClick={close}
+          aria-label={t("Закрыть", "Жабу")}
+        >
           ×
         </button>
       </div>
@@ -59,7 +62,21 @@ export function MobileNav() {
           }}
         >
           <GlobeIcon width={18} height={18} />
-          RU / KZ
+          <button
+            type="button"
+            onClick={() => setLang("ru")}
+            className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
+          >
+            RU
+          </button>
+          <span style={{ opacity: 0.4 }}>/</span>
+          <button
+            type="button"
+            onClick={() => setLang("kz")}
+            className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
+          >
+            KZ
+          </button>
         </div>
         <a href={phoneHref} className="mobile-nav-phone" onClick={close}>
           <Phone size={18} strokeWidth={2} />
@@ -68,41 +85,41 @@ export function MobileNav() {
       </div>
       <ul>
         <li>
-          <div className="mobile-nav-group-title">Интернет</div>
+          <div className="mobile-nav-group-title">{t("Интернет", "Интернет")}</div>
           <ul className="mobile-nav-group">
             <li>
               <SmartLink to="/internet" onClick={close}>
-                Интернет для бизнеса
+                {t("Интернет для бизнеса", "Бизнеске арналған интернет")}
               </SmartLink>
             </li>
           </ul>
         </li>
         <li>
-          <div className="mobile-nav-group-title">IT услуги</div>
+          <div className="mobile-nav-group-title">{t("IT услуги", "IT қызметтері")}</div>
           <ul className="mobile-nav-group">
             <li>
               <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
-                IT аутсорсинг
+                {t("IT аутсорсинг", "IT аутсорсинг")}
               </a>
             </li>
             <li>
               <SmartLink to="/it-sks" onClick={close}>
-                СКС. Монтаж сетей
+                {t("СКС. Монтаж сетей", "СКС. Желілерді құру")}
               </SmartLink>
             </li>
           </ul>
         </li>
         <li>
-          <div className="mobile-nav-group-title">Серверы</div>
+          <div className="mobile-nav-group-title">{t("Серверы", "Серверлер")}</div>
           <ul className="mobile-nav-group">
             <li>
               <SmartLink to="/dedicated" onClick={close}>
-                Dedicated сервер
+                {t("Dedicated сервер", "Dedicated сервер")}
               </SmartLink>
             </li>
             <li>
               <SmartLink to="/vps" onClick={close}>
-                VPS/VDS сервер
+                {t("VPS/VDS сервер", "VPS/VDS сервер")}
               </SmartLink>
             </li>
             <li>
@@ -112,36 +129,36 @@ export function MobileNav() {
             </li>
             <li>
               <SmartLink to="/colocation-full" onClick={close}>
-                Аренда стойки
+                {t("Аренда стойки", "Стойканы жалға алу")}
               </SmartLink>
             </li>
           </ul>
         </li>
         <li>
           <Link to="/about" onClick={close}>
-            О компании
+            {t("О компании", "Компания туралы")}
           </Link>
         </li>
         <li>
           <Link to="/hr" onClick={close}>
-            Вакансии
+            {t("Вакансии", "Бос орындар")}
           </Link>
         </li>
         <li>
           <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
-            Интернет для физ. лиц
+            {t("Интернет для физ. лиц", "Жеке тұлғаларға интернет")}
           </a>
         </li>
         <li>
           <Link to="/contacts" onClick={close}>
-            Контакты
+            {t("Контакты", "Байланыс")}
           </Link>
         </li>
       </ul>
       <button
         type="button"
         onClick={close}
-        aria-label="Закрыть меню"
+        aria-label={t("Закрыть меню", "Мәзірді жабу")}
         style={{
           position: "absolute",
           top: 20,
@@ -157,4 +174,3 @@ export function MobileNav() {
     </div>
   );
 }
-
