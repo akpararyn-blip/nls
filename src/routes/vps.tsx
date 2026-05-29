@@ -34,9 +34,10 @@ const PRICE_SSD = 90; // за 1 ГБ
 const PRICE_HDD = 38; // за 1 ГБ
 
 const SSD_MIN = 10;
-const SSD_STEP = 10;
+const SSD_STEP = 1;
 const HDD_MIN = 0;
-const HDD_STEP = 10;
+const HDD_STEP = 1;
+
 
 type Plan = {
   id: string;
