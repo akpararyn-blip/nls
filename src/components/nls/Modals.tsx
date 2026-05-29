@@ -1,17 +1,19 @@
 import { useCity, type CityKey } from "@/lib/city-context";
+import { useT } from "@/lib/lang-context";
 import { CloseIcon } from "./Icons";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { useEffect } from "react";
 
-const CITY_OPTIONS: { key: CityKey; label: string }[] = [
-  { key: "Almaty", label: "Алматы" },
-  { key: "Astana", label: "Астана" },
-  { key: "Shymkent", label: "Шымкент" },
-  { key: "Other", label: "Другие города" },
-];
-
 export function Modals() {
   const { modal, closeModals, cityKey, setCity, consultation } = useCity();
+  const t = useT();
+
+  const CITY_OPTIONS: { key: CityKey; label: string }[] = [
+    { key: "Almaty", label: t("Алматы", "Алматы") },
+    { key: "Astana", label: t("Астана", "Астана") },
+    { key: "Shymkent", label: t("Шымкент", "Шымкент") },
+    { key: "Other", label: t("Другие города", "Басқа қалалар") },
+  ];
 
   useEffect(() => {
     if (!modal.city && !modal.consultation) return;
@@ -32,12 +34,15 @@ export function Modals() {
         }}
       >
         <div className="modal-content">
-          <span className="close-modal" onClick={closeModals} role="button" aria-label="Закрыть">
+          <span className="close-modal" onClick={closeModals} role="button" aria-label={t("Закрыть", "Жабу")}>
             ×
           </span>
-          <h3 style={{ marginBottom: 10 }}>Выберите ваш город</h3>
+          <h3 style={{ marginBottom: 10 }}>{t("Выберите ваш город", "Қалаңызды таңдаңыз")}</h3>
           <p style={{ color: "var(--color-text-light)", fontSize: "0.9rem" }}>
-            Контактная информация будет обновлена в зависимости от выбранного города.
+            {t(
+              "Контактная информация будет обновлена в зависимости от выбранного города.",
+              "Байланыс ақпараты таңдалған қалаға қарай жаңартылады."
+            )}
           </p>
 
           <div className="city-list">
@@ -63,13 +68,13 @@ export function Modals() {
         }}
       >
         <div className="modal-content form-modal-content">
-          <button type="button" className="close-modal" onClick={closeModals} aria-label="Закрыть">
+          <button type="button" className="close-modal" onClick={closeModals} aria-label={t("Закрыть", "Жабу")}>
             <CloseIcon />
           </button>
 
           <div className="modal-header">
-            <h3>Оставить заявку</h3>
-            <p>Заполните форму, и наш менеджер свяжется с вами в течение 15 минут.</p>
+            <h3>{t("Оставить заявку", "Өтінім қалдыру")}</h3>
+            <p>{t("Заполните форму, и наш менеджер свяжется с вами в течение 15 минут.", "Форманы толтырыңыз, менеджеріміз 15 минут ішінде байланысады.")}</p>
           </div>
 
           {modal.consultation && (
@@ -82,8 +87,8 @@ export function Modals() {
               }
               action="consultation_modal"
               idPrefix="modal"
-              companyLabel="Название компании или ИИН/БИН"
-              messageLabel="Комментарий (необязательно)"
+              companyLabel={t("Название компании или ИИН/БИН", "Компания атауы немесе ЖСН/БСН")}
+              messageLabel={t("Комментарий (необязательно)", "Пікір (міндетті емес)")}
               messageFieldKey="Комментарий"
               messageRows={2}
               defaultMessage={consultation.subject ?? undefined}
