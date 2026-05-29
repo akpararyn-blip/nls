@@ -4410,10 +4410,33 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 .hr-tips-section { padding: 80px 0; background: var(--color-bg-light, #f7f8fb); }
 .hr-tips-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-top: 40px;
+  justify-content: center;
 }
+/* Центрируем «хвостовые» карточки, если их число не кратно 3 */
+.hr-tips-grid > .hr-tip-card:nth-last-child(2):nth-child(3n + 1) {
+  grid-column: 1 / span 2;
+  justify-self: end;
+  max-width: calc((100% - 20px) / 2);
+  width: 100%;
+}
+.hr-tips-grid > .hr-tip-card:last-child:nth-child(3n + 2) {
+  justify-self: start;
+  max-width: 100%;
+}
+@media (max-width: 900px) {
+  .hr-tips-grid { grid-template-columns: repeat(2, 1fr); }
+  .hr-tips-grid > .hr-tip-card:nth-last-child(2):nth-child(3n + 1),
+  .hr-tips-grid > .hr-tip-card:last-child:nth-child(3n + 2) {
+    grid-column: auto; max-width: 100%; justify-self: stretch;
+  }
+}
+@media (max-width: 600px) {
+  .hr-tips-grid { grid-template-columns: 1fr; }
+}
+
 .hr-tip-card {
   background: #fff;
   border: 1px solid rgba(0,0,0,.06);
@@ -4749,14 +4772,19 @@ a.contacts-city-row:hover { color: var(--color-orange); }
   .contacts-socials-list { justify-content: flex-start; }
 }
 
-/* ===== Header mega menu — grouped (desktop) ===== */
-.dropdown-menu.mega-menu {
-  min-width: 880px;
+/* ===== Header mega menu — grouped (desktop) =====
+   Не задаём display: grid в базе — иначе меню видно (display:none из .dropdown-menu перебивается).
+   Структуру grid включаем ТОЛЬКО когда меню реально открыто (на hover на родителе). */
+.services-nav-item:hover .dropdown-menu.mega-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
+}
+.dropdown-menu.mega-menu {
+  min-width: 880px;
   padding: 18px 12px;
 }
+
 .mega-menu-group {
   display: flex;
   flex-direction: column;

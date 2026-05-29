@@ -34,9 +34,10 @@ const PRICE_SSD = 90; // за 1 ГБ
 const PRICE_HDD = 38; // за 1 ГБ
 
 const SSD_MIN = 10;
-const SSD_STEP = 10;
+const SSD_STEP = 1;
 const HDD_MIN = 0;
-const HDD_STEP = 10;
+const HDD_STEP = 1;
+
 
 type Plan = {
   id: string;
@@ -231,13 +232,15 @@ function Tariffs() {
 type ResourceKey = "cpu" | "ram" | "ssd" | "hdd";
 
 function Calculator() {
-  const { openConsultationModalWith } = useCity();
+  const { openConsultationModalWith, cityKey } = useCity();
   const barVisible = useMobileBarVisibility("vps-calculator");
+  const showHdd = cityKey !== "Astana";
 
   const [cpu, setCpu] = useState(2);
   const [ram, setRam] = useState(2);
   const [ssd, setSsd] = useState(20);
   const [hdd, setHdd] = useState(0);
+
 
   const [ssdInput, setSsdInput] = useState<string>("20");
   const [hddInput, setHddInput] = useState<string>("0");
@@ -358,18 +361,21 @@ function Calculator() {
               activeHint={hint && hint.field === "ssd" ? hint.text : null}
             />
 
-            <ResourceInputRow
-              icon={<Database size={22} strokeWidth={1.8} />}
-              label="Накопитель HDD"
-              hintLabel={`${PRICE_HDD} ₸ за 1 ГБ`}
-              inputValue={hddInput}
-              unit="ГБ"
-              onMinus={() => stepDisk("hdd", -1)}
-              onPlus={() => stepDisk("hdd", 1)}
-              onChange={onDiskInput("hdd")}
-              onBlur={() => commitDisk("hdd")}
-              activeHint={hint && hint.field === "hdd" ? hint.text : null}
-            />
+            {showHdd && (
+              <ResourceInputRow
+                icon={<Database size={22} strokeWidth={1.8} />}
+                label="Накопитель HDD"
+                hintLabel={`${PRICE_HDD} ₸ за 1 ГБ`}
+                inputValue={hddInput}
+                unit="ГБ"
+                onMinus={() => stepDisk("hdd", -1)}
+                onPlus={() => stepDisk("hdd", 1)}
+                onChange={onDiskInput("hdd")}
+                onBlur={() => commitDisk("hdd")}
+                activeHint={hint && hint.field === "hdd" ? hint.text : null}
+              />
+            )}
+
           </div>
 
           <div className="calc-summary">
@@ -379,7 +385,7 @@ function Calculator() {
                 <SumLine title="CPU" detail={`${cpu} × ядро`} price={calc.priceCpu} />
                 <SumLine title="RAM" detail={`${ram} ГБ`} price={calc.priceRam} />
                 <SumLine title="SSD" detail={`${ssd} ГБ`} price={calc.priceSsd} />
-                <SumLine title="HDD" detail={hdd === 0 ? "—" : `${hdd} ГБ`} price={calc.priceHdd} />
+                {showHdd && <SumLine title="HDD" detail={hdd === 0 ? "—" : `${hdd} ГБ`} price={calc.priceHdd} />}
               </div>
               <div className="summary-footer">
                 <div className="summary-total-row">

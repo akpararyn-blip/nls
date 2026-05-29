@@ -406,18 +406,9 @@ function Calculator() {
                 onRemove={network.remove}
               />
 
-              {/* Software */}
-              <DynamicSection
-                label="Установка ПО"
-                addLabel="Добавить ПО"
-                placeholder="Выберите ПО"
-                options={softwareOptions}
-                rows={software.rows}
-                onAdd={software.add}
-                onChange={software.update}
-                onRemove={software.remove}
-              />
+              {/* Установка ПО — услуга снята, скрыто */}
             </div>
+
 
             {/* Summary */}
             <div className="calc-summary">
@@ -449,11 +440,8 @@ function Calculator() {
                     total={calc.priceNetwork}
                     items={calc.networkItems}
                   />
-                  <SummarySection
-                    title="Установка ПО"
-                    total={calc.priceSoftware}
-                    items={calc.softwareItems}
-                  />
+                  {/* Установка ПО — услуга снята */}
+
                 </div>
                 <div className="summary-footer">
                   <div className="summary-total-row">
@@ -488,7 +476,7 @@ function Calculator() {
             <SummarySection title="Накопители" total={calc.priceStorage} items={calc.storageItems} />
             <SummarySection title="Дополнительно" total={calc.extrasTotal} items={calc.extras} />
             <SummarySection title="Сетевой порт" total={calc.priceNetwork} items={calc.networkItems} />
-            <SummarySection title="Установка ПО" total={calc.priceSoftware} items={calc.softwareItems} />
+
             <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", marginTop: 8 }}>
               Цены без учета НДС
             </p>

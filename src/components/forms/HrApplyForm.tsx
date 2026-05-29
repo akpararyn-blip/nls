@@ -4,28 +4,20 @@ import { Send } from "lucide-react";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import { submitLead } from "@/lib/submitLead";
+import { formatKzPhone } from "@/lib/phone-mask";
+import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
+import { useT } from "@/lib/lang-context";
 
-function formatPhone(value: string) {
-  const digits = value.replace(/\D/g, "").replace(/^7?/, "");
-  const m = digits.match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-  if (!m) return "+7";
-  const [, a, b, c, d] = m;
-  return "+7 " + (a || "") + (b ? " " + b : "") + (c ? "-" + c : "") + (d ? "-" + d : "");
-}
-
-/**
- * Форма отклика на вакансию. Уходит в HR-чат Telegram, после успеха —
- * редирект на /thank-you?type=hr (страница покажет другой текст).
- */
 export function HrApplyForm() {
   const navigate = useNavigate();
+  const t = useT();
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ lastName: "", firstName: "", phone: "", position: "" });
 
   const onChange = (k: keyof typeof form) => (e: ChangeEvent<HTMLInputElement>) => {
     let v = e.target.value;
-    if (k === "phone") v = formatPhone(v);
+    if (k === "phone") v = formatKzPhone(v);
     setForm((f) => ({ ...f, [k]: v }));
   };
 
@@ -34,21 +26,33 @@ export function HrApplyForm() {
     if (!consent || submitting) return;
     setSubmitting(true);
     try {
+      const fields = {
+        [t("Фамилия", "Тегі")]: form.lastName,
+        [t("Имя", "Аты")]: form.firstName,
+        [t("Телефон", "Телефон")]: form.phone,
+        [t("Должность", "Лауазым")]: form.position,
+      };
       await submitLead({
         formName: "HR — отклик на вакансию",
         action: "hr_apply",
         target: "hr",
-        fields: {
-          "Фамилия": form.lastName,
-          "Имя": form.firstName,
-          "Телефон": form.phone,
-          "Должность": form.position,
-        },
+        fields,
       });
+
+      const orderNumber = generateOrderNumber();
+      saveLastOrder({
+        number: orderNumber,
+        formName: "HR — отклик на вакансию",
+        subject: t("Отклик на вакансию", "Бос орынға өтініш"),
+        fields,
+        from: typeof window !== "undefined" ? window.location.pathname : "/hr",
+        at: new Date().toISOString(),
+      });
+
       navigate({ to: "/thank-you", search: { type: "hr" } });
     } catch (err) {
       console.error(err);
-      alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+      alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));
     } finally {
       setSubmitting(false);
     }
@@ -58,47 +62,47 @@ export function HrApplyForm() {
     <form className="hr-apply-form" onSubmit={onSubmit}>
       <div className="hr-form-row">
         <div className="hr-form-field">
-          <label htmlFor="hr-lastname">Фамилия</label>
+          <label htmlFor="hr-lastname">{t("Фамилия", "Тегі")}</label>
           <input
             id="hr-lastname"
             type="text"
             value={form.lastName}
             onChange={onChange("lastName")}
-            placeholder="Иванов"
+            placeholder={t("Иванов", "Иванов")}
             required
           />
         </div>
         <div className="hr-form-field">
-          <label htmlFor="hr-firstname">Имя</label>
+          <label htmlFor="hr-firstname">{t("Имя", "Аты")}</label>
           <input
             id="hr-firstname"
             type="text"
             value={form.firstName}
             onChange={onChange("firstName")}
-            placeholder="Иван"
+            placeholder={t("Иван", "Иван")}
             required
           />
         </div>
       </div>
       <div className="hr-form-field">
-        <label htmlFor="hr-phone">Телефон</label>
+        <label htmlFor="hr-phone">{t("Телефон", "Телефон")}</label>
         <input
           id="hr-phone"
           type="tel"
           value={form.phone}
           onChange={onChange("phone")}
-          placeholder="+7 700 000-00-00"
+          placeholder="+7 700 000 00 00"
           required
         />
       </div>
       <div className="hr-form-field">
-        <label htmlFor="hr-position">Должность, на которую претендуете</label>
+        <label htmlFor="hr-position">{t("Должность, на которую претендуете", "Үміткер болып отырған лауазым")}</label>
         <input
           id="hr-position"
           type="text"
           value={form.position}
           onChange={onChange("position")}
-          placeholder="Например, сетевой инженер"
+          placeholder={t("Например, сетевой инженер", "Мысалы, желілік инженер")}
           required
         />
       </div>
@@ -106,7 +110,7 @@ export function HrApplyForm() {
       <ConsentCheckbox id="hr-consent" checked={consent} onChange={setConsent} />
 
       <button type="submit" className="btn btn-primary btn-block" disabled={!consent || submitting}>
-        {submitting ? "Отправка…" : "Отправить заявку"}
+        {submitting ? t("Отправка…", "Жіберілуде…") : t("Отправить заявку", "Өтінім жіберу")}
         <Send size={16} />
       </button>
       <RecaptchaNotice />
