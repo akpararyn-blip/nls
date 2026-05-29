@@ -1,4 +1,5 @@
 import { useCity } from "@/lib/city-context";
+import { useT } from "@/lib/lang-context";
 
 type Plan = {
   id: string;
@@ -71,7 +72,6 @@ const plans: Plan[] = [...plansRaw].sort(
     parseInt(a.price.replace(/\s/g, ""), 10) - parseInt(b.price.replace(/\s/g, ""), 10),
 );
 
-// Иконки SVG
 const CpuIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="4" y="4" width="16" height="16" rx="2" />
@@ -100,23 +100,24 @@ const DiskIcon = () => (
 
 export function DedicatedPlans() {
   const { openConsultationModalWith } = useCity();
+  const t = useT();
 
   return (
     <section className="plans-section">
       <div className="container">
         <div className="section-title">
-          <span className="section-eyebrow">Тарифы</span>
-          <h2>Готовые конфигурации</h2>
-          <p>Выберите подходящий тариф или соберите свой в конфигураторе ниже</p>
+          <span className="section-eyebrow">{t("Тарифы", "Тарифтер")}</span>
+          <h2>{t("Готовые конфигурации", "Дайын конфигурациялар")}</h2>
+          <p>{t("Выберите подходящий тариф или соберите свой в конфигураторе ниже", "Сәйкес тарифті таңдаңыз немесе төмендегі конфигураторда өзіңіздікін құрастырыңыз")}</p>
         </div>
 
         <div className="plans-grid">
           {plans.map((plan) => (
             <article key={plan.id} className={`plan-card${plan.popular ? " plan-card--popular" : ""}`}>
-              {plan.popular && <div className="plan-badge">Популярный</div>}
+              {plan.popular && <div className="plan-badge">{t("Популярный", "Танымал")}</div>}
 
               <div className="plan-header">
-                <span className="plan-vendor">Сервер</span>
+                <span className="plan-vendor">{t("Сервер", "Сервер")}</span>
                 <h3 className="plan-title">{plan.model}</h3>
               </div>
 
@@ -124,28 +125,28 @@ export function DedicatedPlans() {
                 <li className="plan-spec">
                   <span className="plan-spec-icon"><CpuIcon /></span>
                   <span className="plan-spec-text">
-                    <span className="plan-spec-label">Процессор</span>
+                    <span className="plan-spec-label">{t("Процессор", "Процессор")}</span>
                     <span className="plan-spec-value">{plan.cpu}</span>
                   </span>
                 </li>
                 <li className="plan-spec">
                   <span className="plan-spec-icon"><FreqIcon /></span>
                   <span className="plan-spec-text">
-                    <span className="plan-spec-label">Частота</span>
+                    <span className="plan-spec-label">{t("Частота", "Жиілік")}</span>
                     <span className="plan-spec-value">{plan.freq}</span>
                   </span>
                 </li>
                 <li className="plan-spec">
                   <span className="plan-spec-icon"><RamIcon /></span>
                   <span className="plan-spec-text">
-                    <span className="plan-spec-label">Память</span>
+                    <span className="plan-spec-label">{t("Память", "Жады")}</span>
                     <span className="plan-spec-value">{plan.ram}</span>
                   </span>
                 </li>
                 <li className="plan-spec">
                   <span className="plan-spec-icon"><DiskIcon /></span>
                   <span className="plan-spec-text">
-                    <span className="plan-spec-label">Накопители</span>
+                    <span className="plan-spec-label">{t("Накопители", "Жинақтаушылар")}</span>
                     <span className="plan-spec-value">{plan.ssd}</span>
                   </span>
                 </li>
@@ -158,11 +159,11 @@ export function DedicatedPlans() {
               </div>
 
               <div className="plan-price-block">
-                <div className="plan-price-label">от</div>
+                <div className="plan-price-label">{t("от", "бастап")}</div>
                 <div className="plan-price">
                   {plan.price} <span className="plan-currency">₸</span>
                 </div>
-                <div className="plan-period">в месяц, без НДС</div>
+                <div className="plan-period">{t("в месяц, без НДС", "айына, ҚҚС-сыз")}</div>
               </div>
 
               <button
@@ -174,7 +175,7 @@ export function DedicatedPlans() {
                   })
                 }
               >
-                Заказать
+                {t("Заказать", "Тапсырыс беру")}
               </button>
             </article>
           ))}
