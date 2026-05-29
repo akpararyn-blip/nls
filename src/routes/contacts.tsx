@@ -60,8 +60,8 @@ const CITIES = [
   {
     key: "shymkent",
     name: "Шымкент",
-    phoneDisplay: "+7 727 339 77 77",
-    phoneTel: "+77273397777",
+    phoneDisplay: "+7 700 339 77 77",
+    phoneTel: "+77003397777",
     address:
       "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (ул. Рыскулбекова, 13/1)",
     map: "https://www.google.com/maps?q=ул.+Рыскулбекова+13/1,+Шымкент&output=embed",

@@ -188,11 +188,7 @@ export function SlaSection() {
       label: "Отказоустойчивость Tier III",
       text: "Параллельные пути электропитания и охлаждения, плановые работы без остановки сервисов.",
     },
-    {
-      value: "ISO / PCI",
-      label: "Соответствие регуляторам",
-      text: "Регулярное тестирование DR-планов, ISO 27001, ISO 22301 и PCI DSS.",
-    },
+    
   ];
   return (
     <section className="enterprise-section enterprise-section--alt">

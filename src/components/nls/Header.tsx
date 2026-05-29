@@ -52,7 +52,7 @@ export function Header() {
             <div className="top-menu">
               <Link to="/about">О компании</Link>
               <Link to="/hr">Вакансии</Link>
-              <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">Интернет для физ. лиц</a>
+              <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">Интернет для физических лиц</a>
               <Link to="/contacts">Контакты</Link>
             </div>
           </div>
@@ -143,7 +143,7 @@ export function Header() {
                       </SmartLink>
                       <SmartLink to="/vps" className="mega-menu-link">
                         <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>VPS сервер</span>
+                        <span>VPS/VDS сервер</span>
                       </SmartLink>
                       <SmartLink to="/colocation" className="mega-menu-link">
                         <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />

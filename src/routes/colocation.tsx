@@ -83,9 +83,7 @@ function Hero() {
             Размещение серверов <br />
             в надёжном ЦОД
             <br />
-            <span className="hero-h1-small" style={{ color: "var(--color-orange)" }}>
-              colocation
-            </span>
+            
           </h1>
           <p className="hero-subtitle">
             Разместите ваше оборудование в нашем собственном дата-центре уровня Tier III в
@@ -166,7 +164,7 @@ function Advantages() {
           <span className="section-eyebrow">Инфраструктура</span>
           <h2>
             Технологии и безопасность{" "}
-            <span style={{ color: "var(--color-orange)" }}>Infinity B40 Cluster</span>
+            
           </h2>
           <p>Собственный дата-центр уровня Tier III с резервированием по всем подсистемам.</p>
         </div>

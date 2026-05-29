@@ -50,14 +50,14 @@ export function Footer() {
               </li>
               <li>
                 <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
-                  Интернет для физ. лиц
-                  <ExternalIcon width={12} height={12} />
+                  Интернет для физических лиц
+                  
                 </a>
               </li>
               <li>
                 <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
                   IT аутсорсинг
-                  <ExternalIcon width={12} height={12} />
+                  
                 </a>
               </li>
               <li>
@@ -74,7 +74,7 @@ export function Footer() {
                 <SmartLink to="/dedicated">Dedicated сервер</SmartLink>
               </li>
               <li>
-                <SmartLink to="/vps">VPS сервер</SmartLink>
+                <SmartLink to="/vps">VPS/VDS сервер</SmartLink>
               </li>
               <li>
                 <SmartLink to="/colocation">Colocation</SmartLink>

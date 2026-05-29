@@ -197,7 +197,7 @@ function Advantages() {
           <span className="section-eyebrow">Инфраструктура</span>
           <h2>
             Технологии и безопасность{" "}
-            <span style={{ color: "var(--color-orange)" }}>Infinity B40 Cluster</span>
+            
           </h2>
           <p>Характеристики дата-центра едины для всех услуг размещения.</p>
         </div>

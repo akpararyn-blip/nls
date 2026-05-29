@@ -102,7 +102,7 @@ export function MobileNav() {
             </li>
             <li>
               <SmartLink to="/vps" onClick={close}>
-                VPS сервер
+                VPS/VDS сервер
               </SmartLink>
             </li>
             <li>
