@@ -1,124 +1,68 @@
-## Что нужно сделать
+## Что сейчас не так
 
-Проект сейчас собирается через `@lovable.dev/vite-tanstack-config`, который под капотом включает плагин TanStack Start + Cloudflare-плагин и выдаёт серверную сборку (`wrangler.jsonc`, server-entry). Для FTP-хостинга нужна чистая статика: `index.html` + `assets/` + готовые HTML-страницы маршрутов, чтобы прямые ссылки и обновление страницы работали без Node-сервера.
+Сайт — SPA на TanStack Router. Если вставить GTM-скрипт по инструкции Google, он инициализируется один раз при загрузке и фиксирует только первый просмотр страницы. Переходы между маршрутами не вызывают перезагрузку документа, поэтому в GTM не приходят `Page View` события — а от них зависят триггеры Yandex Metrika, Meta Pixel и TikTok Pixel.
 
-Хорошая новость: серверного кода в проекте нет — все формы шлются прямо из браузера (`fetch` в Telegram API), reCAPTCHA публичная, никакие `createServerFn` / `/api/*` маршруты не используются. То есть функционально приложение уже client-only, надо только переупаковать сборку.
+Решение: подгружать нужный GTM-контейнер по `window.location.hostname` и на каждой смене URL отправлять событие в `dataLayer`.
 
-## Подход
+## План
 
-Переключаемся с **TanStack Start (SSR)** на **TanStack Router в режиме SPA + предрендер маршрутов** через официальный плагин `@tanstack/router-plugin/vite`. На выходе получаем папку `dist/` с:
-- `index.html` (SPA-фолбэк),
-- по `index.html` для каждого статического маршрута (`/login/index.html`, `/about/index.html`, `/internet/index.html` и т.д.) — чтобы Apache/Nginx на shared-хостинге отдавал нужную страницу по прямой ссылке без 404,
-- `assets/` со всеми JS/CSS/картинками.
+### 1. Конфиг GTM по доменам — `src/config/gtm.ts` (новый файл)
 
-Это снимает зависимость от Cloudflare Workers, `nodejs_compat` и server-функций.
-
-## Изменения в файлах
-
-### 1. `vite.config.ts` — собственная конфигурация без Lovable-обёртки
-Уходим от `@lovable.dev/vite-tanstack-config` (он жёстко тянет `tanstackStart()` + Cloudflare). Новый конфиг:
-
-```ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
-
-export default defineConfig({
-  plugins: [
-    tanstackRouter({
-      target: "react",
-      autoCodeSplitting: true,
-      routesDirectory: "src/routes",
-      generatedRouteTree: "src/routeTree.gen.ts",
-    }),
-    react(),
-    tailwindcss(),
-    tsconfigPaths(),
-  ],
-  build: { outDir: "dist", sourcemap: false },
-  server: { port: 8080, host: true },
-});
-```
-
-Никаких `tanstackStart()` и `cloudflare()`.
-
-### 2. Новая точка входа SPA
-- `index.html` (в корне) — стандартный Vite-шаблон с `<div id="root">` и `<script type="module" src="/src/main.tsx">`.
-- `src/main.tsx` — создаёт роутер и монтирует `<RouterProvider>` в `#root`.
-
-### 3. `src/routes/__root.tsx` — упростить
-Убрать `HeadContent`, `Scripts`, `shellComponent`, `links: [{ rel: "stylesheet", href: appCss }]` — это API TanStack Start. В SPA:
-- стили подключаются напрямую `import "./styles.css"` в `main.tsx`,
-- `<head>` живёт в `index.html`,
-- скрипт reCAPTCHA добавляется в `index.html` обычным `<script async defer src="...?render=KEY">` (ключ подставляем через `%VITE_RECAPTCHA_SITE_KEY%` в `index.html` либо инжектим маленьким рантайм-скриптом в `main.tsx`).
-
-`__root.tsx` оставляет только `createRootRoute({ component, notFoundComponent })` с `<Outlet />` внутри `<CityProvider>`.
-
-### 4. Per-route `<head>` через `react-helmet-async` или нативно
-TanStack Start `head: () => ({ meta, links, scripts })` перестанет работать. Чтобы не потерять SEO (титулы, OG), добавляем лёгкий хелпер `useDocumentHead({ title, description, ogImage })` на основе `useEffect`, который выставляет `document.title` и мета-теги. На каждой странице меняем `head: () => ({...})` на вызов этого хука в компоненте маршрута. Для предрендеренных страниц мета попадёт прямо в HTML.
-
-### 5. Предрендер всех известных маршрутов
-Чтобы прямые ссылки `/login`, `/about`, `/contacts`, `/internet`, `/it-sks`, `/colocation`, `/colocation-full`, `/dedicated`, `/vps`, `/hr`, `/privacy`, `/thank-you` работали без Node-сервера, добавляем простой пост-билд скрипт `scripts/prerender.mjs`, который копирует `dist/index.html` в `dist/<route>/index.html` для каждого маршрута из списка. Apache/Nginx на shared-хостинге сам отдаст правильный файл.
-
-В `package.json`: `"build": "vite build && node scripts/prerender.mjs"`.
-
-### 6. SPA-фолбэк для shared-хостинга
-Чтобы любые неизвестные пути (например, опечатки) не давали серверный 404, добавляем в `dist/` файл `.htaccess` (Apache) — дефолт большинства местных shared-хостингов:
+Маппинг хост → GTM ID:
 
 ```
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
+colocation.nls.kz   → GTM-W5VT62QG
+dedicated.nls.kz    → GTM-WZ29K6QS
+internet.nls.kz     → GTM-TMG5ZQDK
+lan.nls.kz          → GTM-PT6RVBPF
+rack.nls.kz         → GTM-WFDBFNWW
+server.nls.kz       → GTM-PLJN2C4N
+nls.kz / www.nls.kz → читается из import.meta.env.VITE_GTM_ID_MAIN
 ```
 
-Тот же скрипт `prerender.mjs` положит его в `dist/`. Если хостинг на Nginx — в README пометим, какую `try_files` директиву попросить у админа.
+Превью- и lovable-домены (`*.lovable.app`, `localhost`) — GTM не подключаем, чтобы не загрязнять статистику.
 
-### 7. Удаляем серверные артефакты
-- `wrangler.jsonc` — удалить.
-- `@cloudflare/vite-plugin`, `@tanstack/react-start`, `@lovable.dev/vite-tanstack-config` — удалить из `package.json` (сборка их больше не использует).
-- В `src/router.tsx` ничего менять не нужно — `createRouter` из `@tanstack/react-router` уже правильный API.
-- Импорты `@tanstack/react-router` в коде остаются как есть (`Link`, `useNavigate`, `createFileRoute`, `Outlet`).
+Экспортируется функция `getGtmIdForHost(host)`.
 
-### 8. `.env` — продолжает работать
-`VITE_*` переменные подхватываются обычным Vite-сборщиком ровно так же. Никакие `process.env` в коде не используются.
+### 2. Загрузчик GTM — `src/lib/gtm.ts` (новый файл)
 
-## Что получим
+Две функции:
+- `initGtm(id)` — однократно инициализирует `window.dataLayer`, пушит `gtm.start` и вставляет `<script src="https://www.googletagmanager.com/gtm.js?id=...">` + `<noscript><iframe ...>` в `<body>`. Защищён флагом, чтобы не подключиться дважды.
+- `pushPageView({ path, title })` — пушит в `dataLayer` событие `{ event: 'page_view', page_path, page_location, page_title }`. В GTM это будет триггер «Custom Event = page_view» для Yandex Metrika hit, Meta Pixel PageView и TikTok Pixel Pageview.
 
-После `npm run build` (или `bun run build`) в папке `dist/` будет:
-```
-dist/
-  index.html              ← главная + SPA-фолбэк
-  about/index.html
-  contacts/index.html
-  internet/index.html
-  it-sks/index.html
-  colocation/index.html
-  colocation-full/index.html
-  dedicated/index.html
-  vps/index.html
-  hr/index.html
-  login/index.html
-  privacy/index.html
-  thank-you/index.html
-  .htaccess               ← rewrite на index.html
-  assets/                 ← JS, CSS, картинки с хешами в именах
-  favicon.svg
-```
+### 3. Подключение к роутеру — `src/main.tsx`
 
-Эту папку можно загрузить на любой shared-хостинг через FTP в корень сайта и оно заработает.
+После создания роутера:
+- Определяем `hostname`, через `getGtmIdForHost` получаем ID, вызываем `initGtm(id)`.
+- Подписываемся на `router.subscribe('onResolved', ({ toLocation }) => pushPageView({ path: toLocation.pathname + toLocation.search, title: document.title }))`. Это срабатывает после каждой завершённой навигации, когда новый `document.title` уже применён (через существующий `installHeadSync`).
+- Первый просмотр тоже отправляем явно после `initGtm`, чтобы не зависеть от тайминга первого `onResolved`.
 
-## Риски / на что обратить внимание
+### 4. Учёт переключателя поддоменов (`USE_INTERNAL_ROUTING`)
 
-- **SEO-метаданные**: текущие `head: () => ({...})` в роутах (титулы, OG-теги для `/about`, `/colocation` и т.д.) надо переписать на хук `useDocumentHead`. Иначе поисковики увидят дефолтный заголовок «NLS Kazakhstan» на всех страницах. Это рутинная, но обязательная правка по каждому файлу в `src/routes/`.
-- **Hydration / SSR-данные**: ни одна страница не использует `loader` с серверными данными (всё рендерится на клиенте, формы шлют запросы из браузера) — миграция безопасна.
-- **TanStack Start-специфичные импорты**: `HeadContent`, `Scripts`, `shellComponent`, `head: () => ({ scripts })`, `?url`-импорт CSS как «links» — нужно вычистить. Я составлю полный список затронутых файлов на этапе реализации и поправлю каждый.
-- **Lovable Preview**: после миграции превью внутри Lovable продолжит работать (это всё ещё Vite + React), но фича Lovable «Publish» больше не будет публиковать на Cloudflare — это и есть цель.
+Логика берёт ID строго по реальному `hostname`. Поэтому:
+- В текущем «внутреннем» режиме на nls.kz используется ID основного домена.
+- Когда вы переключите `USE_INTERNAL_ROUTING = false` и каждый поддомен начнёт обслуживать свою услугу — автоматически подтянется правильный GTM (например, на `colocation.nls.kz` — GTM-W5VT62QG). Менять ничего не нужно.
 
-## Резюме
+### 5. Что нужно настроить в каждом GTM-контейнере
 
-Снимаем Cloudflare/SSR-обёртку, переключаемся на классический SPA + статический предрендер маршрутов + `.htaccess` для рерайтов. На выходе — чистая папка `dist/`, которую заливаем по FTP.
+В каждом из 7 контейнеров создаём один общий триггер и переиспользуем его для всех тегов:
+
+- **Trigger**: Custom Event, имя события = `page_view`.
+- В тегах Yandex Metrika, Meta Pixel, TikTok Pixel заменить триггер `All Pages` (History Change) на этот `page_view`.
+- Опционально: создать переменные dataLayer `page_path`, `page_title` и пробрасывать их в Yandex Metrika hit (`url`, `title`) и в Pixel `PageView`.
+
+После этого все три системы будут получать корректные просмотры при каждом переходе.
+
+## Технические детали
+
+- GTM скрипт грузится синхронно через `appendChild` (async), без блокировки рендера.
+- `dataLayer` инициализируется ДО создания скрипта — это обязательное условие GTM-snippet.
+- Подписка `router.subscribe('onResolved', ...)` — стандартный API TanStack Router, не требует ререндеров.
+- Файлы изменяются: `src/main.tsx`. Новые файлы: `src/config/gtm.ts`, `src/lib/gtm.ts`.
+- Поведение `LangProvider` и `CityProvider` не затрагивается.
+- SSR не активирован для production (сейчас чистый CSR), поэтому проверки `typeof window !== 'undefined'` достаточно — никаких изменений в server-функциях не требуется.
+
+## Что нужно от вас
+
+1. **GTM ID для основного домена nls.kz** — добавлю в `.env` как `VITE_GTM_ID_MAIN`. Если пока нет — пришлите позже, до этого на nls.kz GTM подключаться не будет.
+2. Подтвердите, что в каждом GTM-контейнере вы готовы перенастроить триггеры пикселей на Custom Event `page_view` (или мне расписать пошагово).
