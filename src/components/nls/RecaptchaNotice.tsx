@@ -1,4 +1,7 @@
+import { useT } from "@/lib/lang-context";
+
 export function RecaptchaNotice() {
+  const t = useT();
   return (
     <p
       style={{
@@ -8,15 +11,15 @@ export function RecaptchaNotice() {
         lineHeight: 1.4,
       }}
     >
-      Защищено reCAPTCHA. Применяются{" "}
+      {t("Защищено reCAPTCHA. Применяются ", "reCAPTCHA арқылы қорғалған. Google-дың ")}
       <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">
-        Политика конфиденциальности
+        {t("Политика конфиденциальности", "Құпиялылық саясаты")}
       </a>{" "}
-      и{" "}
+      {t("и", "және")}{" "}
       <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer">
-        Условия использования
+        {t("Условия использования", "Пайдалану шарттары")}
       </a>{" "}
-      Google.
+      {t("Google.", "қолданылады.")}
     </p>
   );
 }

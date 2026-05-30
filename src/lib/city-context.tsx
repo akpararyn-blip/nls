@@ -2,41 +2,67 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 export type CityKey = "Almaty" | "Astana" | "Shymkent" | "Other";
 
+export interface LocalizedString {
+  ru: string;
+  kz: string;
+}
+
 export interface CityData {
-  name: string;
+  name: LocalizedString;
   phone: string;
+  /** WhatsApp техподдержки (исторический whatsapp поля). */
   whatsapp: string;
-  address: string;
+  /** WhatsApp отдела продаж. */
+  whatsappSales: string;
+  address: LocalizedString;
 }
 
 const UNIFIED_PHONE = "+7 700 339 7777";
-const UNIFIED_WHATSAPP = "+77003397777";
+/** Техподдержка */
+const SUPPORT_WHATSAPP = "+77003397777";
+/** Отдел продаж */
+const SALES_WHATSAPP = "+77007304591";
 
 export const CITIES: Record<CityKey, CityData> = {
   Almaty: {
-    name: "Алматы",
+    name: { ru: "Алматы", kz: "Алматы" },
     phone: UNIFIED_PHONE,
-    whatsapp: UNIFIED_WHATSAPP,
-    address: "050060 (A15E3X9) Республика Казахстан, г. Алматы, пр. Аль Фараби, 95",
+    whatsapp: SUPPORT_WHATSAPP,
+    whatsappSales: SALES_WHATSAPP,
+    address: {
+      ru: "050060 (A15E3X9) Республика Казахстан, г. Алматы, пр. Аль Фараби, 95",
+      kz: "050060 (A15E3X9) Қазақстан Республикасы, Алматы қ., Әл-Фараби даңғ., 95",
+    },
   },
   Astana: {
-    name: "Астана",
+    name: { ru: "Астана", kz: "Астана" },
     phone: UNIFIED_PHONE,
-    whatsapp: UNIFIED_WHATSAPP,
-    address: "010000 (Z00Y7B8) Республика Казахстан, г. Астана, Мкр. Караоткель-2, ул. Жылыой 13/1",
+    whatsapp: SUPPORT_WHATSAPP,
+    whatsappSales: SALES_WHATSAPP,
+    address: {
+      ru: "010000 (Z00Y7B8) Республика Казахстан, г. Астана, Мкр. Караоткель-2, ул. Жылыой 13/1",
+      kz: "010000 (Z00Y7B8) Қазақстан Республикасы, Астана қ., Қараөткел-2 ы.а., Жылыой к-сі 13/1",
+    },
   },
   Shymkent: {
-    name: "Шымкент",
+    name: { ru: "Шымкент", kz: "Шымкент" },
     phone: UNIFIED_PHONE,
-    whatsapp: UNIFIED_WHATSAPP,
-    address:
-      "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (Улица Рыскулбекова, 13/1)",
+    whatsapp: SUPPORT_WHATSAPP,
+    whatsappSales: SALES_WHATSAPP,
+    address: {
+      ru: "160021 Республика Казахстан, г. Шымкент, район Тұран, мкр. Малый Самал, дом 1695 (Улица Рыскулбекова, 13/1)",
+      kz: "160021 Қазақстан Республикасы, Шымкент қ., Тұран ауданы, Кіші Самал ы.а., 1695 үй (Рысқұлбеков көшесі, 13/1)",
+    },
   },
   Other: {
-    name: "Другие города",
+    name: { ru: "Другие города", kz: "Басқа қалалар" },
     phone: UNIFIED_PHONE,
-    whatsapp: UNIFIED_WHATSAPP,
-    address: "г. Алматы, пр. Аль Фараби, 95 (Головной офис)",
+    whatsapp: SUPPORT_WHATSAPP,
+    whatsappSales: SALES_WHATSAPP,
+    address: {
+      ru: "г. Алматы, пр. Аль Фараби, 95 (Головной офис)",
+      kz: "Алматы қ., Әл-Фараби даңғ., 95 (Бас кеңсе)",
+    },
   },
 };
 
