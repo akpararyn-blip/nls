@@ -74,7 +74,7 @@ export function Header() {
             </button>
             <div className="top-menu">
               <Link to="/about">{t("О компании", "Компания туралы")}</Link>
-              <Link to="/hr">{t("Вакансии", "Бос орындар")}</Link>
+              <Link to="/hr">{t("Вакансии", "Бос жұмыс орындары")}</Link>
               <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer">
                 {t("Интернет для физических лиц", "Жеке тұлғаларға арналған интернет")}
               </a>
@@ -187,7 +187,7 @@ export function Header() {
                       </a>
                       <SmartLink to="/it-sks" className="mega-menu-link">
                         <Network className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("СКС. Монтаж сетей", "СКС. Желілерді құру")}</span>
+                        <span>{t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}</span>
                       </SmartLink>
                     </div>
                     <div className="mega-menu-group">
@@ -206,7 +206,7 @@ export function Header() {
                       </SmartLink>
                       <SmartLink to="/colocation-full" className="mega-menu-link">
                         <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("Аренда стойки", "Стойканы жалға алу")}</span>
+                        <span>{t("Аренда стойки", "Тіректерді жалға алу")}</span>
                       </SmartLink>
                     </div>
                   </div>

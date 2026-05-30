@@ -104,7 +104,7 @@ export function MobileNav() {
             </li>
             <li>
               <SmartLink to="/it-sks" onClick={close}>
-                {t("СКС. Монтаж сетей", "СКС. Желілерді құру")}
+                {t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}
               </SmartLink>
             </li>
           </ul>
@@ -129,7 +129,7 @@ export function MobileNav() {
             </li>
             <li>
               <SmartLink to="/colocation-full" onClick={close}>
-                {t("Аренда стойки", "Стойканы жалға алу")}
+                {t("Аренда стойки", "Тіректерді жалға алу")}
               </SmartLink>
             </li>
           </ul>
@@ -141,7 +141,7 @@ export function MobileNav() {
         </li>
         <li>
           <Link to="/hr" onClick={close}>
-            {t("Вакансии", "Бос орындар")}
+            {t("Вакансии", "Бос жұмыс орындары")}
           </Link>
         </li>
         <li>

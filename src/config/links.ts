@@ -10,7 +10,7 @@
  *
  * Достаточно поменять этот флаг — компоненты не трогаем.
  */
-export const USE_INTERNAL_ROUTING = false;
+export const USE_INTERNAL_ROUTING = true;
 
 export type ServicePath =
   | "/internet"

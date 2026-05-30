@@ -65,14 +65,14 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <SmartLink to="/it-sks">{t("СКС. Монтаж сетей", "СКС. Желілерді құру")}</SmartLink>
+                <SmartLink to="/it-sks">{t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}</SmartLink>
               </li>
             </ul>
           </div>
 
           {/* Servers */}
           <div className="footer-col">
-            <h4>{t("Серверы и ЦОД", "Серверлер және ДӨО")}</h4>
+            <h4>{t("Серверы и ЦОД", "Серверлер және Дата-орталығы")}</h4>
             <ul>
               <li>
                 <SmartLink to="/dedicated">{t("Dedicated сервер", "Dedicated сервер")}</SmartLink>
@@ -84,7 +84,7 @@ export function Footer() {
                 <SmartLink to="/colocation">Colocation</SmartLink>
               </li>
               <li>
-                <SmartLink to="/colocation-full">{t("Аренда стойки", "Стойканы жалға алу")}</SmartLink>
+                <SmartLink to="/colocation-full">{t("Аренда стойки", "Тіректерді жалға алу")}</SmartLink>
               </li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ export function Footer() {
                 <Link to="/about">{t("О компании", "Компания туралы")}</Link>
               </li>
               <li>
-                <Link to="/hr">{t("Вакансии", "Бос орындар")}</Link>
+                <Link to="/hr">{t("Вакансии", "Бос жұмыс орындары")}</Link>
               </li>
               <li>
                 <Link to="/contacts">{t("Контакты", "Байланыс")}</Link>
