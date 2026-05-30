@@ -125,7 +125,7 @@ function ThankYouPage() {
               <div className="thank-you-meta">
                 <div className="thank-you-meta-item">
                   <span className="thank-you-meta-label">{t("Город", "Қала")}</span>
-                  <strong>{city.name}</strong>
+                  <strong>{t(city.name.ru, city.name.kz)}</strong>
                 </div>
                 <div className="thank-you-meta-item">
                   <span className="thank-you-meta-label">{t("Телефон", "Телефон")}</span>
