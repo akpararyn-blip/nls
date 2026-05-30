@@ -1,4 +1,5 @@
 import type { SVGProps } from "react";
+import { useT } from "@/lib/lang-context";
 
 const APP_STORE_URL = "https://apps.apple.com/ru/app/nls-kz/id6447656407";
 const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=kz.nls.cabinet";
@@ -24,19 +25,32 @@ function GooglePlayLogo(props: SVGProps<SVGSVGElement>) {
 }
 
 export function StoreBadges({ className = "" }: { className?: string }) {
+  const t = useT();
   return (
     <div className={`store-badges ${className}`}>
-      <a href={APP_STORE_URL} target="_blank" rel="noreferrer" className="store-badge" aria-label="Скачать в App Store">
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noreferrer"
+        className="store-badge"
+        aria-label={t("Скачать в App Store", "App Store-дан жүктеу")}
+      >
         <AppleLogo />
         <span className="store-badge-text">
-          <small>Загрузите в</small>
+          <small>{t("Загрузите в", "Жүктеп алыңыз")}</small>
           <strong>App Store</strong>
         </span>
       </a>
-      <a href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer" className="store-badge" aria-label="Скачать в Google Play">
+      <a
+        href={GOOGLE_PLAY_URL}
+        target="_blank"
+        rel="noreferrer"
+        className="store-badge"
+        aria-label={t("Скачать в Google Play", "Google Play-ден жүктеу")}
+      >
         <GooglePlayLogo />
         <span className="store-badge-text">
-          <small>Доступно в</small>
+          <small>{t("Доступно в", "Қолжетімді")}</small>
           <strong>Google Play</strong>
         </span>
       </a>

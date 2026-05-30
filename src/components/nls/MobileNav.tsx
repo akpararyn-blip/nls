@@ -50,7 +50,7 @@ export function MobileNav() {
           }}
         >
           <PinIcon width={18} height={18} />
-          <span className="display-city">{city.name}</span>
+          <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
         </div>
         <div
           style={{
@@ -67,7 +67,7 @@ export function MobileNav() {
             onClick={() => setLang("ru")}
             className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
           >
-            RU
+            RU<span className="lang-beta">beta</span>
           </button>
           <span style={{ opacity: 0.4 }}>/</span>
           <button
@@ -75,7 +75,7 @@ export function MobileNav() {
             onClick={() => setLang("kz")}
             className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
           >
-            KZ
+            KZ<span className="lang-beta">beta</span>
           </button>
         </div>
         <a href={phoneHref} className="mobile-nav-phone" onClick={close}>

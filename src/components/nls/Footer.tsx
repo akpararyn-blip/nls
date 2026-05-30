@@ -10,7 +10,8 @@ export function Footer() {
   const { city } = useCity();
   const t = useT();
   const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
-  const waHref = `https://wa.me/${city.whatsapp.replace("+", "")}`;
+  const waSupportHref = `https://wa.me/${city.whatsapp.replace("+", "")}`;
+  const waSalesHref = `https://wa.me/${city.whatsappSales.replace("+", "")}`;
 
   const cities = [CITIES.Almaty, CITIES.Astana, CITIES.Shymkent];
 
@@ -121,9 +122,15 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href={waHref} className="display-whatsapp footer-wa" target="_blank" rel="noreferrer">
+                <a href={waSalesHref} className="display-whatsapp footer-wa" target="_blank" rel="noreferrer">
                   <WhatsAppIcon width={16} height={16} />
                   {t("WhatsApp · Отдел продаж", "WhatsApp · Сату бөлімі")}
+                </a>
+              </li>
+              <li>
+                <a href={waSupportHref} className="display-whatsapp footer-wa" target="_blank" rel="noreferrer">
+                  <WhatsAppIcon width={16} height={16} />
+                  {t("WhatsApp · Техподдержка", "WhatsApp · Техқолдау")}
                 </a>
               </li>
               <li className="footer-contact-row">
@@ -161,9 +168,9 @@ export function Footer() {
         {/* Cities & addresses */}
         <div className="footer-cities">
           {cities.map((c) => (
-            <div className="footer-city-card" key={c.name}>
-              <h5>{c.name}</h5>
-              <p>{c.address}</p>
+            <div className="footer-city-card" key={c.name.ru}>
+              <h5>{t(c.name.ru, c.name.kz)}</h5>
+              <p>{t(c.address.ru, c.address.kz)}</p>
             </div>
           ))}
         </div>
