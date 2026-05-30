@@ -30,13 +30,16 @@ if (typeof window !== "undefined") {
   const gtmId = getGtmIdForHost(window.location.hostname);
   if (gtmId) {
     initGtm(gtmId);
-    pushPageView({
-      path: window.location.pathname + window.location.search,
-    });
+    // page_view пушим только через onResolved — он сработает и на первой
+    // навигации (после того, как installHeadSync обновит document.title),
+    // и на всех последующих. Дедуп по path защищает от повторных резолвов
+    // (StrictMode в dev, router.invalidate(), и т.п.).
+    let lastPath: string | null = null;
     router.subscribe("onResolved", ({ toLocation }) => {
-      pushPageView({
-        path: toLocation.pathname + (toLocation.searchStr ?? ""),
-      });
+      const path = toLocation.pathname + (toLocation.searchStr ?? "");
+      if (path === lastPath) return;
+      lastPath = path;
+      pushPageView({ path });
     });
   }
 }
