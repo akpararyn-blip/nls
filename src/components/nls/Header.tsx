@@ -70,7 +70,7 @@ export function Header() {
               }}
             >
               <PinIcon width={16} height={16} />
-              <span className="display-city">{city.name}</span>
+              <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
             </button>
             <div className="top-menu">
               <Link to="/about">{t("О компании", "Компания туралы")}</Link>
@@ -124,7 +124,8 @@ export function Header() {
                     setLangOpen(false);
                   }}
                 >
-                  RU
+                  <span>RU</span>
+                  <span className="lang-beta">beta</span>
                 </div>
                 <div
                   role="option"
@@ -134,7 +135,8 @@ export function Header() {
                     setLangOpen(false);
                   }}
                 >
-                  KZ
+                  <span>KZ</span>
+                  <span className="lang-beta">beta</span>
                 </div>
               </div>
             </div>
