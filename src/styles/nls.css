@@ -5987,3 +5987,39 @@ body::before, body::after { display: none !important; }
         height: 16px;
     }
 }
+
+/* Beta-плашка у переключателя языка */
+.lang-beta {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 3px;
+  background: var(--color-blue, #2563eb);
+  color: #fff;
+  vertical-align: middle;
+}
+.lang-dropdown [role="option"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Дополнительная стилизация плавающего контакта (новый пункт-кнопка) */
+.float-contact-item--btn {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.float-contact-icon--callback {
+  background: var(--color-blue, #2563eb);
+  color: #fff;
+}

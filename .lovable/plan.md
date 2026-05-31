@@ -1,68 +1,54 @@
-## Что сейчас не так
+## Что меняем
 
-Сайт — SPA на TanStack Router. Если вставить GTM-скрипт по инструкции Google, он инициализируется один раз при загрузке и фиксирует только первый просмотр страницы. Переходы между маршрутами не вызывают перезагрузку документа, поэтому в GTM не приходят `Page View` события — а от них зависят триггеры Yandex Metrika, Meta Pixel и TikTok Pixel.
+### 1. Переводы RU/KZ через `useT()`
 
-Решение: подгружать нужный GTM-контейнер по `window.location.hostname` и на каждой смене URL отправлять событие в `dataLayer`.
+- **`src/components/nls/ConsentCheckbox.tsx`** — перевести «Отправляя форму, я даю согласие на обработку персональных данных».
+- **`src/components/nls/RecaptchaNotice.tsx`** — перевести «Защищено reCAPTCHA. Применяются Политика конфиденциальности и Условия использования Google».
+- **`src/components/nls/StoreBadges.tsx`** — перевести «Загрузите в», «Доступно в».
+- **`src/lib/city-context.tsx`** — адреса городов сделать локализуемыми. Заменим `address: string` на `address: { ru: string; kz: string }`, переведём адреса трёх городов и Other, в `Footer.tsx` и `Modals.tsx` (где используется `city.address`) — выбирать перевод через `t(city.address.ru, city.address.kz)`. Названия городов (`name`) тоже сделать локализуемыми (Алматы/Алматы, Астана/Астана, Шымкент/Шымкент, «Другие города»/«Басқа қалалар»).
 
-## План
+### 2. WhatsApp: два номера с подписями
 
-### 1. Конфиг GTM по доменам — `src/config/gtm.ts` (новый файл)
+Константы:
+- Техподдержка: `+7 700 339 7777` (текущий `city.whatsapp`)
+- Отдел продаж: `+7 700 730 4591`
 
-Маппинг хост → GTM ID:
+Куда добавить подписи:
+- **`Footer.tsx`** — текущая строка «WhatsApp · Отдел продаж» неверная (номер техподдержки). Делаем две строки:
+  - WhatsApp · Отдел продаж → `wa.me/77007304591`
+  - WhatsApp · Техподдержка → `wa.me/77003397777`
+- **Телефонная ссылка `tel:+77003397777` в шапке/футере — не трогаем** (по требованию).
 
-```
-colocation.nls.kz   → GTM-W5VT62QG
-dedicated.nls.kz    → GTM-WZ29K6QS
-internet.nls.kz     → GTM-TMG5ZQDK
-lan.nls.kz          → GTM-PT6RVBPF
-rack.nls.kz         → GTM-WFDBFNWW
-server.nls.kz       → GTM-PLJN2C4N
-nls.kz / www.nls.kz → читается из import.meta.env.VITE_GTM_ID_MAIN
-```
+### 3. `FloatingContact.tsx` — расширить меню
 
-Превью- и lovable-домены (`*.lovable.app`, `localhost`) — GTM не подключаем, чтобы не загрязнять статистику.
+В выпадающем меню кнопки сейчас два пункта (Позвонить, WhatsApp). Делаем 4 пункта:
+1. Позвонить — `+7 700 339 7777`
+2. WhatsApp · Отдел продаж — `wa.me/77007304591`
+3. WhatsApp · Техподдержка — `wa.me/77003397777`
+4. Заказать обратный звонок — кнопка, вызывает `openConsultationModalWith({ subject: "Обратный звонок" })` из `useCity()`.
 
-Экспортируется функция `getGtmIdForHost(host)`.
+Все подписи через `useT()`.
 
-### 2. Загрузчик GTM — `src/lib/gtm.ts` (новый файл)
+### 4. Beta-плашки у переключателя языка
 
-Две функции:
-- `initGtm(id)` — однократно инициализирует `window.dataLayer`, пушит `gtm.start` и вставляет `<script src="https://www.googletagmanager.com/gtm.js?id=...">` + `<noscript><iframe ...>` в `<body>`. Защищён флагом, чтобы не подключиться дважды.
-- `pushPageView({ path, title })` — пушит в `dataLayer` событие `{ event: 'page_view', page_path, page_location, page_title }`. В GTM это будет триггер «Custom Event = page_view» для Yandex Metrika hit, Meta Pixel PageView и TikTok Pixel Pageview.
+- **`Header.tsx`** — в выпадающем списке `.lang-dropdown` рядом с «RU» и «KZ» отрисовать маленький бейдж `<span class="lang-beta">beta</span>`. Поскольку перевод неофициальный для обоих языков, бейдж ставим у обоих вариантов (так пользователь понимает, что любая локализация — beta).
+- **`MobileNav.tsx`** — если там есть переключатель языка, добавить такие же бейджи (проверим файл при реализации).
+- **`src/styles/nls.css`** — добавить стиль `.lang-beta` (маленькая капсула, акцентный цвет, uppercase).
 
-### 3. Подключение к роутеру — `src/main.tsx`
+## Что НЕ меняем
 
-После создания роутера:
-- Определяем `hostname`, через `getGtmIdForHost` получаем ID, вызываем `initGtm(id)`.
-- Подписываемся на `router.subscribe('onResolved', ({ toLocation }) => pushPageView({ path: toLocation.pathname + toLocation.search, title: document.title }))`. Это срабатывает после каждой завершённой навигации, когда новый `document.title` уже применён (через существующий `installHeadSync`).
-- Первый просмотр тоже отправляем явно после `initGtm`, чтобы не зависеть от тайминга первого `onResolved`.
+- Номер `tel:+77003397777` в шапке/футере остаётся как есть (без изменения подписи).
+- Логика GTM, маршрутизация, тексты страниц вне перечисленных компонентов.
 
-### 4. Учёт переключателя поддоменов (`USE_INTERNAL_ROUTING`)
+## Файлы
 
-Логика берёт ID строго по реальному `hostname`. Поэтому:
-- В текущем «внутреннем» режиме на nls.kz используется ID основного домена.
-- Когда вы переключите `USE_INTERNAL_ROUTING = false` и каждый поддомен начнёт обслуживать свою услугу — автоматически подтянется правильный GTM (например, на `colocation.nls.kz` — GTM-W5VT62QG). Менять ничего не нужно.
-
-### 5. Что нужно настроить в каждом GTM-контейнере
-
-В каждом из 7 контейнеров создаём один общий триггер и переиспользуем его для всех тегов:
-
-- **Trigger**: Custom Event, имя события = `page_view`.
-- В тегах Yandex Metrika, Meta Pixel, TikTok Pixel заменить триггер `All Pages` (History Change) на этот `page_view`.
-- Опционально: создать переменные dataLayer `page_path`, `page_title` и пробрасывать их в Yandex Metrika hit (`url`, `title`) и в Pixel `PageView`.
-
-После этого все три системы будут получать корректные просмотры при каждом переходе.
-
-## Технические детали
-
-- GTM скрипт грузится синхронно через `appendChild` (async), без блокировки рендера.
-- `dataLayer` инициализируется ДО создания скрипта — это обязательное условие GTM-snippet.
-- Подписка `router.subscribe('onResolved', ...)` — стандартный API TanStack Router, не требует ререндеров.
-- Файлы изменяются: `src/main.tsx`. Новые файлы: `src/config/gtm.ts`, `src/lib/gtm.ts`.
-- Поведение `LangProvider` и `CityProvider` не затрагивается.
-- SSR не активирован для production (сейчас чистый CSR), поэтому проверки `typeof window !== 'undefined'` достаточно — никаких изменений в server-функциях не требуется.
-
-## Что нужно от вас
-
-1. **GTM ID для основного домена nls.kz** — добавлю в `.env` как `VITE_GTM_ID_MAIN`. Если пока нет — пришлите позже, до этого на nls.kz GTM подключаться не будет.
-2. Подтвердите, что в каждом GTM-контейнере вы готовы перенастроить триггеры пикселей на Custom Event `page_view` (или мне расписать пошагово).
+- edit: `src/components/nls/ConsentCheckbox.tsx`
+- edit: `src/components/nls/RecaptchaNotice.tsx`
+- edit: `src/components/nls/StoreBadges.tsx`
+- edit: `src/lib/city-context.tsx` (тип `CityData.address` и `name` → локализуемые)
+- edit: `src/components/nls/Footer.tsx` (два WA с подписями + локализованные адреса/имена городов)
+- edit: `src/components/nls/Modals.tsx` (если использует `city.address`/`city.name` — подставить `t(...)`)
+- edit: `src/components/nls/FloatingContact.tsx` (4 пункта, переводы, обратный звонок)
+- edit: `src/components/nls/Header.tsx` (beta-бейджи)
+- edit: `src/components/nls/MobileNav.tsx` (beta-бейджи у языкового переключателя, если есть)
+- edit: `src/styles/nls.css` (стиль `.lang-beta`)
