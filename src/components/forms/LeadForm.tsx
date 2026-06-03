@@ -165,7 +165,12 @@ export function LeadForm({
       {showAddress && (
         <div className="form-row-2">
           <div className="form-group">
-            <label htmlFor={id("address")}>{t("Адрес", "Мекенжай")}</label>
+            <label htmlFor={id("address")}>
+              {t("Адрес", "Мекенжай")}{" "}
+              <span style={{ color: "var(--color-text-light)", fontWeight: 400, fontSize: "0.85em" }}>
+                {t("(необязательно)", "(міндетті емес)")}
+              </span>
+            </label>
             <input
               type="text"
               id={id("address")}
