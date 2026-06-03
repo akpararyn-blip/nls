@@ -243,9 +243,11 @@ function CalcCta() {
 
 function HowWeWork() {
   const t = useT();
-  const steps = [
+  type Step = { title: string; text: string; link?: { label: string; to: "/requisites" } };
+  const steps: Step[] = [
     {
       title: t("Заявка", "Өтінім"),
+
       text: t(
         "Вы оставляете заявку на сайте или по номеру телефона.",
         "Сіз сайтта немесе телефон арқылы өтінім қалдырасыз."
@@ -304,13 +306,13 @@ function HowWeWork() {
     },
   ];
 
-  const renderStep = (step: (typeof steps)[number], idx: number) => (
+  const renderStep = (step: Step, idx: number) => (
     <div className="how-step" key={idx}>
       <div className="how-step-num">{String(idx + 1).padStart(2, "0")}</div>
       <h3>{step.title}</h3>
       <p>
         {step.text}
-        {"link" in step && step.link && (
+        {step.link && (
           <>
             {" "}
             <Link to={step.link.to} className="how-step-link">
@@ -321,6 +323,7 @@ function HowWeWork() {
       </p>
     </div>
   );
+
 
   return (
     <section className="how-we-work-section">
