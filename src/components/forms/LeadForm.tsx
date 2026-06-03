@@ -6,6 +6,7 @@ import { submitLead } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
 import { useT } from "@/lib/lang-context";
+import { useCity, type CityKey } from "@/lib/city-context";
 
 export interface LeadFormProps {
   formName: string;
@@ -21,7 +22,16 @@ export interface LeadFormProps {
   fullWidthButton?: boolean;
   onSuccess?: () => void;
   noRedirect?: boolean;
+  /** Показать поля «Адрес» и «Город» (только для страницы /internet) */
+  showAddress?: boolean;
 }
+
+const CITY_NAMES_RU: Record<CityKey, string> = {
+  Almaty: "Алматы",
+  Astana: "Астана",
+  Shymkent: "Шымкент",
+  Other: "Другие города",
+};
 
 export function LeadForm({
   formName,
@@ -37,9 +47,11 @@ export function LeadForm({
   fullWidthButton = true,
   onSuccess,
   noRedirect,
+  showAddress = false,
 }: LeadFormProps) {
   const navigate = useNavigate();
   const t = useT();
+  const { cityKey, city } = useCity();
 
   const lblCompany = companyLabel ?? t("Название компании или проекта", "Компания немесе жоба атауы");
   const lblMessage = messageLabel ?? t("Сообщение для менеджера", "Менеджер үшін хабарлама");
@@ -49,7 +61,12 @@ export function LeadForm({
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [phone, setPhone] = useState("");
+  const [selectedCity, setSelectedCity] = useState<CityKey>(cityKey);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    setSelectedCity(cityKey);
+  }, [cityKey]);
 
   useEffect(() => {
     if (defaultMessage !== undefined && messageRef.current) {
@@ -68,15 +85,30 @@ export function LeadForm({
     const fd = new FormData(form);
     setSubmitting(true);
     try {
+      const companyValue = String(fd.get("company") ?? "");
+      // Ищем 12 цифр подряд только в поле «Название компании или ИИН/БИН»
+      const iinMatch = companyValue.replace(/\D+/g, " ").match(/(?<!\d)(\d{12})(?!\d)/);
+      const iin = iinMatch ? iinMatch[1] : undefined;
+
+      const cityRu = showAddress ? CITY_NAMES_RU[selectedCity] : city.name.ru;
+
       const fields: Record<string, string> = {
-        [lblCompany]: String(fd.get("company") ?? ""),
+        [lblCompany]: companyValue,
         [t("ФИО", "Аты-жөні")]: String(fd.get("name") ?? ""),
         [t("Телефон", "Телефон")]: phone,
+        ...(showAddress
+          ? {
+              ["Адрес"]: String(fd.get("address") ?? ""),
+              ["Город"]: CITY_NAMES_RU[selectedCity],
+            }
+          : {
+              ["Город"]: city.name.ru,
+            }),
         [keyMessage]: String(fd.get("message") ?? ""),
         ...(subject ? { [t("Тема", "Тақырып")]: subject } : {}),
       };
 
-      await submitLead({ formName, action, fields });
+      await submitLead({ formName, action, fields, city: cityRu, iin });
 
       // Сохраняем заявку для страницы thank-you
       const orderNumber = generateOrderNumber();
@@ -129,6 +161,37 @@ export function LeadForm({
           required
         />
       </div>
+
+      {showAddress && (
+        <div className="form-row-2">
+          <div className="form-group">
+            <label htmlFor={id("address")}>{t("Адрес", "Мекенжай")}</label>
+            <input
+              type="text"
+              id={id("address")}
+              name="address"
+              className="form-control"
+              placeholder={t("ул., дом, офис", "көше, үй, кеңсе")}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor={id("city")}>{t("Город", "Қала")}</label>
+            <select
+              id={id("city")}
+              name="city"
+              className="form-control"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value as CityKey)}
+            >
+              <option value="Almaty">{t("Алматы", "Алматы")}</option>
+              <option value="Astana">{t("Астана", "Астана")}</option>
+              <option value="Shymkent">{t("Шымкент", "Шымкент")}</option>
+              <option value="Other">{t("Другие города", "Басқа қалалар")}</option>
+            </select>
+          </div>
+        </div>
+      )}
+
       <div className="form-group">
         <label htmlFor={id("message")}>{lblMessage}</label>
         <textarea

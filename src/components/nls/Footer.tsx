@@ -107,8 +107,12 @@ export function Footer() {
                 <Link to="/login">{t("Личный кабинет", "Жеке кабинет")}</Link>
               </li>
               <li>
+                <Link to="/requisites">{t("Реквизиты", "Деректемелер")}</Link>
+              </li>
+              <li>
                 <Link to="/privacy">{t("Политика конфиденциальности", "Құпиялылық саясаты")}</Link>
               </li>
+
             </ul>
           </div>
 
