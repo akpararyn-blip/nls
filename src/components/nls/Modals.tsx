@@ -77,25 +77,31 @@ export function Modals() {
             <p>{t("Заполните форму, и наш менеджер свяжется с вами в течение 15 минут.", "Форманы толтырыңыз, менеджеріміз 15 минут ішінде байланысады.")}</p>
           </div>
 
-          {modal.consultation && (
-            <LeadForm
-              key={consultation.subject ?? "modal"}
-              formName={
-                consultation.subject
-                  ? `Модальное окно — ${consultation.subject}`
-                  : "Модальное окно — консультация"
-              }
-              action="consultation_modal"
-              idPrefix="modal"
-              companyLabel={t("Название компании или ИИН/БИН", "Компания атауы немесе ЖСН/БСН")}
-              messageLabel={t("Комментарий (необязательно)", "Пікір (міндетті емес)")}
-              messageFieldKey="Комментарий"
-              messageRows={2}
-              defaultMessage={consultation.subject ?? undefined}
-              subject={consultation.subject ?? undefined}
-              onSuccess={closeModals}
-            />
-          )}
+          {modal.consultation && (() => {
+            const showAddress =
+              typeof window !== "undefined" && window.location.pathname.startsWith("/internet");
+            return (
+              <LeadForm
+                key={consultation.subject ?? "modal"}
+                formName={
+                  consultation.subject
+                    ? `Модальное окно — ${consultation.subject}`
+                    : "Модальное окно — консультация"
+                }
+                action="consultation_modal"
+                idPrefix="modal"
+                companyLabel={t("Название компании или ИИН/БИН", "Компания атауы немесе ЖСН/БСН")}
+                messageLabel={t("Комментарий (необязательно)", "Пікір (міндетті емес)")}
+                messageFieldKey="Комментарий"
+                messageRows={2}
+                defaultMessage={consultation.subject ?? undefined}
+                subject={consultation.subject ?? undefined}
+                onSuccess={closeModals}
+                showAddress={showAddress}
+              />
+            );
+          })()}
+
         </div>
       </div>
     </>

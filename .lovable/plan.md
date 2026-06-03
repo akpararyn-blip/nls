@@ -1,54 +1,83 @@
-## Что меняем
+## План изменений (с учётом уточнений)
 
-### 1. Переводы RU/KZ через `useT()`
+### 1. Telegram: город + автоссылка на ИИН/БИН
+**`src/lib/submitLead.ts`**
+- Принимать опц. `city?: string` и `iinSource?: string` (или просто передавать в `fields` ключ `Название компании или ИИН/БИН` — и сканировать **только это поле**).
+- Регулярка `/(?<!\d)(\d{12})(?!\d)/` применяется ИСКЛЮЧИТЕЛЬНО к значению поля «Название компании или ИИН/БИН». Если найдено — в сообщение добавляется строка:
+  `• <b>Проверить ИИН:</b> https://pk.adata.kz/counterparty/main/company/{12d}/basic-info`
+- В шапку сообщения добавить `🏙 Город: {city}` (после строки `Страница`).
 
-- **`src/components/nls/ConsentCheckbox.tsx`** — перевести «Отправляя форму, я даю согласие на обработку персональных данных».
-- **`src/components/nls/RecaptchaNotice.tsx`** — перевести «Защищено reCAPTCHA. Применяются Политика конфиденциальности и Условия использования Google».
-- **`src/components/nls/StoreBadges.tsx`** — перевести «Загрузите в», «Доступно в».
-- **`src/lib/city-context.tsx`** — адреса городов сделать локализуемыми. Заменим `address: string` на `address: { ru: string; kz: string }`, переведём адреса трёх городов и Other, в `Footer.tsx` и `Modals.tsx` (где используется `city.address`) — выбирать перевод через `t(city.address.ru, city.address.kz)`. Названия городов (`name`) тоже сделать локализуемыми (Алматы/Алматы, Астана/Астана, Шымкент/Шымкент, «Другие города»/«Басқа қалалар»).
+**`src/components/forms/LeadForm.tsx`**
+- Подтянуть `useCity()` и передавать `city: city.name.ru` в `submitLead`.
+- Поле «Город» в `fields` также сохраняем (для thank-you), но в Telegram дублироваться не будет — `submitLead` исключит его из `fieldLines`, т.к. рендерит в шапке.
 
-### 2. WhatsApp: два номера с подписями
+### 2. Поля «Адрес» и «Город» — ТОЛЬКО на странице «Интернет»
+**`LeadForm.tsx`** — добавить пропс `showAddress?: boolean` (по умолчанию `false`).
+- Если `showAddress`, между телефоном и комментарием рендерим строку из двух полей:
+  - `Адрес` (input text, необязательное)
+  - `Город` (select: Алматы / Астана / Шымкент / Другие города), значение по умолчанию = текущий `cityKey`.
+- Класс-обёртка `.form-row-2` (2 колонки на десктопе, 1 на мобиле).
+- В `fields` попадают «Адрес» и «Город».
 
-Константы:
-- Техподдержка: `+7 700 339 7777` (текущий `city.whatsapp`)
-- Отдел продаж: `+7 700 730 4591`
+**Где включаем `showAddress`:**
+- `src/routes/internet.tsx` — `<LeadForm ... showAddress />` в секции FinalCTA.
+- `src/components/nls/Modals.tsx` — модалка «Оставить заявку»: включать `showAddress` ТОЛЬКО если открыта со страницы `/internet`. Реализация: проверка `typeof window !== "undefined" && window.location.pathname.startsWith("/internet")` при открытии модалки → пробросить флаг в `LeadForm` через `key`/проп.
 
-Куда добавить подписи:
-- **`Footer.tsx`** — текущая строка «WhatsApp · Отдел продаж» неверная (номер техподдержки). Делаем две строки:
-  - WhatsApp · Отдел продаж → `wa.me/77007304591`
-  - WhatsApp · Техподдержка → `wa.me/77003397777`
-- **Телефонная ссылка `tel:+77003397777` в шапке/футере — не трогаем** (по требованию).
+Поле «Город» всё равно передаётся в Telegram (через `submitLead.city`) на ВСЕХ страницах — берётся из `useCity()`. Видимый селектор «Город» в форме показывается только на /internet.
 
-### 3. `FloatingContact.tsx` — расширить меню
+### 3. Уменьшение модалки «Оставить заявку»
+**CSS (`src/styles/nls.css`):**
+- `.modal-content`, `.form-modal-content` — вертикальные паддинги 32 → 20 px.
+- `.modal-header` — меньше `margin-bottom`, `h3` чуть меньше, `p` уменьшить шрифт/убрать на маленьких высотах.
+- `.form-group` — `margin-bottom` 16 → 10 px; `input/textarea` — меньше `padding-y`.
+- Новый `.form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; } @media(max-width:560px){ grid-template-columns:1fr; }`.
 
-В выпадающем меню кнопки сейчас два пункта (Позвонить, WhatsApp). Делаем 4 пункта:
-1. Позвонить — `+7 700 339 7777`
-2. WhatsApp · Отдел продаж — `wa.me/77007304591`
-3. WhatsApp · Техподдержка — `wa.me/77003397777`
-4. Заказать обратный звонок — кнопка, вызывает `openConsultationModalWith({ subject: "Обратный звонок" })` из `useCity()`.
+### 4. Cookie-баннер компактнее (текст НЕ сокращать)
+**`CookieBanner.tsx` + CSS `.cookie-banner`**
+- Текст оставить, но уменьшить `font-size` (например 0.95 → 0.78 rem), `line-height` ужать.
+- Кнопки — меньше (padding и font-size, например `.btn-sm` стиль локально).
+- Баннер прижать к низу: `bottom: 0; border-radius: 0`, убрать нижний отступ, общий `padding` уменьшить.
+- На десктопе текст и кнопки в один ряд (flex).
 
-Все подписи через `useT()`.
+### 5. Страница «Интернет»: блок «Как мы работаем»
+**`src/routes/internet.tsx`** — новая секция `HowWeWork` после `Tariffs`/CTA (см. п.8).
+- 9 шагов. Сетка:
+  - Desktop: первый ряд 5 колонок, второй ряд 4 колонки (используем два отдельных grid-блока подряд: `grid-template-columns: repeat(5,1fr)` и ниже `repeat(4,1fr)`).
+  - Mobile (`<=720px`): 2 колонки.
+- Карточка шага: крупная цифра, заголовок, описание.
+- В шаге 5 «ОПЛАТА» — ссылка `<Link to="/requisites">Реквизиты NLS KAZAKHSTAN</Link>`.
+- Локализация RU/KZ через `useT()`.
 
-### 4. Beta-плашки у переключателя языка
+### 6. Страница «Реквизиты»
+- `src/routes/requisites.tsx` (URL `/requisites`), `createFileRoute("/requisites")` + `head()`.
+- Таблица со всеми реквизитами ТОО «NLS KAZAKHSTAN» (директор, адреса, телефоны, email, БИН, НДС, банк. реквизиты — 3 банка).
+- Внутри `SiteLayout`, стили — новый класс `.requisites-table` в `nls.css`.
+- Ссылка добавляется в `Footer.tsx` рядом с «Политика конфиденциальности».
 
-- **`Header.tsx`** — в выпадающем списке `.lang-dropdown` рядом с «RU» и «KZ» отрисовать маленький бейдж `<span class="lang-beta">beta</span>`. Поскольку перевод неофициальный для обоих языков, бейдж ставим у обоих вариантов (так пользователь понимает, что любая локализация — beta).
-- **`MobileNav.tsx`** — если там есть переключатель языка, добавить такие же бейджи (проверим файл при реализации).
-- **`src/styles/nls.css`** — добавить стиль `.lang-beta` (маленькая капсула, акцентный цвет, uppercase).
+### 7. Новый тариф «Интернет базовый»
+**`src/routes/internet.tsx` → `Tariffs`**
+- Добавить третью карточку (первой в ряду): «Интернет базовый», «скорость до 100 Мбит/с», фичи и кнопка как у «Интернет для офиса».
+- Сетка тарифов: 3 колонки на десктопе, 1 на мобиле. Хит — по-прежнему «Интернет для офиса».
 
-## Что НЕ меняем
+### 8. CTA «Рассчитать скорость с учётом рабочих мест»
+- Новая секция сразу после `Tariffs`.
+- Заголовок + короткое описание (скорость зависит от числа сотрудников, видеосвязи, облаков и т.п.).
+- Кнопка «Рассчитать» → `openConsultationModalWith({ subject: t("Расчёт скорости по рабочим местам", "Жұмыс орындары бойынша жылдамдықты есептеу") })`.
 
-- Номер `tel:+77003397777` в шапке/футере остаётся как есть (без изменения подписи).
-- Логика GTM, маршрутизация, тексты страниц вне перечисленных компонентов.
+### 9. Заголовок «Доп. услуги» перед `ExtraServices`
+- Внутри `<section className="extra-services-section">` добавить `section-title` c eyebrow «Доп. услуги» / «Қосымша қызметтер» и заголовком в едином стиле с остальными секциями.
 
-## Файлы
+### 10. Плавающая кнопка — отступ от края
+- `.float-contact` в `src/styles/nls.css`: увеличить `right`/`bottom` (desktop 16→28 px, mobile 12→20 px).
 
-- edit: `src/components/nls/ConsentCheckbox.tsx`
-- edit: `src/components/nls/RecaptchaNotice.tsx`
-- edit: `src/components/nls/StoreBadges.tsx`
-- edit: `src/lib/city-context.tsx` (тип `CityData.address` и `name` → локализуемые)
-- edit: `src/components/nls/Footer.tsx` (два WA с подписями + локализованные адреса/имена городов)
-- edit: `src/components/nls/Modals.tsx` (если использует `city.address`/`city.name` — подставить `t(...)`)
-- edit: `src/components/nls/FloatingContact.tsx` (4 пункта, переводы, обратный звонок)
-- edit: `src/components/nls/Header.tsx` (beta-бейджи)
-- edit: `src/components/nls/MobileNav.tsx` (beta-бейджи у языкового переключателя, если есть)
-- edit: `src/styles/nls.css` (стиль `.lang-beta`)
+---
+
+### Технические детали
+- Регэксп ИИН: `/(?<!\d)(\d{12})(?!\d)/` применяется только к значению ключа, начинающегося с «Название компании» (или матчинг по точному label`Название компании или ИИН/БИН`). Реализуем через дополнительный аргумент `submitLead({ iin })` — лучше: `LeadForm` сам ищет 12 цифр в value поля `company` и передаёт `iin?: string` в `submitLead`.
+- Город в Telegram отдельной строкой шапки; ключ «Город» из `fields` фильтруется при рендере `fieldLines`.
+- Поле «Адрес»/«Город» появляется только при `showAddress` пропсе.
+- Маршрут `/requisites` авто-регистрируется TanStack file-router.
+
+### Файлы
+- edit: `src/lib/submitLead.ts`, `src/components/forms/LeadForm.tsx`, `src/components/nls/CookieBanner.tsx`, `src/components/nls/Footer.tsx`, `src/components/nls/Modals.tsx`, `src/routes/internet.tsx`, `src/styles/nls.css`
+- create: `src/routes/requisites.tsx`

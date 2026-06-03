@@ -15,6 +15,7 @@ import {
   Cloud,
   Boxes,
   ArrowRight,
+  Calculator,
 } from "lucide-react";
 
 export const Route = createFileRoute("/internet")({
@@ -41,6 +42,8 @@ export function InternetPage() {
     <SiteLayout>
       <Hero />
       <Tariffs />
+      <CalcCta />
+      <HowWeWork />
       <ExtraServices />
       <DcServices />
       <Trust />
@@ -117,7 +120,33 @@ function Tariffs() {
           </p>
         </div>
 
-        <div className="tariffs-grid">
+        <div className="tariffs-grid tariffs-grid--3">
+          <div className="tariff-card">
+            <div className="tariff-header">
+              <div className="tariff-icon">
+                <CheckIcon />
+              </div>
+              <h3>{t("Интернет базовый", "Базалық интернет")}</h3>
+            </div>
+            <div className="tariff-speed">
+              {t("скорость до", "жылдамдық")} <span>100</span> {t("Мбит/с", "Мбит/с дейін")}
+            </div>
+            <p className="tariff-desc">
+              {t(
+                "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
+                "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
+              )}
+            </p>
+            <ul className="tariff-features">
+              <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
+              <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
+              <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
+            </ul>
+            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
+              {t("Узнать стоимость", "Құнын білу")}
+            </button>
+          </div>
+
           <div className="tariff-card tariff-featured">
             <div className="featured-badge">{t("Хит продаж", "Сатылым хиті")}</div>
             <div className="tariff-header">
@@ -176,6 +205,147 @@ function Tariffs() {
   );
 }
 
+function CalcCta() {
+  const { openConsultationModalWith } = useCity();
+  const t = useT();
+  return (
+    <section className="calc-cta-section">
+      <div className="container">
+        <div className="calc-cta-card">
+          <div className="calc-cta-icon">
+            <Calculator size={32} strokeWidth={1.8} />
+          </div>
+          <div className="calc-cta-body">
+            <h3>{t("Рассчитать скорость с учётом рабочих мест", "Жұмыс орындары бойынша жылдамдықты есептеу")}</h3>
+            <p>
+              {t(
+                "Подберём оптимальный тариф исходя из числа сотрудников, типа задач, видеоконференций, облачных сервисов и резервного копирования.",
+                "Қызметкерлер саны, тапсырмалардың түрі, видеоконференциялар, бұлтты сервистер мен резервтік көшіруді ескере отырып оңтайлы тарифті таңдаймыз."
+              )}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() =>
+              openConsultationModalWith({
+                subject: t("Расчёт скорости по рабочим местам", "Жұмыс орындары бойынша жылдамдықты есептеу"),
+              })
+            }
+          >
+            {t("Рассчитать", "Есептеу")}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowWeWork() {
+  const t = useT();
+  type Step = { title: string; text: string; link?: { label: string; to: "/requisites" } };
+  const steps: Step[] = [
+    {
+      title: t("Заявка", "Өтінім"),
+
+      text: t(
+        "Вы оставляете заявку на сайте или по номеру телефона.",
+        "Сіз сайтта немесе телефон арқылы өтінім қалдырасыз."
+      ),
+    },
+    {
+      title: t("Консультация", "Кеңес беру"),
+      text: t(
+        "Консультация менеджера и согласование времени выезда для замера.",
+        "Менеджердің кеңесі және өлшеу үшін шығу уақытын келісу."
+      ),
+    },
+    {
+      title: t("Возможность подключения", "Қосылу мүмкіндігі"),
+      text: t(
+        "Инженер проверит возможность подключения и рассчитает стоимость.",
+        "Инженер қосылу мүмкіндігін тексеріп, құнын есептейді."
+      ),
+    },
+    {
+      title: t("Договор", "Шарт"),
+      text: t(
+        "Заключение договора на монтаж оборудования. При выборе аренды — дополнительный договор аренды.",
+        "Жабдықты орнатуға шарт жасасу. Жалға алу таңдалса — қосымша жалдау шарты."
+      ),
+    },
+    {
+      title: t("Оплата", "Төлем"),
+      text: t("Вы производите оплату.", "Сіз төлемді жасайсыз."),
+      link: { label: t("Реквизиты NLS Kazakhstan", "NLS Kazakhstan деректемелері"), to: "/requisites" as const },
+    },
+    {
+      title: t("Прокладка кабеля", "Кабель тарту"),
+      text: t(
+        "Инженеры проложат кабель. Это может занять несколько дней.",
+        "Инженерлер кабельді тартады. Бұл бірнеше күнді алуы мүмкін."
+      ),
+    },
+    {
+      title: t("Настройка интернета", "Интернетті баптау"),
+      text: t(
+        "После прокладки настраиваем оборудование и проверяем работу интернета.",
+        "Тартудан кейін жабдықты баптаймыз және интернеттің жұмысын тексереміз."
+      ),
+    },
+    {
+      title: t("Проверка", "Тексеру"),
+      text: t(
+        "Финальная проверка — чтобы всё работало как часы.",
+        "Бәрі сағаттай дөп жұмыс істеуі үшін соңғы тексеру."
+      ),
+    },
+    {
+      title: t("Техподдержка", "Техқолдау"),
+      text: t("Техподдержка NLS Kazakhstan 24/7.", "NLS Kazakhstan техқолдауы 24/7."),
+    },
+  ];
+
+  const renderStep = (step: Step, idx: number) => (
+    <div className="how-step" key={idx}>
+      <div className="how-step-num">{String(idx + 1).padStart(2, "0")}</div>
+      <h3>{step.title}</h3>
+      <p>
+        {step.text}
+        {step.link && (
+          <>
+            {" "}
+            <Link to={step.link.to} className="how-step-link">
+              {step.link.label}
+            </Link>
+          </>
+        )}
+      </p>
+    </div>
+  );
+
+
+  return (
+    <section className="how-we-work-section">
+      <div className="container">
+        <div className="section-title">
+          <span className="section-eyebrow">{t("Процесс", "Үдеріс")}</span>
+          <h2>{t("Как мы работаем", "Біз қалай жұмыс істейміз")}</h2>
+          <p>
+            {t(
+              "От первой заявки до круглосуточной техподдержки — 9 простых шагов.",
+              "Алғашқы өтінімнен тәулік бойы техқолдауға дейін — 9 қарапайым қадам."
+            )}
+          </p>
+        </div>
+
+        <div className="how-grid how-grid--5">{steps.slice(0, 5).map((s, i) => renderStep(s, i))}</div>
+        <div className="how-grid how-grid--4">{steps.slice(5).map((s, i) => renderStep(s, i + 5))}</div>
+      </div>
+    </section>
+  );
+}
+
 function ExtraServices() {
   const t = useT();
   const extraServices = [
@@ -215,6 +385,16 @@ function ExtraServices() {
   return (
     <section className="extra-services-section">
       <div className="container">
+        <div className="section-title">
+          <span className="section-eyebrow">{t("Доп. услуги", "Қосымша қызметтер")}</span>
+          <h2>{t("Дополнительные решения для офиса", "Кеңсеге арналған қосымша шешімдер")}</h2>
+          <p>
+            {t(
+              "Расширьте инфраструктуру комплексными услугами под ключ.",
+              "Инфрақұрылымды кешенді қызметтермен толықтырыңыз."
+            )}
+          </p>
+        </div>
         <div className="bento-grid">
           {extraServices.map((s) => {
             const Icon = s.icon;
@@ -353,6 +533,7 @@ function FinalCTA() {
             action="internet_cta"
             idPrefix="internet"
             messageLabel={t("Сообщение для менеджера (необязательно)", "Менеджерге арналған хабарлама (міндетті емес)")}
+            showAddress
           />
         </div>
       </div>
