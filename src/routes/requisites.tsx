@@ -38,6 +38,28 @@ function RequisitesPage() {
             </p>
           </div>
 
+          <div className="requisites-download">
+            <a
+              href="/nls-rekvizity.pdf"
+              download
+              className="btn btn-primary"
+              style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {t("Скачать реквизиты в PDF", "Деректемелерді PDF форматында жүктеу")}
+            </a>
+            <p className="requisites-download-hint">
+              {t(
+                "Удобный документ для бухгалтерии — все данные на одной странице, готов к печати и отправке контрагентам.",
+                "Бухгалтерия үшін ыңғайлы құжат — барлық деректер бір бетте, басып шығаруға және контрагенттерге жіберуге дайын."
+              )}
+            </p>
+          </div>
+
           <div className="requisites-card">
             <table className="requisites-table">
               <tbody>
@@ -65,35 +87,27 @@ function RequisitesPage() {
                 </tr>
                 <tr>
                   <th>{t("Телефон", "Телефон")}</th>
-                  <td>
-                    <a href="tel:+77273397777">+7 (727) 339 77 77</a>
-                  </td>
+                  <td>+7 (727) 339 77 77</td>
                 </tr>
                 <tr>
                   <th>E-mail</th>
-                  <td>
-                    <a href="mailto:sales@nls.kz">sales@nls.kz</a>
-                  </td>
+                  <td>sales@nls.kz</td>
                 </tr>
                 <tr>
                   <th>{t("По вопросам оплаты", "Төлем мәселелері бойынша")}</th>
-                  <td>
-                    <a href="tel:+77273397777">+7 727 339 77 77</a>
-                  </td>
+                  <td>+7 727 339 77 77</td>
                 </tr>
                 <tr>
                   <th>{t("Техническая поддержка", "Техникалық қолдау")}</th>
                   <td>
-                    <a href="tel:+77273397777">+7 (727) 339 77 77</a>
+                    +7 (727) 339 77 77
                     <br />
-                    <a href="mailto:support@nls.kz">support@nls.kz</a>
+                    support@nls.kz
                   </td>
                 </tr>
                 <tr>
                   <th>{t("По договору", "Шарт бойынша")}</th>
-                  <td>
-                    <a href="tel:+77273397777">+7 727 339 77 77</a>
-                  </td>
+                  <td>+7 727 339 77 77</td>
                 </tr>
                 <tr>
                   <th>БИН/ИИН</th>
