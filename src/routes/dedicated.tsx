@@ -614,6 +614,8 @@ function DynamicSection({
   onAdd,
   onChange,
   onRemove,
+  incompatibleIds,
+  incompatibleMessage,
 }: {
   label: string;
   addLabel: string;
@@ -625,6 +627,8 @@ function DynamicSection({
   onAdd: () => void;
   onChange: (id: number, index: number | null) => void;
   onRemove: (id: number) => void;
+  incompatibleIds?: Set<number>;
+  incompatibleMessage?: string;
 }) {
   const t = useT();
   const limitReached = maxRows !== undefined && rows.length >= maxRows;
@@ -647,31 +651,50 @@ function DynamicSection({
         </button>
       </div>
       <div>
-        {rows.map((row) => (
-          <div className="calc-added-item visible" key={row.id}>
-            <select
-              className="calc-select"
-              value={row.index ?? ""}
-              onChange={(e) => onChange(row.id, e.target.value === "" ? null : Number(e.target.value))}
-            >
-              <option value="" disabled>
-                {placeholder}
-              </option>
-              {visibleOptions.map(({ o, i }) => (
-                <option key={i} value={i}>
-                  {o.name} — {formatPrice(o.price)}
-                </option>
-              ))}
-            </select>
-            <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title={t("Удалить", "Жою")}>
-              <CloseIcon width={18} height={18} />
-            </button>
-          </div>
-        ))}
+        {rows.map((row) => {
+          const isIncompatible = !!(incompatibleIds && incompatibleIds.has(row.id));
+          const currentOption = row.index !== null ? options[row.index] : null;
+          return (
+            <div className={`calc-added-item visible${isIncompatible ? " is-error" : ""}`} key={row.id}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                <select
+                  className={`calc-select${isIncompatible ? " is-error" : ""}`}
+                  value={row.index ?? ""}
+                  disabled={isIncompatible}
+                  onChange={(e) => onChange(row.id, e.target.value === "" ? null : Number(e.target.value))}
+                >
+                  {isIncompatible && currentOption ? (
+                    <option value={row.index ?? ""}>
+                      {currentOption.name} — {formatPrice(currentOption.price)}
+                    </option>
+                  ) : (
+                    <>
+                      <option value="" disabled>
+                        {placeholder}
+                      </option>
+                      {visibleOptions.map(({ o, i }) => (
+                        <option key={i} value={i}>
+                          {o.name} — {formatPrice(o.price)}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
+                {isIncompatible && incompatibleMessage && (
+                  <div className="calc-row-error">{incompatibleMessage}</div>
+                )}
+              </div>
+              <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title={t("Удалить", "Жою")}>
+                <CloseIcon width={18} height={18} />
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 
 function SummarySection({
   title,
