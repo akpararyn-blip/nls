@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useFitText } from "@/hooks/use-fit-text";
 
