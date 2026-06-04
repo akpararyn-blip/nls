@@ -246,7 +246,7 @@ function CalcCta() {
 
 function HowWeWork() {
   const t = useT();
-  type Step = { title: string; text: string; link?: { label: string; to: "/requisites" } };
+  type Step = { title: React.ReactNode; text: string; link?: { label: string; to: "/requisites" } };
   const steps: Step[] = [
     {
       title: t("Заявка", "Өтінім"),
@@ -264,7 +264,13 @@ function HowWeWork() {
       ),
     },
     {
-      title: t("Возможность подключения", "Қосылу мүмкіндігі"),
+      title: (
+        <>
+          {t("Возможность", "Қосылу")}
+          <br />
+          {t("подключения", "мүмкіндігі")}
+        </>
+      ),
       text: t(
         "Инженер проверит возможность подключения и рассчитает стоимость.",
         "Инженер қосылу мүмкіндігін тексеріп, құнын есептейді."
