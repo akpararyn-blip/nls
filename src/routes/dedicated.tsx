@@ -269,22 +269,29 @@ function Calculator() {
     return result;
   }, [cpuFF]);
 
-  // При смене CPU — сброс несовместимых накопителей
-  useEffect(() => {
+  // Мягкая обработка несовместимости: не удаляем диски, помечаем как "несовместимо"
+  const incompatibleStorageIds = useMemo(() => {
+    const s = new Set<number>();
     storage.rows.forEach((r) => {
-      if (r.index !== null && !allowedStorageIdx.includes(r.index)) {
-        storage.update(r.id, null);
-      }
+      if (r.index !== null && !allowedStorageIdx.includes(r.index)) s.add(r.id);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cpuFF]);
+    return s;
+  }, [storage.rows, allowedStorageIdx]);
+
+  // Авто-активация RAID при 2+ совместимых накопителях
+  const compatibleStorageCount = storage.rows.filter(
+    (r) => r.index !== null && !incompatibleStorageIds.has(r.id)
+  ).length;
+  useEffect(() => {
+    if (compatibleStorageCount >= 2) setRaid(true);
+  }, [compatibleStorageCount]);
 
   const calc = useMemo(() => {
     const cpu = cpuIdx !== null ? cpuOptions[cpuIdx] : null;
     const ram = ramIdx !== null ? ramOptions[ramIdx] : null;
 
     const storageItems = storage.rows
-      .filter((r) => r.index !== null)
+      .filter((r) => r.index !== null && !incompatibleStorageIds.has(r.id))
       .map((r) => storageOptions[r.index as number]);
     const networkItems = network.rows
       .filter((r) => r.index !== null)
@@ -347,7 +354,7 @@ function Calculator() {
       priceSoftware,
       total,
     };
-  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, t]);
+  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, incompatibleStorageIds, t]);
 
   // Формирование текста для заявки
   const buildSubject = () => {
@@ -425,7 +432,10 @@ function Calculator() {
                 onAdd={storage.add}
                 onChange={storage.update}
                 onRemove={storage.remove}
+                incompatibleIds={incompatibleStorageIds}
+                incompatibleMessage={t("Не соответствуют форм-фактору", "Форм-факторға сай келмейді")}
               />
+
 
               <div className="calc-field">
                 <label className="calc-field-label">{t("Дополнительно", "Қосымша")}</label>
@@ -433,9 +443,19 @@ function Calculator() {
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
                       {t("Аппаратный RAID", "Аппараттық RAID")} <span className="calc-toggle-price">9 000 {t("₸/мес", "₸/ай")}</span>
+                      {compatibleStorageCount >= 2 && (
+                        <span className="calc-toggle-price" style={{ marginLeft: 8, color: "var(--color-primary)" }}>
+                          {t("(включён авто при 2+ дисках)", "(2+ диск кезінде авто қосылған)")}
+                        </span>
+                      )}
                     </div>
                     <label className="toggle-switch">
-                      <input type="checkbox" checked={raid} onChange={(e) => setRaid(e.target.checked)} />
+                      <input
+                        type="checkbox"
+                        checked={raid}
+                        disabled={compatibleStorageCount >= 2}
+                        onChange={(e) => setRaid(e.target.checked)}
+                      />
                       <span className="toggle-slider" />
                     </label>
                   </div>
@@ -548,7 +568,9 @@ function Calculator() {
                   </button>
                 </div>
               </div>
+              <CalculatorDisclaimer />
             </div>
+
           </div>
         </div>
       </section>
@@ -604,6 +626,8 @@ function DynamicSection({
   onAdd,
   onChange,
   onRemove,
+  incompatibleIds,
+  incompatibleMessage,
 }: {
   label: string;
   addLabel: string;
@@ -615,6 +639,8 @@ function DynamicSection({
   onAdd: () => void;
   onChange: (id: number, index: number | null) => void;
   onRemove: (id: number) => void;
+  incompatibleIds?: Set<number>;
+  incompatibleMessage?: string;
 }) {
   const t = useT();
   const limitReached = maxRows !== undefined && rows.length >= maxRows;
@@ -637,31 +663,50 @@ function DynamicSection({
         </button>
       </div>
       <div>
-        {rows.map((row) => (
-          <div className="calc-added-item visible" key={row.id}>
-            <select
-              className="calc-select"
-              value={row.index ?? ""}
-              onChange={(e) => onChange(row.id, e.target.value === "" ? null : Number(e.target.value))}
-            >
-              <option value="" disabled>
-                {placeholder}
-              </option>
-              {visibleOptions.map(({ o, i }) => (
-                <option key={i} value={i}>
-                  {o.name} — {formatPrice(o.price)}
-                </option>
-              ))}
-            </select>
-            <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title={t("Удалить", "Жою")}>
-              <CloseIcon width={18} height={18} />
-            </button>
-          </div>
-        ))}
+        {rows.map((row) => {
+          const isIncompatible = !!(incompatibleIds && incompatibleIds.has(row.id));
+          const currentOption = row.index !== null ? options[row.index] : null;
+          return (
+            <div className={`calc-added-item visible${isIncompatible ? " is-error" : ""}`} key={row.id}>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                <select
+                  className={`calc-select${isIncompatible ? " is-error" : ""}`}
+                  value={row.index ?? ""}
+                  disabled={isIncompatible}
+                  onChange={(e) => onChange(row.id, e.target.value === "" ? null : Number(e.target.value))}
+                >
+                  {isIncompatible && currentOption ? (
+                    <option value={row.index ?? ""}>
+                      {currentOption.name} — {formatPrice(currentOption.price)}
+                    </option>
+                  ) : (
+                    <>
+                      <option value="" disabled>
+                        {placeholder}
+                      </option>
+                      {visibleOptions.map(({ o, i }) => (
+                        <option key={i} value={i}>
+                          {o.name} — {formatPrice(o.price)}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
+                {isIncompatible && incompatibleMessage && (
+                  <div className="calc-row-error">{incompatibleMessage}</div>
+                )}
+              </div>
+              <button type="button" className="calc-remove-btn" onClick={() => onRemove(row.id)} title={t("Удалить", "Жою")}>
+                <CloseIcon width={18} height={18} />
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+
 
 function SummarySection({
   title,
@@ -674,16 +719,10 @@ function SummarySection({
   items: Option[];
   alwaysShow?: boolean;
 }) {
-  if (total === 0 && !alwaysShow) {
-    return (
-      <div className="summary-category">
-        <div className="sum-row">
-          <span className="sum-label">{title}</span>
-          <span className="sum-value muted">—</span>
-        </div>
-      </div>
-    );
+  if (total === 0 && items.length === 0 && !alwaysShow) {
+    return null;
   }
+
   return (
     <div className="summary-category">
       <div className="sum-row">
