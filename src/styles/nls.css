@@ -5924,17 +5924,19 @@ body::before, body::after { display: none !important; }
 /* === Compact modal on mobile === */
 @media (max-width: 600px) {
     .modal-overlay {
-        align-items: flex-start;
-        padding: 12px;
-        overflow-y: auto;
+        padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
     }
     .modal-content {
         padding: 28px 20px;
         width: 100%;
         max-width: 100%;
-        margin: auto 0;
-        max-height: calc(100vh - 24px);
+        max-height: calc(100vh - 16px);
+        max-height: 100dvh;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        display: flex;
+        flex-direction: column;
     }
     .form-modal-content {
         padding: 0;
@@ -5957,7 +5959,7 @@ body::before, body::after { display: none !important; }
     }
     .form-modal-content > form,
     .modern-form {
-        padding: 6px 20px 22px;
+        padding: 6px 20px max(22px, env(safe-area-inset-bottom));
     }
     .form-modal-content .form-group {
         margin-bottom: 12px;
@@ -5978,10 +5980,13 @@ body::before, body::after { display: none !important; }
         font-size: 1rem !important;
     }
     .form-modal-content .close-modal {
-        width: 32px;
-        height: 32px;
-        top: 10px;
-        right: 10px;
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top));
+        right: max(10px, env(safe-area-inset-right));
+        width: 36px;
+        height: 36px;
+        z-index: 11;
+        background: rgba(0, 0, 0, 0.55);
     }
     .form-modal-content .close-modal svg {
         width: 16px;
