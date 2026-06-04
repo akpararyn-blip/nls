@@ -5,12 +5,14 @@ type Plan = {
   id: string;
   model: string;
   cpu: string;
+  cores: string;
   freq: string;
   ram: string;
   ssd: string;
   raid: string;
   network: string;
   ip: string;
+  ipmi: string;
   price: string;
   popular?: boolean;
 };
@@ -20,11 +22,13 @@ const plansRaw: Plan[] = [
     id: "dl380-g9-64",
     model: "HP DL380 Gen9",
     cpu: "2 × Intel® Xeon® E5-2680 v4",
+    cores: "28C/56T",
     freq: "2.40 GHz",
     ram: "64 GB",
-    ssd: "4 × 480 GB",
-    raid: "RAID p240",
+    ssd: "4 × 480 GB SSD",
+    raid: "RAID",
     network: "100 Мбит/с",
+    ipmi: "IPMI",
     ip: "1 IP",
     price: "201 450",
   },
@@ -32,12 +36,14 @@ const plansRaw: Plan[] = [
     id: "dl360-g9-128",
     model: "HP DL360 Gen9",
     cpu: "2 × Intel® Xeon® E5-2680 v4",
+    cores: "28C/56T",
     freq: "2.40 GHz",
     ram: "128 GB",
-    ssd: "2 × 960 GB",
-    raid: "RAID p240",
+    ssd: "2 × 960 GB SSD",
+    raid: "RAID",
     network: "100 Мбит/с",
-    ip: "4 IP",
+    ip: "1 IP",
+    ipmi: "IPMI",
     price: "227 320",
     popular: true,
   },
@@ -45,24 +51,28 @@ const plansRaw: Plan[] = [
     id: "dl360-g9-64",
     model: "HP DL360 Gen9",
     cpu: "2 × Intel® Xeon® E5-2690 v3",
+    cores: "24C/48T",
     freq: "2.60 GHz",
     ram: "64 GB",
-    ssd: "2 × 960 GB",
-    raid: "RAID p240",
+    ssd: "2 × 960 GB SSD",
+    raid: "RAID",
     network: "100 Мбит/с",
-    ip: "4 IP",
+    ip: "1 IP",
+    ipmi: "IPMI",
     price: "204 200",
   },
   {
     id: "dl360-g9-256",
     model: "HP DL360 Gen9",
     cpu: "2 × Intel® Xeon® E5-2690 v3",
+    cores: "24C/48T",
     freq: "2.60 GHz",
     ram: "256 GB",
-    ssd: "2 × 1.92 TB",
-    raid: "RAID p240",
+    ssd: "2 × 1.92 TB SSD",
+    raid: "RAID",
     network: "100 Мбит/с",
     ip: "1 IP",
+    ipmi: "IPMI",
     price: "269 110",
   },
 ];

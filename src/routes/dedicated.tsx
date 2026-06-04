@@ -29,14 +29,21 @@ export const Route = createFileRoute("/dedicated")({
   component: DedicatedPage,
 });
 
-type Option = { name: string; price: number };
+type Option = { name: string; price: number; formFactor?: number; diskNumber?: number };
 
 const cpuOptions: Option[] = [
-  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, (28C/56T)", price: 130000 },
-  { name: "2 x Intel® Xeon® E5-2690 v3, 2.6/3.5 ГГц, (24C/48T)", price: 130000 },
-  { name: "2 x Intel® Xeon® Gold 6140, 2.3/3.7 ГГц, (36C/72T)", price: 140000 },
-  { name: "2 x Intel® Xeon® Gold 6148, 2.4/3.7 ГГц, (40C/80T)", price: 382000 },
-  { name: "2 x Intel® Xeon® Platinum 8168, 2.7/3.7 ГГц, (48C/96T)", price: 645000 },
+  { name: "2 x Intel® Xeon® E5-2643 v3, 3.4/3.7 ГГц, (всего 12C/6T)", price: 90000, formFactor: 2.5, diskNumber: 10 },
+  { name: "2 x Intel® Xeon® E5-2667 v4, 3.2/3.6 ГГц, (всего 16C/32T)", price: 100000, formFactor: 2.5, diskNumber: 10 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, SFF (всего 28C/56T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, LFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 4 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, LFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
+  { name: "2 x Intel® Xeon® E5-2690 v3, 2.6/3.5 ГГц, (всего 24C/48T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6128, 3.4/3.7 ГГц, (всего 12C/24T)", price: 13000, formFactor: 3.5, diskNumber: 4 },
+  { name: "2 x Intel® Xeon® Gold 6130, 2.1/3.7 ГГц, (всего 32C/64T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
+  { name: "2 x Intel® Xeon® Gold 6132, 2.6/3.7 ГГц, (всего 28C/56T)", price: 200000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6140, 2.3/3.7 ГГц, (всего 36C/72T)", price: 140000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6148, 2.4/3.7 ГГц, (всего 40C/80T)", price: 382000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Platinum 8168, 2.7/3.7 ГГц, (всего 48C/96T)", price: 645000, formFactor: 2.5, diskNumber: 16 },
 ];
 
 const ramOptions: Option[] = [
@@ -52,18 +59,21 @@ const ramOptions: Option[] = [
 ];
 
 const storageOptions: Option[] = [
-  { name: "480 GB SSD", price: 8200 },
-  { name: "960 GB SSD", price: 20000 },
-  { name: "1,9 TB SSD", price: 38000 },
-  { name: "3,84 TB SSD", price: 57600 },
-  { name: "7,68 TB SSD", price: 85000 },
-  { name: "1 TB HDD", price: 6000 },
-  { name: "2 TB HDD", price: 11500 },
-  { name: "4 TB HDD", price: 14500 },
-  { name: "8 TB HDD", price: 23500 },
+  { name: "480 GB SSD", price: 8200, formFactor: 2.5 },
+  { name: "960 GB SSD", price: 20000, formFactor: 2.5 },
+  { name: "1,9 TB SSD", price: 38000, formFactor: 2.5 },
+  { name: "3,84 TB SSD", price: 57600, formFactor: 2.5 },
+  { name: "7,68 TB SSD", price: 85000, formFactor: 2.5 },
+  { name: "1 TB HDD", price: 6000, formFactor: 3.5 },
+  { name: "2 TB HDD", price: 11500, formFactor: 3.5 },
+  { name: "4 TB HDD", price: 14500, formFactor: 3.5 },
+  { name: "8 TB HDD", price: 23500, formFactor: 3.5 },
+  { name: "10 TB HDD", price: 30500, formFactor: 3.5 },
+  { name: "16 TB HDD", price: 47500, formFactor: 3.5 },
 ];
 
 const networkOptions: Option[] = [
+  { name: "100 Mbit /s", price: 0 },
   { name: "1 Gbit/s", price: 1000 },
   { name: "10 Gbit/s", price: 30000 },
 ];
