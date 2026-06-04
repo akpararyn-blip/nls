@@ -542,11 +542,7 @@ function Configurator() {
                 <button
                   type="button"
                   className="btn btn-primary calc-order-btn"
-                  onClick={() =>
-                    openConsultationModalWith({
-                      subject: `Заказ Colocation: ${servers.length} серв., итого ${formatPrice(grandTotal)}/мес`,
-                    })
-                  }
+                  onClick={handleOrderClick}
                 >
                   {t("Заказать", "Тапсырыс беру")}
                 </button>
@@ -557,9 +553,42 @@ function Configurator() {
 
         {tab === "list" && <PriceList />}
       </div>
+
+      {socketWarnOpen && (
+        <div
+          className="modal-overlay active"
+          onClick={() => setSocketWarnOpen(false)}
+          style={{ zIndex: 1000 }}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 520 }}
+          >
+            <h3 style={{ marginTop: 0, marginBottom: 12, fontSize: "1.15rem" }}>
+              {t("⚠️ Внимание: выбрана только одна линия питания", "⚠️ Назар аударыңыз: тек бір қуат желісі таңдалған")}
+            </h3>
+            <p style={{ marginBottom: 16, lineHeight: 1.5, color: "var(--color-text-light)" }}>
+              {t(
+                `Одна розетка предоставляется бесплатно, однако отказоустойчивость оборудования гарантируется только при подключении к двум независимым линиям. При использовании одной розетки любой сбой или замыкание на линии приведёт к полному отключению вашего сервера. Настоятельно рекомендуем добавить вторую розетку за ${formatPrice(PRICE_EXTRA_SOCKET)}.`,
+                `Бір розетка тегін беріледі, бірақ жабдықтың тұрақтылығы тек екі тәуелсіз желіге қосылғанда ғана кепілденеді. Бір розетка пайдаланылған жағдайда желідегі кез келген ақау сервердің толық өшуіне әкеледі. Екінші розетканы ${formatPrice(PRICE_EXTRA_SOCKET)}-ге қосуды ұсынамыз.`
+              )}
+            </p>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <button type="button" className="btn btn-outline" onClick={acceptRisks}>
+                {t("Я понимаю риски", "Тәуекелді түсінемін")}
+              </button>
+              <button type="button" className="btn btn-primary" onClick={addSocketsAndOrder}>
+                {t("Добавить розетку", "Розетка қосу")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
+
 
 function HintTip({ text }: { text: string }) {
   const t = useT();
