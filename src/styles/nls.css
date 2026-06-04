@@ -6119,6 +6119,7 @@ body::before, body::after { display: none !important; }
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   position: relative;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  min-width: 0;
 }
 .how-step:hover {
   transform: translateY(-3px);
@@ -6133,12 +6134,14 @@ body::before, body::after { display: none !important; }
   font-variant-numeric: tabular-nums;
 }
 .how-step h3 {
-  font-size: 1rem;
+  font-size: var(--how-h3-size, 1rem);
   margin-bottom: 8px;
   color: var(--color-blue-dark);
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
+
 .how-step p {
   font-size: 0.88rem;
   line-height: 1.45;

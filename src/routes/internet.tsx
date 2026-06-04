@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useRef } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { useFitText } from "@/hooks/use-fit-text";
+
 import { useCity } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
@@ -325,10 +328,14 @@ function HowWeWork() {
   );
 
 
+  const sectionRef = useRef<HTMLElement | null>(null);
+  useFitText(sectionRef, ".how-step h3", { min: 0.62, max: 1, cssVar: "--how-h3-size" });
+
   return (
-    <section className="how-we-work-section">
+    <section ref={sectionRef} className="how-we-work-section">
       <div className="container">
         <div className="section-title">
+
           <span className="section-eyebrow">{t("Процесс", "Үдеріс")}</span>
           <h2>{t("Как мы работаем", "Біз қалай жұмыс істейміз")}</h2>
           <p>
