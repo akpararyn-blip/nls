@@ -269,15 +269,22 @@ function Calculator() {
     return result;
   }, [cpuFF]);
 
-  // При смене CPU — сброс несовместимых накопителей
-  useEffect(() => {
+  // Мягкая обработка несовместимости: не удаляем диски, помечаем как "несовместимо"
+  const incompatibleStorageIds = useMemo(() => {
+    const s = new Set<number>();
     storage.rows.forEach((r) => {
-      if (r.index !== null && !allowedStorageIdx.includes(r.index)) {
-        storage.update(r.id, null);
-      }
+      if (r.index !== null && !allowedStorageIdx.includes(r.index)) s.add(r.id);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cpuFF]);
+    return s;
+  }, [storage.rows, allowedStorageIdx]);
+
+  // Авто-активация RAID при 2+ совместимых накопителях
+  const compatibleStorageCount = storage.rows.filter(
+    (r) => r.index !== null && !incompatibleStorageIds.has(r.id)
+  ).length;
+  useEffect(() => {
+    if (compatibleStorageCount >= 2) setRaid(true);
+  }, [compatibleStorageCount]);
 
   const calc = useMemo(() => {
     const cpu = cpuIdx !== null ? cpuOptions[cpuIdx] : null;
