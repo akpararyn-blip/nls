@@ -443,9 +443,19 @@ function Calculator() {
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
                       {t("Аппаратный RAID", "Аппараттық RAID")} <span className="calc-toggle-price">9 000 {t("₸/мес", "₸/ай")}</span>
+                      {compatibleStorageCount >= 2 && (
+                        <span className="calc-toggle-price" style={{ marginLeft: 8, color: "var(--color-primary)" }}>
+                          {t("(включён авто при 2+ дисках)", "(2+ диск кезінде авто қосылған)")}
+                        </span>
+                      )}
                     </div>
                     <label className="toggle-switch">
-                      <input type="checkbox" checked={raid} onChange={(e) => setRaid(e.target.checked)} />
+                      <input
+                        type="checkbox"
+                        checked={raid}
+                        disabled={compatibleStorageCount >= 2}
+                        onChange={(e) => setRaid(e.target.checked)}
+                      />
                       <span className="toggle-slider" />
                     </label>
                   </div>
