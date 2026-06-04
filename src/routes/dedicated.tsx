@@ -432,7 +432,10 @@ function Calculator() {
                 onAdd={storage.add}
                 onChange={storage.update}
                 onRemove={storage.remove}
+                incompatibleIds={incompatibleStorageIds}
+                incompatibleMessage={t("Не соответствуют форм-фактору", "Форм-факторға сай келмейді")}
               />
+
 
               <div className="calc-field">
                 <label className="calc-field-label">{t("Дополнительно", "Қосымша")}</label>
