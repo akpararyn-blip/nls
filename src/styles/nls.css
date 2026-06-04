@@ -2395,7 +2395,7 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     .hero-dedicated-icon svg { width: 30px; height: 30px; }
     .calc-section { padding: 40px 0 100px; }
     .calc-form { padding: 24px; }
-    .calc-summary { display: none; }
+    .calc-summary { display: block; position: static; margin-top: 16px; }
     .mobile-calc-bar { display: block; }
     .calc-add-row { flex-direction: column; }
     .calc-add-row .calc-select { width: 100%; }
