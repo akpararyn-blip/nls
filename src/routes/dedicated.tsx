@@ -291,7 +291,7 @@ function Calculator() {
     const ram = ramIdx !== null ? ramOptions[ramIdx] : null;
 
     const storageItems = storage.rows
-      .filter((r) => r.index !== null)
+      .filter((r) => r.index !== null && !incompatibleStorageIds.has(r.id))
       .map((r) => storageOptions[r.index as number]);
     const networkItems = network.rows
       .filter((r) => r.index !== null)
