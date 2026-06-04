@@ -2248,31 +2248,31 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
 .summary-header {
     background: linear-gradient(135deg, var(--color-blue-dark), var(--color-blue));
     color: var(--color-white);
-    padding: 22px 28px;
+    padding: 14px 18px;
     font-weight: 700;
-    font-size: 1.15rem;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.summary-header svg { width: 22px; height: 22px; color: var(--color-orange); }
-.summary-body { padding: 24px 28px; }
+.summary-header svg { width: 20px; height: 20px; color: var(--color-orange); }
+.summary-body { padding: 14px 18px; }
 
-.summary-category { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f0f4f8; }
+.summary-category { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #f0f4f8; }
 .summary-category:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .sum-row { display: flex; justify-content: space-between; align-items: center; }
-.sum-label { font-weight: 600; font-size: 0.9rem; color: var(--color-blue-dark); }
-.sum-value { font-weight: 700; font-size: 0.95rem; color: var(--color-blue-dark); }
+.sum-label { font-weight: 600; font-size: 0.85rem; color: var(--color-blue-dark); }
+.sum-value { font-weight: 700; font-size: 0.9rem; color: var(--color-blue-dark); }
 .sum-value.muted { color: #cbd5e0; font-weight: 500; }
 .sum-detail {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-light);
-    margin-top: 4px;
+    margin-top: 3px;
     padding-left: 0;
 }
 
 .summary-footer {
-    padding: 24px 28px;
+    padding: 14px 18px;
     background: #f8fafc;
     border-top: 2px solid #f0f4f8;
 }
@@ -2280,28 +2280,29 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 .summary-total-label {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: var(--color-blue-dark);
 }
 .summary-total-amount {
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--color-orange);
 }
 .summary-vat {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-light);
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 .summary-card .calc-order-btn {
     width: 100%;
-    font-size: 1.05rem;
-    padding: 16px;
+    font-size: 1rem;
+    padding: 12px;
 }
+
 
 /* ============================================
    MOBILE FIXED BOTTOM BAR
@@ -2394,7 +2395,7 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     .hero-dedicated-icon svg { width: 30px; height: 30px; }
     .calc-section { padding: 40px 0 100px; }
     .calc-form { padding: 24px; }
-    .calc-summary { display: none; }
+    .calc-summary { display: block; position: static; margin-top: 16px; }
     .mobile-calc-bar { display: block; }
     .calc-add-row { flex-direction: column; }
     .calc-add-row .calc-select { width: 100%; }
@@ -6265,4 +6266,52 @@ body::before, body::after { display: none !important; }
 @media (max-width: 600px) {
   .requisites-download { padding: 18px; gap: 14px; }
   .requisites-download-hint { font-size: 0.88rem; }
+}
+
+/* === Dedicated plans — period switcher === */
+.plan-period-switch {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    background: #f1f5f9;
+    border-radius: 999px;
+    margin: 0 auto 28px;
+    justify-content: center;
+}
+.plans-section .plan-period-switch { display: flex; max-width: max-content; }
+.plan-period-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: var(--color-blue-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.plan-period-btn:hover { background: rgba(255,255,255,0.7); }
+.plan-period-btn.is-active {
+    background: var(--color-blue-dark);
+    color: var(--color-white);
+    box-shadow: 0 4px 14px rgba(0,85,123,0.18);
+}
+.plan-discount-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-orange);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.plan-saving {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #15803d;
 }

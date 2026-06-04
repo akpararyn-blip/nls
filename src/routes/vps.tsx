@@ -7,7 +7,7 @@ import { CheckIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import vpsHero from "@/assets/vpsvds.png";
 import { useMemo, useState, type ChangeEvent } from "react";
-import { Cpu, MemoryStick, HardDrive, Database, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
+import { Cpu, MemoryStick, HardDrive, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/vps")({
   head: () => ({
@@ -33,12 +33,12 @@ export const Route = createFileRoute("/vps")({
 const PRICE_CPU = 1200;
 const PRICE_RAM = 1500;
 const PRICE_SSD = 90;
-const PRICE_HDD = 38;
 
+const RAM_MIN = 1;
+const RAM_STEP = 1;
 const SSD_MIN = 10;
 const SSD_STEP = 1;
-const HDD_MIN = 0;
-const HDD_STEP = 1;
+
 
 
 type Plan = {
@@ -245,21 +245,24 @@ function Tariffs() {
 }
 
 // ===== Calculator =====
-type ResourceKey = "cpu" | "ram" | "ssd" | "hdd";
+type ResourceKey = "cpu" | "ram" | "ssd";
+
+const FIELD_RANGES: Record<"ram" | "ssd", { min: number; step: number }> = {
+  ram: { min: RAM_MIN, step: RAM_STEP },
+  ssd: { min: SSD_MIN, step: SSD_STEP },
+};
 
 function Calculator() {
-  const { openConsultationModalWith, cityKey } = useCity();
+  const { openConsultationModalWith } = useCity();
   const t = useT();
   const barVisible = useMobileBarVisibility("vps-calculator");
-  const showHdd = cityKey !== "Astana";
 
   const [cpu, setCpu] = useState(2);
   const [ram, setRam] = useState(2);
   const [ssd, setSsd] = useState(20);
-  const [hdd, setHdd] = useState(0);
 
+  const [ramInput, setRamInput] = useState<string>("2");
   const [ssdInput, setSsdInput] = useState<string>("20");
-  const [hddInput, setHddInput] = useState<string>("0");
 
   const [hint, setHint] = useState<{ field: ResourceKey; text: string } | null>(null);
 
@@ -274,32 +277,37 @@ function Calculator() {
     const priceCpu = cpu * PRICE_CPU;
     const priceRam = ram * PRICE_RAM;
     const priceSsd = ssd * PRICE_SSD;
-    const priceHdd = hdd * PRICE_HDD;
     return {
       priceCpu,
       priceRam,
       priceSsd,
-      priceHdd,
-      total: priceCpu + priceRam + priceSsd + priceHdd,
+      total: priceCpu + priceRam + priceSsd,
     };
-  }, [cpu, ram, ssd, hdd]);
+  }, [cpu, ram, ssd]);
+
+  const setInput = (field: "ram" | "ssd", value: string) => {
+    if (field === "ram") setRamInput(value);
+    else setSsdInput(value);
+  };
+  const setValue = (field: "ram" | "ssd", value: number) => {
+    if (field === "ram") setRam(value);
+    else setSsd(value);
+  };
+  const getValue = (field: "ram" | "ssd") => (field === "ram" ? ram : ssd);
+  const getInput = (field: "ram" | "ssd") => (field === "ram" ? ramInput : ssdInput);
 
   const onDiskInput =
-    (field: "ssd" | "hdd") => (e: ChangeEvent<HTMLInputElement>) => {
+    (field: "ram" | "ssd") => (e: ChangeEvent<HTMLInputElement>) => {
       const raw = e.target.value;
       if (/[^\d]/.test(raw)) {
         showHint(field, t("Можно вводить только цифры", "Тек сандарды енгізуге болады"));
       }
-      const cleaned = raw.replace(/\D/g, "");
-      if (field === "ssd") setSsdInput(cleaned);
-      else setHddInput(cleaned);
+      setInput(field, raw.replace(/\D/g, ""));
     };
 
-  const commitDisk = (field: "ssd" | "hdd") => {
-    const raw = field === "ssd" ? ssdInput : hddInput;
-    const min = field === "ssd" ? SSD_MIN : HDD_MIN;
-    const step = field === "ssd" ? SSD_STEP : HDD_STEP;
-    let n = parseInt(raw || "0", 10);
+  const commitDisk = (field: "ram" | "ssd") => {
+    const { min, step } = FIELD_RANGES[field];
+    let n = parseInt(getInput(field) || "0", 10);
     if (Number.isNaN(n) || n < 0) n = 0;
     if (n < min) n = min;
     if (n % step !== 0) {
@@ -308,34 +316,24 @@ function Calculator() {
         field,
         t(
           `Шаг ${step} ГБ — округлили до ${rounded} ГБ`,
-          `Қадам ${step} ГБ — ${rounded} ГБ-қа дейін домалақталды`
-        )
+          `Қадам ${step} ГБ — ${rounded} ГБ-қа дейін домалақталды`,
+        ),
       );
       n = rounded;
     }
-    if (field === "ssd") {
-      setSsd(n);
-      setSsdInput(String(n));
-    } else {
-      setHdd(n);
-      setHddInput(String(n));
-    }
+    setValue(field, n);
+    setInput(field, String(n));
   };
 
-  const stepDisk = (field: "ssd" | "hdd", dir: 1 | -1) => {
-    const min = field === "ssd" ? SSD_MIN : HDD_MIN;
-    const step = field === "ssd" ? SSD_STEP : HDD_STEP;
-    const current = field === "ssd" ? ssd : hdd;
-    let next = current + dir * step;
+  const stepDisk = (field: "ram" | "ssd", dir: 1 | -1) => {
+    const { min, step } = FIELD_RANGES[field];
+    let next = getValue(field) + dir * step;
     if (next < min) next = min;
-    if (field === "ssd") {
-      setSsd(next);
-      setSsdInput(String(next));
-    } else {
-      setHdd(next);
-      setHddInput(String(next));
-    }
+    setValue(field, next);
+    setInput(field, String(next));
   };
+
+  const subject = `Заказ VPS (конфигуратор): CPU x${cpu}, RAM ${ram} ГБ, SSD ${ssd} ГБ — ${formatPrice(calc.total)}/мес`;
 
   return (
     <section className="calc-section" id="vps-calculator">
@@ -363,14 +361,17 @@ function Calculator() {
               onPlus={() => setCpu((v) => v + 1)}
             />
 
-            <ResourceRow
+            <ResourceInputRow
               icon={<MemoryStick size={22} strokeWidth={1.8} />}
               label={t("Оперативная память (RAM)", "Жедел жады (RAM)")}
               hintLabel={t(`${PRICE_RAM} ₸ за 1 ГБ`, `1 ГБ үшін ${PRICE_RAM} ₸`)}
-              value={ram}
+              inputValue={ramInput}
               unit={t("ГБ", "ГБ")}
-              onMinus={() => setRam((v) => Math.max(1, v - 1))}
-              onPlus={() => setRam((v) => v + 1)}
+              onMinus={() => stepDisk("ram", -1)}
+              onPlus={() => stepDisk("ram", 1)}
+              onChange={onDiskInput("ram")}
+              onBlur={() => commitDisk("ram")}
+              activeHint={hint && hint.field === "ram" ? hint.text : null}
             />
 
             <ResourceInputRow
@@ -385,22 +386,6 @@ function Calculator() {
               onBlur={() => commitDisk("ssd")}
               activeHint={hint && hint.field === "ssd" ? hint.text : null}
             />
-
-            {showHdd && (
-              <ResourceInputRow
-                icon={<Database size={22} strokeWidth={1.8} />}
-                label={t("Накопитель HDD", "HDD жинақтаушы")}
-                hintLabel={t(`${PRICE_HDD} ₸ за 1 ГБ`, `1 ГБ үшін ${PRICE_HDD} ₸`)}
-                inputValue={hddInput}
-                unit={t("ГБ", "ГБ")}
-                onMinus={() => stepDisk("hdd", -1)}
-                onPlus={() => stepDisk("hdd", 1)}
-                onChange={onDiskInput("hdd")}
-                onBlur={() => commitDisk("hdd")}
-                activeHint={hint && hint.field === "hdd" ? hint.text : null}
-              />
-            )}
-
           </div>
 
           <div className="calc-summary">
@@ -410,7 +395,6 @@ function Calculator() {
                 <SumLine title="CPU" detail={`${cpu} × ${t("ядро", "ядро")}`} price={calc.priceCpu} />
                 <SumLine title="RAM" detail={`${ram} ${t("ГБ", "ГБ")}`} price={calc.priceRam} />
                 <SumLine title="SSD" detail={`${ssd} ${t("ГБ", "ГБ")}`} price={calc.priceSsd} />
-                {showHdd && <SumLine title="HDD" detail={hdd === 0 ? "—" : `${hdd} ${t("ГБ", "ГБ")}`} price={calc.priceHdd} />}
               </div>
               <div className="summary-footer">
                 <div className="summary-total-row">
@@ -421,11 +405,7 @@ function Calculator() {
                 <button
                   type="button"
                   className="btn btn-primary calc-order-btn"
-                  onClick={() =>
-                    openConsultationModalWith({
-                      subject: `Заказ VPS (конфигуратор): CPU x${cpu}, RAM ${ram} ГБ, SSD ${ssd} ГБ, HDD ${hdd} ГБ — ${formatPrice(calc.total)}/мес`,
-                    })
-                  }
+                  onClick={() => openConsultationModalWith({ subject })}
                 >
                   {t("Заказать", "Тапсырыс беру")}
                 </button>
@@ -444,11 +424,7 @@ function Calculator() {
             <button
               type="button"
               className="btn btn-primary calc-order-btn"
-              onClick={() =>
-                openConsultationModalWith({
-                  subject: `Заказ VPS (конфигуратор): CPU x${cpu}, RAM ${ram} ГБ, SSD ${ssd} ГБ, HDD ${hdd} ГБ — ${formatPrice(calc.total)}/мес`,
-                })
-              }
+              onClick={() => openConsultationModalWith({ subject })}
             >
               {t("Заказать", "Тапсырыс беру")}
             </button>
@@ -458,6 +434,7 @@ function Calculator() {
     </section>
   );
 }
+
 
 function ResourceRow({
   icon, label, hintLabel, value, unit, onMinus, onPlus,

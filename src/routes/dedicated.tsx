@@ -7,7 +7,7 @@ import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import dedicatedHero from "@/assets/server-dedicated.png";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
   head: () => ({
@@ -73,7 +73,7 @@ const storageOptions: Option[] = [
 ];
 
 const networkOptions: Option[] = [
-  { name: "100 Mbit /s", price: 0 },
+  { name: "100 Mbit/s", price: 0 },
   { name: "1 Gbit/s", price: 1000 },
   { name: "10 Gbit/s", price: 30000 },
 ];
@@ -85,8 +85,9 @@ const softwareOptions: Option[] = [
 ];
 
 const RAID_PRICE = 9000;
-const IPMI_PRICE = 3000;
+const IPMI_PRICE = 0;
 const IP_PRICE = 2250;
+
 
 function formatPrice(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸";
@@ -160,9 +161,9 @@ function Hero() {
   const { openConsultationModal } = useCity();
   const t = useT();
   const features = [
-    t("До 10 000 Мбит/с", "10 000 Мбит/с дейін"),
+    t("С каналом до 100 Мбит/с", "100 Мбит/с дейін арнамен"),
     t("Собственный ЦОД Tier III", "Меншікті Tier III дата-орталығы"),
-    t("Настройка под задачу", "Тапсырмаға баптау"),
+    t("Размещены в Алматы и в Астане", "Алматы және Астанада орналасқан"),
     t("Поддержка 24/7", "24/7 қолдау"),
   ];
   return (
@@ -173,15 +174,16 @@ function Hero() {
             Dedicated Servers
           </span>
           <h1>
-            <span style={{ color: "var(--color-orange)" }}>{t("Аренда серверов", "Серверлерді жалдау")}</span>{" "}
+            <span style={{ color: "var(--color-orange)" }}>{t("Аренда высокопроизводительных физических серверов", "Жоғары өнімді физикалық серверлерді жалдау")}</span>{" "}
             {t("в дата-центре NLS", "NLS дата-орталығында")}
           </h1>
           <p className="hero-subtitle">
             {t(
-              "Готовые конфигурации и сборка под ваши задачи. Серверы размещены в собственном дата-центре NLS.",
-              "Дайын конфигурациялар және сіздің тапсырмаларыңызға арнап құрастыру. Серверлер NLS меншікті дата-орталығында орналастырылған."
+              "Готовые сервера с настраиваемой конфигурацией под ваши требования.",
+              "Талаптарыңызға сай реттелетін конфигурациямен дайын серверлер."
             )}
           </p>
+
 
           <ul className="hero-bullets">
             {features.map((f) => (
@@ -239,20 +241,43 @@ function CustomBuildCTA() {
 }
 
 function Calculator() {
-  const { openConsultationModal } = useCity();
+  const { openConsultationModalWith } = useCity();
   const t = useT();
   const barVisible = useMobileBarVisibility("calculator");
 
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
   const [ramIdx, setRamIdx] = useState<number | null>(null);
   const [raid, setRaid] = useState(false);
-  const [ipmi, setIpmi] = useState(false);
+  const [ipmi, setIpmi] = useState(true);
   const [ipCount, setIpCount] = useState(1);
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
   const storage = useDynamic();
   const network = useDynamic();
   const software = useDynamic();
+
+  // Формфактор накопителей фильтруем по выбранному CPU
+  const cpuFF = cpuIdx !== null ? cpuOptions[cpuIdx].formFactor : undefined;
+  const maxDisks = cpuIdx !== null ? (cpuOptions[cpuIdx].diskNumber ?? 25) : 25;
+  const allowedStorageIdx = useMemo(() => {
+    const result: number[] = [];
+    storageOptions.forEach((o, i) => {
+      if (cpuFF === undefined) result.push(i);
+      else if (cpuFF === 3.5) result.push(i); // LFF корзины принимают и 2.5, и 3.5
+      else if (o.formFactor === 2.5) result.push(i);
+    });
+    return result;
+  }, [cpuFF]);
+
+  // При смене CPU — сброс несовместимых накопителей
+  useEffect(() => {
+    storage.rows.forEach((r) => {
+      if (r.index !== null && !allowedStorageIdx.includes(r.index)) {
+        storage.update(r.id, null);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cpuFF]);
 
   const calc = useMemo(() => {
     const cpu = cpuIdx !== null ? cpuOptions[cpuIdx] : null;
@@ -275,12 +300,31 @@ function Calculator() {
     const priceSoftware = softwareItems.reduce((s, i) => s + i.price, 0);
     const priceRaid = raid ? RAID_PRICE : 0;
     const priceIpmi = ipmi ? IPMI_PRICE : 0;
-    const priceIp = (ipCount - 1) * IP_PRICE;
+    const extraIp = Math.max(0, ipCount - 1);
+    const priceIp = extraIp * IP_PRICE;
 
+    // Дополнительно (только RAID — IPMI идёт отдельной строкой раздела «Дополнительно» с ценой 0)
     const extras: Option[] = [];
+    if (ipmi) extras.push({ name: "IPMI", price: 0 });
     if (priceRaid) extras.push({ name: t("Аппаратный RAID", "Аппараттық RAID"), price: RAID_PRICE });
-    if (priceIpmi) extras.push({ name: "IPMI", price: IPMI_PRICE });
-    if (priceIp) extras.push({ name: t(`IP адрес x${ipCount} (1 бесплатный)`, `IP мекенжай x${ipCount} (1 тегін)`), price: priceIp });
+
+    // Сетевой порт: всегда фиксированный 100 Mbit/s бесплатно + пользовательские
+    const networkDisplay: Option[] = [
+      { name: "100 Mbit/s", price: 0 },
+      ...networkItems.filter((i) => i.name !== "100 Mbit/s"),
+    ];
+    const networkDisplayPrice = networkDisplay.reduce((s, i) => s + i.price, 0);
+
+    // IP: всегда 1 бесплатный + при необходимости доп.
+    const ipItems: Option[] = [
+      { name: t("1 публичный IPv4", "1 публикалық IPv4"), price: 0 },
+    ];
+    if (extraIp > 0) {
+      ipItems.push({
+        name: t(`+${extraIp} IP адрес${extraIp > 1 ? "ов" : ""}`, `+${extraIp} IP мекенжай`),
+        price: priceIp,
+      });
+    }
 
     const total =
       priceCpu + priceRam + priceStorage + priceRaid + priceIpmi + priceIp + priceNetwork + priceSoftware;
@@ -289,10 +333,13 @@ function Calculator() {
       cpu,
       ram,
       storageItems,
-      networkItems,
+      networkDisplay,
+      networkDisplayPrice,
       softwareItems,
       extras,
-      extrasTotal: priceRaid + priceIpmi + priceIp,
+      extrasTotal: priceRaid + priceIpmi,
+      ipItems,
+      ipTotal: priceIp,
       priceCpu,
       priceRam,
       priceStorage,
@@ -301,6 +348,24 @@ function Calculator() {
       total,
     };
   }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, t]);
+
+  // Формирование текста для заявки
+  const buildSubject = () => {
+    const parts: string[] = ["Заказ сервера (конфигуратор):"];
+    if (calc.cpu) parts.push(`CPU: ${calc.cpu.name}`);
+    if (calc.ram) parts.push(`RAM: ${calc.ram.name}`);
+    if (calc.storageItems.length)
+      parts.push(`Накопители: ${calc.storageItems.map((i) => i.name).join(", ")}`);
+    parts.push(`Сетевой порт: ${calc.networkDisplay.map((i) => i.name).join(" + ")}`);
+    parts.push("Интернет: 100 Мбит/с");
+    if (ipmi) parts.push("IPMI (бесплатно)");
+    if (raid) parts.push("Аппаратный RAID");
+    parts.push(`IP: ${calc.ipItems.map((i) => i.name).join(" + ")}`);
+    parts.push(`Итого: ${formatPrice(calc.total)}/мес`);
+    return parts.join(" | ");
+  };
+
+  const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
 
   return (
     <>
@@ -354,6 +419,8 @@ function Calculator() {
                 addLabel={t("Добавить накопитель", "Жинақтаушы қосу")}
                 placeholder={t("Выберите накопитель", "Жинақтаушыны таңдаңыз")}
                 options={storageOptions}
+                allowedIdx={allowedStorageIdx}
+                maxRows={Math.min(25, maxDisks)}
                 rows={storage.rows}
                 onAdd={storage.add}
                 onChange={storage.update}
@@ -374,7 +441,7 @@ function Calculator() {
                   </div>
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
-                      {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">3 000 {t("₸/мес", "₸/ай")}</span>
+                      {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">{t("бесплатно", "тегін")}</span>
                     </div>
                     <label className="toggle-switch">
                       <input type="checkbox" checked={ipmi} onChange={(e) => setIpmi(e.target.checked)} />
@@ -417,6 +484,7 @@ function Calculator() {
                 addLabel={t("Добавить порт", "Порт қосу")}
                 placeholder={t("Выберите порт", "Портты таңдаңыз")}
                 options={networkOptions}
+                maxRows={20}
                 rows={network.rows}
                 onAdd={network.add}
                 onChange={network.update}
@@ -448,11 +516,25 @@ function Calculator() {
                     title={t("Дополнительно", "Қосымша")}
                     total={calc.extrasTotal}
                     items={calc.extras}
+                    alwaysShow={ipmi || raid}
                   />
                   <SummarySection
                     title={t("Сетевой порт", "Желілік порт")}
-                    total={calc.priceNetwork}
-                    items={calc.networkItems}
+                    total={calc.networkDisplayPrice}
+                    items={calc.networkDisplay}
+                    alwaysShow
+                  />
+                  <SummarySection
+                    title={t("Интернет", "Интернет")}
+                    total={0}
+                    items={[{ name: t("100 Мбит/с", "100 Мбит/с"), price: 0 }]}
+                    alwaysShow
+                  />
+                  <SummarySection
+                    title={t("IP адрес", "IP мекенжай")}
+                    total={calc.ipTotal}
+                    items={calc.ipItems}
+                    alwaysShow
                   />
                 </div>
                 <div className="summary-footer">
@@ -461,7 +543,7 @@ function Calculator() {
                     <span className="summary-total-amount">{formatPrice(calc.total)}</span>
                   </div>
                   <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
-                  <button type="button" className="btn btn-primary calc-order-btn" onClick={openConsultationModal}>
+                  <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
@@ -485,8 +567,10 @@ function Calculator() {
             <SummarySection title={t("Процессор", "Процессор")} total={calc.priceCpu} items={calc.cpu ? [calc.cpu] : []} />
             <SummarySection title={t("ОЗУ", "ЖЖҚ")} total={calc.priceRam} items={calc.ram ? [calc.ram] : []} />
             <SummarySection title={t("Накопители", "Жинақтаушылар")} total={calc.priceStorage} items={calc.storageItems} />
-            <SummarySection title={t("Дополнительно", "Қосымша")} total={calc.extrasTotal} items={calc.extras} />
-            <SummarySection title={t("Сетевой порт", "Желілік порт")} total={calc.priceNetwork} items={calc.networkItems} />
+            <SummarySection title={t("Дополнительно", "Қосымша")} total={calc.extrasTotal} items={calc.extras} alwaysShow={ipmi || raid} />
+            <SummarySection title={t("Сетевой порт", "Желілік порт")} total={calc.networkDisplayPrice} items={calc.networkDisplay} alwaysShow />
+            <SummarySection title={t("Интернет", "Интернет")} total={0} items={[{ name: t("100 Мбит/с", "100 Мбит/с"), price: 0 }]} alwaysShow />
+            <SummarySection title={t("IP адрес", "IP мекенжай")} total={calc.ipTotal} items={calc.ipItems} alwaysShow />
 
             <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", marginTop: 8 }}>
               {t("Цены без учета НДС", "Бағалар ҚҚС-сыз")}
@@ -499,13 +583,14 @@ function Calculator() {
             <div className="mobile-bar-label">{t("Итого за 1 месяц", "1 айға барлығы")}</div>
             <div className="mobile-bar-price">{formatPrice(calc.total)}</div>
           </div>
-          <button type="button" className="btn btn-primary calc-order-btn" onClick={openConsultationModal}>
+          <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
             {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>
       </div>
     </>
   );
+
 }
 
 function DynamicSection({
@@ -513,6 +598,8 @@ function DynamicSection({
   addLabel,
   placeholder,
   options,
+  allowedIdx,
+  maxRows,
   rows,
   onAdd,
   onChange,
@@ -522,17 +609,30 @@ function DynamicSection({
   addLabel: string;
   placeholder: string;
   options: Option[];
+  allowedIdx?: number[];
+  maxRows?: number;
   rows: DynamicRow[];
   onAdd: () => void;
   onChange: (id: number, index: number | null) => void;
   onRemove: (id: number) => void;
 }) {
   const t = useT();
+  const limitReached = maxRows !== undefined && rows.length >= maxRows;
+  const visibleOptions = options
+    .map((o, i) => ({ o, i }))
+    .filter(({ i }) => (allowedIdx ? allowedIdx.includes(i) : true));
+
   return (
     <div className="calc-field">
       <label className="calc-field-label">{label}</label>
       <div className="calc-add-row">
-        <button type="button" className="calc-add-btn" onClick={onAdd}>
+        <button
+          type="button"
+          className="calc-add-btn"
+          onClick={onAdd}
+          disabled={limitReached}
+          title={limitReached ? t(`Максимум ${maxRows}`, `Ең көп ${maxRows}`) : undefined}
+        >
           + {addLabel}
         </button>
       </div>
@@ -547,7 +647,7 @@ function DynamicSection({
               <option value="" disabled>
                 {placeholder}
               </option>
-              {options.map((o, i) => (
+              {visibleOptions.map(({ o, i }) => (
                 <option key={i} value={i}>
                   {o.name} — {formatPrice(o.price)}
                 </option>
@@ -567,12 +667,14 @@ function SummarySection({
   title,
   total,
   items,
+  alwaysShow,
 }: {
   title: string;
   total: number;
   items: Option[];
+  alwaysShow?: boolean;
 }) {
-  if (total === 0) {
+  if (total === 0 && !alwaysShow) {
     return (
       <div className="summary-category">
         <div className="sum-row">
@@ -586,13 +688,16 @@ function SummarySection({
     <div className="summary-category">
       <div className="sum-row">
         <span className="sum-label">{title}</span>
-        <span className="sum-value">{formatPrice(total)}</span>
+        <span className={`sum-value${total === 0 ? " muted" : ""}`}>
+          {total === 0 ? "0 ₸" : formatPrice(total)}
+        </span>
       </div>
       {items.map((it, i) => (
         <div className="sum-detail" key={i}>
-          {it.name} — {formatPrice(it.price)}
+          {it.name}{it.price > 0 ? ` — ${formatPrice(it.price)}` : ` — 0 ₸`}
         </div>
       ))}
     </div>
   );
 }
+
