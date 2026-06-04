@@ -598,6 +598,8 @@ function DynamicSection({
   addLabel,
   placeholder,
   options,
+  allowedIdx,
+  maxRows,
   rows,
   onAdd,
   onChange,
@@ -607,17 +609,30 @@ function DynamicSection({
   addLabel: string;
   placeholder: string;
   options: Option[];
+  allowedIdx?: number[];
+  maxRows?: number;
   rows: DynamicRow[];
   onAdd: () => void;
   onChange: (id: number, index: number | null) => void;
   onRemove: (id: number) => void;
 }) {
   const t = useT();
+  const limitReached = maxRows !== undefined && rows.length >= maxRows;
+  const visibleOptions = options
+    .map((o, i) => ({ o, i }))
+    .filter(({ i }) => (allowedIdx ? allowedIdx.includes(i) : true));
+
   return (
     <div className="calc-field">
       <label className="calc-field-label">{label}</label>
       <div className="calc-add-row">
-        <button type="button" className="calc-add-btn" onClick={onAdd}>
+        <button
+          type="button"
+          className="calc-add-btn"
+          onClick={onAdd}
+          disabled={limitReached}
+          title={limitReached ? t(`Максимум ${maxRows}`, `Ең көп ${maxRows}`) : undefined}
+        >
           + {addLabel}
         </button>
       </div>
@@ -632,7 +647,7 @@ function DynamicSection({
               <option value="" disabled>
                 {placeholder}
               </option>
-              {options.map((o, i) => (
+              {visibleOptions.map(({ o, i }) => (
                 <option key={i} value={i}>
                   {o.name} — {formatPrice(o.price)}
                 </option>
@@ -652,12 +667,14 @@ function SummarySection({
   title,
   total,
   items,
+  alwaysShow,
 }: {
   title: string;
   total: number;
   items: Option[];
+  alwaysShow?: boolean;
 }) {
-  if (total === 0) {
+  if (total === 0 && !alwaysShow) {
     return (
       <div className="summary-category">
         <div className="sum-row">
@@ -671,13 +688,16 @@ function SummarySection({
     <div className="summary-category">
       <div className="sum-row">
         <span className="sum-label">{title}</span>
-        <span className="sum-value">{formatPrice(total)}</span>
+        <span className={`sum-value${total === 0 ? " muted" : ""}`}>
+          {total === 0 ? "0 ₸" : formatPrice(total)}
+        </span>
       </div>
       {items.map((it, i) => (
         <div className="sum-detail" key={i}>
-          {it.name} — {formatPrice(it.price)}
+          {it.name}{it.price > 0 ? ` — ${formatPrice(it.price)}` : ` — 0 ₸`}
         </div>
       ))}
     </div>
   );
 }
+
