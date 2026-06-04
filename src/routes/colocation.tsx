@@ -426,7 +426,7 @@ function Configurator() {
                     {t("Сервер", "Сервер")} {active + 1} — {t("конфигурация", "конфигурация")}
                   </div>
                   <div className="summary-body">
-                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("1U, БП 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет до 100 Мбит/с IPv4-адрес", "1U, ҚК 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет 100 Мбит/с дейін, IPv4-адрес")} price={curCalc.base} />
+                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("1U, БП 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет до 100 Мбит/с IPv4-адрес", "1U, ҚК 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет 100 Мбит/с дейін, IPv4-адрес")} price={curCalc.base} alwaysShow />
                     <SumLine
                       title={t("Доп. Unit", "Қос. Unit")}
                       detail={cur.extraUnits ? `${cur.extraUnits} ${t("шт", "дана")}` : "—"}
