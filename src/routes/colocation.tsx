@@ -629,7 +629,8 @@ function ColoCounterRow({
   );
 }
 
-function SumLine({ title, detail, price }: { title: string; detail: string; price: number }) {
+function SumLine({ title, detail, price, alwaysShow }: { title: string; detail: string; price: number; alwaysShow?: boolean }) {
+  if (price === 0 && !alwaysShow) return null;
   return (
     <div className="summary-category">
       <div className="sum-row">
@@ -642,6 +643,7 @@ function SumLine({ title, detail, price }: { title: string; detail: string; pric
     </div>
   );
 }
+
 
 function PriceList() {
   const t = useT();
