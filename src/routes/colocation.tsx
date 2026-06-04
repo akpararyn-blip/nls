@@ -243,6 +243,7 @@ function Configurator() {
   const [tab, setTab] = useState<"calc" | "list">("calc");
   const [servers, setServers] = useState<ServerCfg[]>([newServer()]);
   const [active, setActive] = useState(0);
+  const [socketWarnOpen, setSocketWarnOpen] = useState(false);
 
   const addServer = () => {
     if (servers.length >= 3) return;
@@ -264,6 +265,51 @@ function Configurator() {
 
   const cur = servers[active];
   const curCalc = totals[active];
+
+  // Полный текст заявки со всеми параметрами по каждому серверу
+  const buildSubject = (serversArg: ServerCfg[] = servers) => {
+    const totalsArg = serversArg.map(calcServer);
+    const grand = totalsArg.reduce((a, t) => a + t.total, 0);
+    const lines = serversArg.map((s, i) => {
+      const c = totalsArg[i];
+      const parts = [`1U/500Вт/1 розетка (баз. ${formatPrice(c.base)})`];
+      if (s.extraUnits) parts.push(`+${s.extraUnits} доп.Unit (${formatPrice(c.extraUnits)})`);
+      if (s.extraPower100w) parts.push(`+${s.extraPower100w * 100} Вт (${formatPrice(c.power)})`);
+      if (s.extraSockets) parts.push(`+${s.extraSockets} розетка (${formatPrice(c.sockets)})`);
+      else parts.push("без доп.розетки");
+      if (s.extraEthPorts) parts.push(`+${s.extraEthPorts} Ethernet (${formatPrice(c.eth)})`);
+      if (s.extraIPs) parts.push(`+${s.extraIPs} IPv4 (${formatPrice(c.ips)})`);
+      return `Сервер ${i + 1}: ${parts.join(", ")} — ${formatPrice(c.total)}/мес`;
+    });
+    return `Заказ Colocation (${serversArg.length} серв.):\n${lines.join("\n")}\nИтого: ${formatPrice(grand)}/мес`;
+  };
+
+  const hasMissingSocket = servers.some((s) => s.extraSockets === 0);
+
+  const submitOrder = () => {
+    openConsultationModalWith({ subject: buildSubject() });
+  };
+
+  const handleOrderClick = () => {
+    if (hasMissingSocket) {
+      setSocketWarnOpen(true);
+    } else {
+      submitOrder();
+    }
+  };
+
+  const acceptRisks = () => {
+    setSocketWarnOpen(false);
+    submitOrder();
+  };
+
+  const addSocketsAndOrder = () => {
+    const next = servers.map((s) => (s.extraSockets === 0 ? { ...s, extraSockets: 1 } : s));
+    setServers(next);
+    setSocketWarnOpen(false);
+    openConsultationModalWith({ subject: buildSubject(next) });
+  };
+
 
   return (
     <section className="calc-section" id="colo-tabs">
@@ -426,7 +472,7 @@ function Configurator() {
                     {t("Сервер", "Сервер")} {active + 1} — {t("конфигурация", "конфигурация")}
                   </div>
                   <div className="summary-body">
-                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("1U, БП 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет до 100 Мбит/с IPv4-адрес", "1U, ҚК 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет 100 Мбит/с дейін, IPv4-адрес")} price={curCalc.base} />
+                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("1U, БП 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет до 100 Мбит/с IPv4-адрес", "1U, ҚК 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет 100 Мбит/с дейін, IPv4-адрес")} price={curCalc.base} alwaysShow />
                     <SumLine
                       title={t("Доп. Unit", "Қос. Unit")}
                       detail={cur.extraUnits ? `${cur.extraUnits} ${t("шт", "дана")}` : "—"}
@@ -474,14 +520,11 @@ function Configurator() {
                     <button
                       type="button"
                       className="btn btn-primary calc-order-btn"
-                      onClick={() =>
-                        openConsultationModalWith({
-                          subject: `Заказ Colocation: ${servers.length} серв., итого ${formatPrice(grandTotal)}/мес`,
-                        })
-                      }
+                      onClick={handleOrderClick}
                     >
                       {t("Заказать", "Тапсырыс беру")}
                     </button>
+
                   </div>
                 </div>
                 <CalculatorDisclaimer />
@@ -499,11 +542,7 @@ function Configurator() {
                 <button
                   type="button"
                   className="btn btn-primary calc-order-btn"
-                  onClick={() =>
-                    openConsultationModalWith({
-                      subject: `Заказ Colocation: ${servers.length} серв., итого ${formatPrice(grandTotal)}/мес`,
-                    })
-                  }
+                  onClick={handleOrderClick}
                 >
                   {t("Заказать", "Тапсырыс беру")}
                 </button>
@@ -514,9 +553,42 @@ function Configurator() {
 
         {tab === "list" && <PriceList />}
       </div>
+
+      {socketWarnOpen && (
+        <div
+          className="modal-overlay active"
+          onClick={() => setSocketWarnOpen(false)}
+          style={{ zIndex: 1000 }}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 520 }}
+          >
+            <h3 style={{ marginTop: 0, marginBottom: 12, fontSize: "1.15rem" }}>
+              {t("⚠️ Внимание: выбрана только одна линия питания", "⚠️ Назар аударыңыз: тек бір қуат желісі таңдалған")}
+            </h3>
+            <p style={{ marginBottom: 16, lineHeight: 1.5, color: "var(--color-text-light)" }}>
+              {t(
+                `Одна розетка предоставляется бесплатно, однако отказоустойчивость оборудования гарантируется только при подключении к двум независимым линиям. При использовании одной розетки любой сбой или замыкание на линии приведёт к полному отключению вашего сервера. Настоятельно рекомендуем добавить вторую розетку за ${formatPrice(PRICE_EXTRA_SOCKET)}.`,
+                `Бір розетка тегін беріледі, бірақ жабдықтың тұрақтылығы тек екі тәуелсіз желіге қосылғанда ғана кепілденеді. Бір розетка пайдаланылған жағдайда желідегі кез келген ақау сервердің толық өшуіне әкеледі. Екінші розетканы ${formatPrice(PRICE_EXTRA_SOCKET)}-ге қосуды ұсынамыз.`
+              )}
+            </p>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <button type="button" className="btn btn-outline" onClick={acceptRisks}>
+                {t("Я понимаю риски", "Тәуекелді түсінемін")}
+              </button>
+              <button type="button" className="btn btn-primary" onClick={addSocketsAndOrder}>
+                {t("Добавить розетку", "Розетка қосу")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
+
 
 function HintTip({ text }: { text: string }) {
   const t = useT();
@@ -629,7 +701,8 @@ function ColoCounterRow({
   );
 }
 
-function SumLine({ title, detail, price }: { title: string; detail: string; price: number }) {
+function SumLine({ title, detail, price, alwaysShow }: { title: string; detail: string; price: number; alwaysShow?: boolean }) {
+  if (price === 0 && !alwaysShow) return null;
   return (
     <div className="summary-category">
       <div className="sum-row">
@@ -642,6 +715,7 @@ function SumLine({ title, detail, price }: { title: string; detail: string; pric
     </div>
   );
 }
+
 
 function PriceList() {
   const t = useT();
