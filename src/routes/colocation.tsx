@@ -520,14 +520,11 @@ function Configurator() {
                     <button
                       type="button"
                       className="btn btn-primary calc-order-btn"
-                      onClick={() =>
-                        openConsultationModalWith({
-                          subject: `Заказ Colocation: ${servers.length} серв., итого ${formatPrice(grandTotal)}/мес`,
-                        })
-                      }
+                      onClick={handleOrderClick}
                     >
                       {t("Заказать", "Тапсырыс беру")}
                     </button>
+
                   </div>
                 </div>
                 <CalculatorDisclaimer />
