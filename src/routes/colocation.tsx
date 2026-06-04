@@ -243,6 +243,7 @@ function Configurator() {
   const [tab, setTab] = useState<"calc" | "list">("calc");
   const [servers, setServers] = useState<ServerCfg[]>([newServer()]);
   const [active, setActive] = useState(0);
+  const [socketWarnOpen, setSocketWarnOpen] = useState(false);
 
   const addServer = () => {
     if (servers.length >= 3) return;
@@ -264,6 +265,51 @@ function Configurator() {
 
   const cur = servers[active];
   const curCalc = totals[active];
+
+  // Полный текст заявки со всеми параметрами по каждому серверу
+  const buildSubject = (serversArg: ServerCfg[] = servers) => {
+    const totalsArg = serversArg.map(calcServer);
+    const grand = totalsArg.reduce((a, t) => a + t.total, 0);
+    const lines = serversArg.map((s, i) => {
+      const c = totalsArg[i];
+      const parts = [`1U/500Вт/1 розетка (баз. ${formatPrice(c.base)})`];
+      if (s.extraUnits) parts.push(`+${s.extraUnits} доп.Unit (${formatPrice(c.extraUnits)})`);
+      if (s.extraPower100w) parts.push(`+${s.extraPower100w * 100} Вт (${formatPrice(c.power)})`);
+      if (s.extraSockets) parts.push(`+${s.extraSockets} розетка (${formatPrice(c.sockets)})`);
+      else parts.push("без доп.розетки");
+      if (s.extraEthPorts) parts.push(`+${s.extraEthPorts} Ethernet (${formatPrice(c.eth)})`);
+      if (s.extraIPs) parts.push(`+${s.extraIPs} IPv4 (${formatPrice(c.ips)})`);
+      return `Сервер ${i + 1}: ${parts.join(", ")} — ${formatPrice(c.total)}/мес`;
+    });
+    return `Заказ Colocation (${serversArg.length} серв.):\n${lines.join("\n")}\nИтого: ${formatPrice(grand)}/мес`;
+  };
+
+  const hasMissingSocket = servers.some((s) => s.extraSockets === 0);
+
+  const submitOrder = () => {
+    openConsultationModalWith({ subject: buildSubject() });
+  };
+
+  const handleOrderClick = () => {
+    if (hasMissingSocket) {
+      setSocketWarnOpen(true);
+    } else {
+      submitOrder();
+    }
+  };
+
+  const acceptRisks = () => {
+    setSocketWarnOpen(false);
+    submitOrder();
+  };
+
+  const addSocketsAndOrder = () => {
+    const next = servers.map((s) => (s.extraSockets === 0 ? { ...s, extraSockets: 1 } : s));
+    setServers(next);
+    setSocketWarnOpen(false);
+    openConsultationModalWith({ subject: buildSubject(next) });
+  };
+
 
   return (
     <section className="calc-section" id="colo-tabs">
