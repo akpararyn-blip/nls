@@ -81,3 +81,34 @@
 - Все новые строки RU + KZ через `useT()`.
 - Файлы:
   - edit: `src/routes/vps.tsx`, `src/routes/dedicated.tsx`, `src/components/nls/DedicatedPlans.tsx`, `src/styles/nls.css`.
+
+---
+
+## 3. Модальная форма на мобильных (iOS / Android)
+
+**Проблема:** на мобильных у модалки два прокручиваемых контейнера (`.modal-overlay` с `overflow-y:auto` + `.modal-content` с `max-height:calc(100vh-24px); overflow-y:auto`). На iOS это ломает momentum-скролл и `100vh` (адресная панель), из-за чего верхний `×` и нижняя «Отправить» становятся недоступны. На `/internet` форма ещё длиннее (Адрес/Город).
+
+**Правки в `src/styles/nls.css`, секция `@media (max-width: 600px)`:**
+- `.modal-overlay`: убрать `overflow-y:auto` и `align-items:flex-start`; вернуть центрирование, добавить safe-area паддинги.
+- `.modal-content`: `max-height: 100dvh` (с фолбэком на `calc(100vh - 16px)`), `overflow-y:auto`, `-webkit-overflow-scrolling:touch`, `overscroll-behavior:contain`; `display:flex; flex-direction:column`.
+- `.form-modal-content .close-modal`: на мобильных вынести в `position:fixed` поверх скролла с `z-index:11` и `top/right: max(10px, env(safe-area-inset-*))` — крестик всегда виден.
+- `.form-modal-content > form` на мобильных: `padding-bottom: max(22px, env(safe-area-inset-bottom))` — кнопка «Отправить» всегда доезжает.
+
+Никакого JS, без изменений в `LeadForm.tsx` / `Modals.tsx`.
+
+---
+
+## 4. Секция «Как мы работаем» на `/internet` — мобильная вёрстка
+
+**Проблема:** 9 шагов разбиты на две grid-сетки (`.how-grid--5` и `.how-grid--4`). На мобильных (`max-width:720px`) обе становятся 2-колоночными, но в первой 5 элементов → последний 5-й висит в одиночку в строке и занимает половину ширины, выглядит криво. На Android/iOS это особенно заметно.
+
+**Правка в `src/styles/nls.css` (блок `@media (max-width: 720px)` около строки 6151):**
+- Для `.how-grid--5` сделать одиночный остаточный 5-й элемент во всю ширину:
+  ```css
+  .how-grid--5 .how-step:nth-child(5):last-child { grid-column: 1 / -1; }
+  ```
+- Опционально центрировать его контент.
+
+Итого на мобильных: ряды 2 + 2 + 1 (full-width) в первой группе, и 2 + 2 во второй — всё строго по 2 в ряд, без «висячих» половинок.
+
+Без изменений в `internet.tsx`.
