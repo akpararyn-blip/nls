@@ -336,8 +336,8 @@ function Configurator() {
                     </div>
                     <div className="colo-row-hint">
                       {t(
-                        "Размещение оборудования до 1 Unit, БП до 500 Вт и 1 розетка электропитания.",
-                        "1 Unit дейінгі жабдықты, 500 Вт дейінгі ҚК және 1 электр розеткасын орналастыру."
+                        "Размещение оборудования 1 Unit, БП до 500 Вт и 1 розетка электропитания.",
+                        "1 Unit жабдықты, 500 Вт дейінгі ҚК және 1 электр розеткасын орналастыру."
                       )}
                     </div>
                   </div>
@@ -390,6 +390,7 @@ function Configurator() {
                   unit={t("шт", "дана")}
                   step={1}
                   min={0}
+                  max={1}
                   value={cur.extraSockets}
                   pricePerStep={PRICE_EXTRA_SOCKET}
                   onChange={(v) => update(active, { extraSockets: v })}
@@ -425,7 +426,7 @@ function Configurator() {
                     {t("Сервер", "Сервер")} {active + 1} — {t("конфигурация", "конфигурация")}
                   </div>
                   <div className="summary-body">
-                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("до 1U, БП 500 Вт, 1 розетка", "1U дейін, ҚК 500 Вт, 1 розетка")} price={curCalc.base} />
+                    <SumLine title={t("Основной Unit", "Негізгі Unit")} detail={t("1U, БП 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет до 100 Мбит/с IPv4-адрес", "1U, ҚК 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, Интернет 100 Мбит/с дейін, IPv4-адрес")} price={curCalc.base} />
                     <SumLine
                       title={t("Доп. Unit", "Қос. Unit")}
                       detail={cur.extraUnits ? `${cur.extraUnits} ${t("шт", "дана")}` : "—"}
@@ -569,6 +570,7 @@ function ColoCounterRow({
   unit,
   step,
   min,
+  max,
   value,
   pricePerStep,
   baseLabel,
@@ -580,6 +582,7 @@ function ColoCounterRow({
   unit: string;
   step: number;
   min: number;
+  max?: number;
   value: number;
   pricePerStep: number;
   baseLabel?: string;
@@ -604,6 +607,7 @@ function ColoCounterRow({
           type="button"
           className="calc-counter-btn"
           onClick={() => onChange(Math.max(min, value - step))}
+          disabled={value <= min}
         >
           −
         </button>
@@ -614,7 +618,8 @@ function ColoCounterRow({
         <button
           type="button"
           className="calc-counter-btn"
-          onClick={() => onChange(value + step)}
+          onClick={() => onChange(max !== undefined ? Math.min(max, value + step) : value + step)}
+          disabled={max !== undefined && value >= max}
         >
           +
         </button>
@@ -644,21 +649,21 @@ function PriceList() {
     { label: t("Установка сервера в дата-центр", "Серверді дата-орталыққа орнату"), price: t("Бесплатно", "Тегін") },
     {
       label: t(
-        "Размещение 19″ оборудования (до 1 Unit, БП до 500 Вт, 1 розетка) — абонентская плата за месяц",
-        "19″ жабдықты орналастыру (1 Unit дейін, 500 Вт дейін ҚК, 1 розетка) — айлық абоненттік төлем"
+        "Размещение 19″ оборудования (1 Unit, БП до 500 Вт, 1 розетка, Ethernet-порт 1 Гбит/с, IPv4-адрес) — абонентская плата за месяц",
+        "19″ жабдықты орналастыру (1 Unit, 500 Вт дейін ҚК, 1 розетка, Ethernet-порт 1 Гбит/с, IPv4-адрес) — айлық абоненттік төлем"
       ),
       price: "28 500 ₸",
     },
     {
       label: t(
-        "Размещение дополнительного 19″ оборудования, за 1 Unit (без розетки)",
-        "Қосымша 19″ жабдықты орналастыру, 1 Unit үшін (розеткасыз)"
+        "Выделение дополнительного 19″ оборудования, за 1 Unit (без розетки)",
+        "Қосымша 19″ жабдықты бөлу, 1 Unit үшін (розеткасыз)"
       ),
       price: "15 000 ₸",
     },
     { label: t("Дополнительный Ethernet-порт коммутатора (100 Mb/s)", "Қосымша коммутатор Ethernet-порты (100 Mb/s)"), price: "2 500 ₸" },
     { label: t("Превышение потребляемой мощности — за каждые 100 Вт", "Тұтынылатын қуаттың асып кетуі — әр 100 Вт үшін"), price: "2 000 ₸" },
-    { label: t("Аренда доп. розетки для резервного БП до 500 Вт", "500 Вт дейінгі резервтік (redundant) ҚК-ға қос. розетка жалдау"), price: "2 000 ₸" },
+    { label: t("Аренда доп. розетки электропитания для резервного БП до 500 Вт", "500 Вт дейінгі резервтік ҚК-ға қос. розетка жалдау"), price: "2 000 ₸" },
     { label: t("Аренда IPv4-адреса (1 шт)", "IPv4-мекенжай жалдау (1 дана)"), price: t("Бесплатно", "Тегін") },
     { label: t("Аренда дополнительного IPv4-адреса", "Қосымша IPv4-мекенжай жалдау"), price: t("2 250 ₸ / шт", "2 250 ₸ / дана") },
   ];
