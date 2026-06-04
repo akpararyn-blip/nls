@@ -7,7 +7,7 @@ import { CheckIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import vpsHero from "@/assets/vpsvds.png";
 import { useMemo, useState, type ChangeEvent } from "react";
-import { Cpu, MemoryStick, HardDrive, Database, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
+import { Cpu, MemoryStick, HardDrive, MapPin, ShieldCheck, Zap, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/vps")({
   head: () => ({
@@ -33,12 +33,12 @@ export const Route = createFileRoute("/vps")({
 const PRICE_CPU = 1200;
 const PRICE_RAM = 1500;
 const PRICE_SSD = 90;
-const PRICE_HDD = 38;
 
+const RAM_MIN = 1;
+const RAM_STEP = 1;
 const SSD_MIN = 10;
 const SSD_STEP = 1;
-const HDD_MIN = 0;
-const HDD_STEP = 1;
+
 
 
 type Plan = {
