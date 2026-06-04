@@ -6315,3 +6315,16 @@ body::before, body::after { display: none !important; }
     font-weight: 600;
     color: #15803d;
 }
+
+/* Несовместимый накопитель в DynamicSection */
+.calc-added-item.is-error .calc-select,
+.calc-select.is-error {
+  border-color: #e53e3e !important;
+  background: #fff5f5;
+  color: #c53030;
+}
+.calc-row-error {
+  color: #e53e3e;
+  font-size: 0.78rem;
+  padding-left: 2px;
+}
