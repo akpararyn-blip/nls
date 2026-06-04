@@ -246,7 +246,7 @@ function CalcCta() {
 
 function HowWeWork() {
   const t = useT();
-  type Step = { title: React.ReactNode; text: string; link?: { label: string; to: "/requisites" } };
+  type Step = { title: ReactNode; text: string; link?: { label: string; to: "/requisites" } };
   const steps: Step[] = [
     {
       title: t("Заявка", "Өтінім"),
