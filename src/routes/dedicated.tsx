@@ -354,7 +354,7 @@ function Calculator() {
       priceSoftware,
       total,
     };
-  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, t]);
+  }, [cpuIdx, ramIdx, raid, ipmi, ipCount, storage.rows, network.rows, software.rows, incompatibleStorageIds, t]);
 
   // Формирование текста для заявки
   const buildSubject = () => {
