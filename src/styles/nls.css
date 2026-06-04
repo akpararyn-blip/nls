@@ -6267,3 +6267,51 @@ body::before, body::after { display: none !important; }
   .requisites-download { padding: 18px; gap: 14px; }
   .requisites-download-hint { font-size: 0.88rem; }
 }
+
+/* === Dedicated plans — period switcher === */
+.plan-period-switch {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    background: #f1f5f9;
+    border-radius: 999px;
+    margin: 0 auto 28px;
+    justify-content: center;
+}
+.plans-section .plan-period-switch { display: flex; max-width: max-content; }
+.plan-period-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: var(--color-blue-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.plan-period-btn:hover { background: rgba(255,255,255,0.7); }
+.plan-period-btn.is-active {
+    background: var(--color-blue-dark);
+    color: var(--color-white);
+    box-shadow: 0 4px 14px rgba(0,85,123,0.18);
+}
+.plan-discount-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--color-orange);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.plan-saving {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #15803d;
+}
