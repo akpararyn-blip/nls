@@ -719,16 +719,10 @@ function SummarySection({
   items: Option[];
   alwaysShow?: boolean;
 }) {
-  if (total === 0 && !alwaysShow) {
-    return (
-      <div className="summary-category">
-        <div className="sum-row">
-          <span className="sum-label">{title}</span>
-          <span className="sum-value muted">—</span>
-        </div>
-      </div>
-    );
+  if (total === 0 && items.length === 0 && !alwaysShow) {
+    return null;
   }
+
   return (
     <div className="summary-category">
       <div className="sum-row">
