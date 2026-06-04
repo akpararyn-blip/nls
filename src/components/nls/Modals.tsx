@@ -79,7 +79,9 @@ export function Modals() {
 
           {modal.consultation && (() => {
             const showAddress =
-              typeof window !== "undefined" && window.location.pathname.startsWith("/internet");
+              typeof window !== "undefined" &&
+              (window.location.pathname.startsWith("/internet") ||
+                window.location.hostname === "internet.nls.kz");
             return (
               <LeadForm
                 key={consultation.subject ?? "modal"}
