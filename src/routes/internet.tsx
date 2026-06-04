@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useFitText } from "@/hooks/use-fit-text";
 
@@ -246,7 +246,7 @@ function CalcCta() {
 
 function HowWeWork() {
   const t = useT();
-  type Step = { title: string; text: string; link?: { label: string; to: "/requisites" } };
+  type Step = { title: ReactNode; text: string; link?: { label: string; to: "/requisites" } };
   const steps: Step[] = [
     {
       title: t("Заявка", "Өтінім"),
@@ -264,7 +264,13 @@ function HowWeWork() {
       ),
     },
     {
-      title: t("Возможность подключения", "Қосылу мүмкіндігі"),
+      title: (
+        <>
+          {t("Возможность", "Қосылу")}
+          <br />
+          {t("подключения", "мүмкіндігі")}
+        </>
+      ),
       text: t(
         "Инженер проверит возможность подключения и рассчитает стоимость.",
         "Инженер қосылу мүмкіндігін тексеріп, құнын есептейді."
