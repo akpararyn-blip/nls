@@ -73,7 +73,7 @@ const storageOptions: Option[] = [
 ];
 
 const networkOptions: Option[] = [
-  { name: "100 Mbit /s", price: 0 },
+  { name: "100 Mbit/s", price: 0 },
   { name: "1 Gbit/s", price: 1000 },
   { name: "10 Gbit/s", price: 30000 },
 ];
@@ -85,8 +85,9 @@ const softwareOptions: Option[] = [
 ];
 
 const RAID_PRICE = 9000;
-const IPMI_PRICE = 3000;
+const IPMI_PRICE = 0;
 const IP_PRICE = 2250;
+
 
 function formatPrice(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸";
