@@ -6155,6 +6155,8 @@ body::before, body::after { display: none !important; }
 }
 @media (max-width: 720px) {
   .how-grid--5, .how-grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .how-grid--5 .how-step:nth-child(5):last-child,
+  .how-grid--4 .how-step:nth-child(3):last-child { grid-column: 1 / -1; }
 }
 
 /* --- Calculator CTA --- */
