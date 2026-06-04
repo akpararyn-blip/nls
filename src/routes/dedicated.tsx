@@ -7,7 +7,7 @@ import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import dedicatedHero from "@/assets/server-dedicated.png";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
   head: () => ({
