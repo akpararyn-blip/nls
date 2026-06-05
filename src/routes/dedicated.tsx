@@ -560,7 +560,7 @@ function Calculator() {
                       <input
                         type="checkbox"
                         checked={raid}
-                        disabled={compatibleStorageCount < 2}
+                        disabled={!hasIdenticalPair}
                         onChange={(e) => setRaid(e.target.checked)}
                       />
                       <span className="toggle-slider" />
