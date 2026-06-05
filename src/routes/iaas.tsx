@@ -592,7 +592,7 @@ function Calculator() {
                     />
 
                     <div className="vdc-card__footer">
-                      <span>{t("Стоимость ВДЦ за 1 мес.", "ВДО құны 1 айға")}</span>
+                      <span>{t("Стоимость виртуального дата-центра за 1 мес.", "Виртуалды дата-орталығының құны 1 айға")}</span>
                       <strong>{formatPrice(monthly)}</strong>
                     </div>
                   </div>
