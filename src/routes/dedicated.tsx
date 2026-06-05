@@ -266,8 +266,9 @@ function Calculator() {
   const [period, setPeriod] = useState<Period>(1);
 
   const storage = useDynamic();
-  // По умолчанию добавлен один сетевой порт «100 Mbit/s — 0 ₸»
-  const network = useDynamic([0]);
+  // 100 Mbit/s — фиксированный порт (рендерится статически выше кнопки),
+  // в DynamicSection доступны только 1 Gbit/s и 10 Gbit/s
+  const network = useDynamic();
   const software = useDynamic();
 
 
