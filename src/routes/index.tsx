@@ -14,6 +14,7 @@ import { SksPage } from "./it-sks";
 import { DedicatedPage } from "./dedicated";
 import { FullRackPage } from "./colocation-full";
 import { VpsPage } from "./vps";
+import { ItOutsourcingPage } from "./it";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,9 +39,10 @@ export const Route = createFileRoute("/")({
   component: IndexPage,
 });
 
-const SERVICE_COMPONENTS: Record<ServicePath, () => React.ReactElement> = {
+const SERVICE_COMPONENTS: Partial<Record<ServicePath, () => React.ReactElement>> = {
   "/internet": InternetPage,
   "/it-sks": SksPage,
+  "/it": ItOutsourcingPage,
   "/colocation": ColocationPage,
   "/dedicated": DedicatedPage,
   "/colocation-full": FullRackPage,
