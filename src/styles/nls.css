@@ -1777,6 +1777,10 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     }
 }
 
+@media (max-width: 480px) {
+    .hero h1 { font-size: 1.7rem; }
+}
+
 /* Mobile Menu */
 .mobile-nav {
     position: fixed;
