@@ -381,7 +381,11 @@ function Calculator() {
     if (ipmi) parts.push("IPMI (бесплатно)");
     if (raid) parts.push("Аппаратный RAID");
     parts.push(`IP: ${calc.ipItems.map((i) => i.name).join(" + ")}`);
-    parts.push(`Итого: ${formatPrice(calc.total)}/мес`);
+    parts.push(`Базовая стоимость: ${formatPrice(calc.total)}/мес`);
+    parts.push(`Срок: ${period} мес.`);
+    if (discount > 0) parts.push(`Скидка: ${Math.round(discount * 100)}%`);
+    parts.push(`Итого за ${period} мес.: ${formatPrice(Math.round(periodTotal))}`);
+    if (periodSaving > 0) parts.push(`Экономия: ${formatPrice(Math.round(periodSaving))}`);
     return parts.join(" | ");
   };
 
