@@ -671,7 +671,20 @@ function Calculator() {
                     </div>
                   )}
                   <p className="summary-vat">{t("Цены указаны без учёта НДС", "Бағалар ҚҚС-сыз көрсетілген")}</p>
-                  <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+                  {!canOrder && (
+                    <div className="calc-order-block">
+                      {orderIssues.map((msg, i) => (
+                        <div key={i}>{msg}</div>
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-primary calc-order-btn"
+                    onClick={orderClick}
+                    disabled={!canOrder}
+                    aria-disabled={!canOrder}
+                  >
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
