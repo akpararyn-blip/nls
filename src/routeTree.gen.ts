@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ItSksRouteImport } from './routes/it-sks'
 import { Route as ItRouteImport } from './routes/it'
 import { Route as InternetRouteImport } from './routes/internet'
+import { Route as IaasRouteImport } from './routes/iaas'
 import { Route as HrRouteImport } from './routes/hr'
 import { Route as DedicatedRouteImport } from './routes/dedicated'
 import { Route as ContactsRouteImport } from './routes/contacts'
@@ -65,6 +66,11 @@ const InternetRoute = InternetRouteImport.update({
   path: '/internet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IaasRoute = IaasRouteImport.update({
+  id: '/iaas',
+  path: '/iaas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HrRoute = HrRouteImport.update({
   id: '/hr',
   path: '/hr',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof ContactsRoute
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
+  '/iaas': typeof IaasRoute
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/contacts': typeof ContactsRoute
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
+  '/iaas': typeof IaasRoute
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/contacts': typeof ContactsRoute
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
+  '/iaas': typeof IaasRoute
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dedicated'
     | '/hr'
+    | '/iaas'
     | '/internet'
     | '/it'
     | '/it-sks'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dedicated'
     | '/hr'
+    | '/iaas'
     | '/internet'
     | '/it'
     | '/it-sks'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dedicated'
     | '/hr'
+    | '/iaas'
     | '/internet'
     | '/it'
     | '/it-sks'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   ContactsRoute: typeof ContactsRoute
   DedicatedRoute: typeof DedicatedRoute
   HrRoute: typeof HrRoute
+  IaasRoute: typeof IaasRoute
   InternetRoute: typeof InternetRoute
   ItRoute: typeof ItRoute
   ItSksRoute: typeof ItSksRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InternetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/iaas': {
+      id: '/iaas'
+      path: '/iaas'
+      fullPath: '/iaas'
+      preLoaderRoute: typeof IaasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hr': {
       id: '/hr'
       path: '/hr'
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactsRoute: ContactsRoute,
   DedicatedRoute: DedicatedRoute,
   HrRoute: HrRoute,
+  IaasRoute: IaasRoute,
   InternetRoute: InternetRoute,
   ItRoute: ItRoute,
   ItSksRoute: ItSksRoute,
