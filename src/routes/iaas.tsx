@@ -55,12 +55,7 @@ const LOCATIONS: Location[] = [
         cpuFreq: "2.4 ГГц",
         prices: { cpu: 1600, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
-      {
-        id: "e5v4",
-        name: "E5-2680 v4, SSD, HDD",
-        cpuFreq: "2.25 ГГц",
-        prices: { cpu: 1500, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
-      },
+      
     ],
   },
   {
@@ -104,11 +99,11 @@ type FieldKey = "cpu" | "ram" | "ssd" | "hdd" | "ip" | "veeam" | "archive";
 const RANGES: Record<FieldKey, { min: number; max: number; step: number }> = {
   cpu: { min: 1, max: 1024, step: 1 },
   ram: { min: 1, max: 10240, step: 1 },
-  ssd: { min: 1, max: 512000, step: 10 },
-  hdd: { min: 1, max: 512000, step: 10 },
+  ssd: { min: 0, max: 512000, step: 1 },
+  hdd: { min: 0, max: 512000, step: 1 },
   ip: { min: 1, max: 256, step: 1 },
   veeam: { min: 0, max: 100, step: 1 },
-  archive: { min: 1, max: 512000, step: 10 },
+  archive: { min: 0, max: 512000, step: 1 },
 };
 
 type Period = 1 | 6 | 12;
@@ -415,8 +410,8 @@ function Calculator() {
             <h2>{t("Конфигуратор виртуального дата-центра", "Виртуалды дата-орталығының конфигураторы")}</h2>
             <p>
               {t(
-                "Соберите конфигурацию под свою задачу — добавляйте несколько ВДЦ в один заказ",
-                "Тапсырмаңызға сай конфигурацияны жинақтаңыз — бір тапсырысқа бірнеше ВДО қосыңыз",
+                "Соберите конфигурацию под свою задачу — добавляйте несколько VDC в один заказ",
+                "Тапсырмаңызға сай конфигурацияны жинақтаңыз — бір тапсырысқа бірнеше VDC қосыңыз",
               )}
             </p>
           </div>
