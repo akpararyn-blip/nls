@@ -628,6 +628,7 @@ function Calculator() {
                   </button>
                 </div>
               </div>
+              <Recommendation />
               <CalculatorDisclaimer />
             </div>
           </div>
