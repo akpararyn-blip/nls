@@ -68,7 +68,7 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD",
+        name: "E5-2643 v3, DDR4, SSD — 3.4 ГГц / vCPU",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -79,8 +79,8 @@ const LOCATIONS: Location[] = [
     nameKz: "Шымкент",
     clusters: [
       {
-        id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD",
+        id: "e5v4-shy",
+        name: "E5-2680 v4, SSD — 2.4 ГГц / vCPU",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
