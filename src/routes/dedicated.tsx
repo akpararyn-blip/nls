@@ -316,14 +316,27 @@ function Calculator() {
     return s;
   }, [storage.rows, allowedStorageIdx]);
 
-  // Авто-активация RAID при 2+ совместимых накопителях
+  // Авто-активация RAID при 2+ ОДИНАКОВЫХ совместимых накопителях
   const compatibleStorageCount = storage.rows.filter(
     (r) => r.index !== null && !incompatibleStorageIds.has(r.id)
   ).length;
+  const storageGroupCounts = useMemo(() => {
+    const m = new Map<number, number>();
+    storage.rows.forEach((r) => {
+      if (r.index === null) return;
+      if (incompatibleStorageIds.has(r.id)) return;
+      m.set(r.index, (m.get(r.index) ?? 0) + 1);
+    });
+    return m;
+  }, [storage.rows, incompatibleStorageIds]);
+  const hasIdenticalPair = useMemo(
+    () => [...storageGroupCounts.values()].some((n) => n >= 2),
+    [storageGroupCounts]
+  );
   useEffect(() => {
-    if (compatibleStorageCount >= 2) setRaid(true);
-    else if (compatibleStorageCount < 2) setRaid(false);
-  }, [compatibleStorageCount]);
+    if (hasIdenticalPair) setRaid(true);
+    else setRaid(false);
+  }, [hasIdenticalPair]);
 
   const calc = useMemo(() => {
     const cpu = cpuIdx !== null ? cpuOptions[cpuIdx] : null;
