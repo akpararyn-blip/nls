@@ -553,18 +553,37 @@ function Calculator() {
                 </div>
               </div>
 
-              <DynamicSection
-                label={t("Сетевой порт", "Желілік порт")}
-                addLabel={t("Добавить порт", "Порт қосу")}
-                placeholder={t("Выберите порт", "Портты таңдаңыз")}
-                options={networkOptions}
-                maxRows={20}
-                rows={network.rows}
-                onAdd={network.add}
-                onChange={network.update}
-                onRemove={network.remove}
-              />
-            </div>
+              <div className="calc-field">
+                <label className="calc-field-label">{t("Сетевой порт", "Желілік порт")}</label>
+                <div className="calc-added-item visible" style={{ opacity: 0.95 }}>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div
+                      className="calc-select"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "not-allowed",
+                        background: "var(--color-surface-2, #f5f6fa)",
+                      }}
+                    >
+                      100 Mbit/s — {formatPrice(0)}
+                    </div>
+                  </div>
+                </div>
+                <DynamicSection
+                  label=""
+                  addLabel={t("Добавить порт", "Порт қосу")}
+                  placeholder={t("Выберите порт", "Портты таңдаңыз")}
+                  options={networkOptions}
+                  allowedIdx={[1, 2]}
+                  maxRows={20}
+                  rows={network.rows}
+                  onAdd={network.add}
+                  onChange={network.update}
+                  onRemove={network.remove}
+                  hideLabel
+                />
+              </div>
 
 
             <div className="calc-summary">
