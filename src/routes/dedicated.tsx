@@ -260,13 +260,16 @@ function Calculator() {
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
   const [ramIdx, setRamIdx] = useState<number | null>(null);
   const [raid, setRaid] = useState(false);
-  const [ipmi, setIpmi] = useState(true);
+  const [ipmi] = useState(true); // IPMI всегда включён — отключить нельзя
   const [ipCount, setIpCount] = useState(1);
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  const [period, setPeriod] = useState<Period>(1);
 
   const storage = useDynamic();
-  const network = useDynamic();
+  // По умолчанию добавлен один сетевой порт «100 Mbit/s — 0 ₸»
+  const network = useDynamic([0]);
   const software = useDynamic();
+
 
   // Формфактор накопителей фильтруем по выбранному CPU
   const cpuFF = cpuIdx !== null ? cpuOptions[cpuIdx].formFactor : undefined;
