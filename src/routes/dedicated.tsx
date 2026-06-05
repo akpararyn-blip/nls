@@ -300,6 +300,7 @@ function Calculator() {
   ).length;
   useEffect(() => {
     if (compatibleStorageCount >= 2) setRaid(true);
+    else if (compatibleStorageCount < 2) setRaid(false);
   }, [compatibleStorageCount]);
 
   const calc = useMemo(() => {
