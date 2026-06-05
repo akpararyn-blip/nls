@@ -6692,3 +6692,15 @@ body::before, body::after { display: none !important; }
     flex-direction: column;
     gap: 4px;
 }
+
+.calc-pair-warning {
+  margin: -8px 0 8px;
+  padding: 10px 12px;
+  background: #fff4e5;
+  border: 1px solid #f5c98a;
+  border-left: 3px solid #e89a2c;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #7a4a0a;
+}
