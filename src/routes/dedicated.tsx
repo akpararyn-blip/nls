@@ -476,10 +476,11 @@ function Calculator() {
                     <div className="calc-toggle-label">
                       {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">{t("бесплатно", "тегін")}</span>
                     </div>
-                    <label className="toggle-switch">
-                      <input type="checkbox" checked={ipmi} onChange={(e) => setIpmi(e.target.checked)} />
+                    <label className="toggle-switch" title={t("IPMI всегда включён", "IPMI әрқашан қосулы")}>
+                      <input type="checkbox" checked={ipmi} disabled readOnly />
                       <span className="toggle-slider" />
                     </label>
+
                   </div>
                 </div>
               </div>
