@@ -32,18 +32,18 @@ export const Route = createFileRoute("/dedicated")({
 type Option = { name: string; price: number; formFactor?: number; diskNumber?: number };
 
 const cpuOptions: Option[] = [
-  { name: "2 x Intel® Xeon® E5-2643 v3, 3.4/3.7 ГГц, (всего 12C/6T)", price: 90000, formFactor: 2.5, diskNumber: 10 },
-  { name: "2 x Intel® Xeon® E5-2667 v4, 3.2/3.6 ГГц, (всего 16C/32T)", price: 100000, formFactor: 2.5, diskNumber: 10 },
-  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, SFF (всего 28C/56T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
-  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, LFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 4 },
-  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, LFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
-  { name: "2 x Intel® Xeon® E5-2690 v3, 2.6/3.5 ГГц, (всего 24C/48T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
-  { name: "2 x Intel® Xeon® Gold 6128, 3.4/3.7 ГГц, (всего 12C/24T)", price: 13000, formFactor: 3.5, diskNumber: 4 },
-  { name: "2 x Intel® Xeon® Gold 6130, 2.1/3.7 ГГц, (всего 32C/64T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
-  { name: "2 x Intel® Xeon® Gold 6132, 2.6/3.7 ГГц, (всего 28C/56T)", price: 200000, formFactor: 2.5, diskNumber: 8 },
-  { name: "2 x Intel® Xeon® Gold 6140, 2.3/3.7 ГГц, (всего 36C/72T)", price: 140000, formFactor: 2.5, diskNumber: 8 },
-  { name: "2 x Intel® Xeon® Gold 6148, 2.4/3.7 ГГц, (всего 40C/80T)", price: 382000, formFactor: 2.5, diskNumber: 8 },
-  { name: "2 x Intel® Xeon® Platinum 8168, 2.7/3.7 ГГц, (всего 48C/96T)", price: 645000, formFactor: 2.5, diskNumber: 16 },
+  { name: "2 x Intel® Xeon® E5-2643 v3, 3.4/3.7 ГГц, 10xSFF (всего 12C/6T)", price: 90000, formFactor: 2.5, diskNumber: 10 },
+  { name: "2 x Intel® Xeon® E5-2667 v4, 3.2/3.6 ГГц, 10xSFF (всего 16C/32T)", price: 100000, formFactor: 2.5, diskNumber: 10 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, 8xSFF (всего 28C/56T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, 4xLFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 4 },
+  { name: "2 x Intel® Xeon® E5-2680 v4, 2.4/3.3 ГГц, 12xLFF (всего 28C/56T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
+  { name: "2 x Intel® Xeon® E5-2690 v3, 2.6/3.5 ГГц, 8xSFF (всего 24C/48T)", price: 130000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6128, 3.4/3.7 ГГц, 4xLFF(всего 12C/24T)", price: 130000, formFactor: 3.5, diskNumber: 4 },
+  { name: "2 x Intel® Xeon® Gold 6130, 2.1/3.7 ГГц, 12xLFF (всего 32C/64T)", price: 130000, formFactor: 3.5, diskNumber: 12 },
+  { name: "2 x Intel® Xeon® Gold 6132, 2.6/3.7 ГГц, 8xSFF (всего 28C/56T)", price: 200000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6140, 2.3/3.7 ГГц, 8xSFF (всего 36C/72T)", price: 140000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Gold 6148, 2.4/3.7 ГГц, 8xSFF (всего 40C/80T)", price: 382000, formFactor: 2.5, diskNumber: 8 },
+  { name: "2 x Intel® Xeon® Platinum 8168, 2.7/3.7 ГГц, 16xSFF (всего 48C/96T)", price: 645000, formFactor: 2.5, diskNumber: 16 },
 ];
 
 const ramOptions: Option[] = [
@@ -162,7 +162,7 @@ function Hero() {
   const t = useT();
   const features = [
     t("С каналом до 100 Мбит/с", "100 Мбит/с дейін арнамен"),
-    t("Собственный ЦОД Tier III", "Меншікті Tier III дата-орталығы"),
+    t("Собственный ЦОД уровня Tier III", "Меншікті Tier III дата-орталығы"),
     t("Размещены в Алматы и в Астане", "Алматы және Астанада орналасқан"),
     t("Поддержка 24/7", "24/7 қолдау"),
   ];

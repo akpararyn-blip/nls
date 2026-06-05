@@ -23,11 +23,11 @@ import {
 export const Route = createFileRoute("/colocation-full")({
   head: () => ({
     meta: [
-      { title: "Аренда серверной стойки (Full Rack) в ЦОД Tier III — NLS Kazakhstan" },
+      { title: "Аренда серверной стойки (Full Rack) в ЦОД уровня Tier III — NLS Kazakhstan" },
       {
         name: "description",
         content:
-          "Изолированные стойки 42U в собственном дата-центре Tier III. Индивидуальные параметры питания и каналов связи под задачи Enterprise.",
+          "Изолированные стойки 42U в собственном дата-центре уровня Tier III. Индивидуальные параметры питания и каналов связи под задачи Enterprise.",
       },
       { property: "og:title", content: "Аренда серверной стойки (Full Rack) — NLS Kazakhstan" },
       {

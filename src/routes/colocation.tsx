@@ -137,7 +137,7 @@ function Advantages() {
   const items = [
     {
       Icon: ShieldCheck,
-      h: t("Отказоустойчивость Tier III", "Tier III бас тартуға төзімділік"),
+      h: t("Отказоустойчивость уровня Tier III", "Tier III бас тартуға төзімділік"),
       p: t(
         "Многоуровневая архитектура 2N, два независимых энерговвода, ИБП и дизель-генераторы с автозапуском.",
         "2N көп деңгейлі архитектурасы, екі тәуелсіз энергия енгізілімі, ҮҚК және автоқосылатын дизельді генераторлар."
@@ -461,7 +461,7 @@ function Configurator() {
                   min={0}
                   value={cur.extraIPs}
                   pricePerStep={PRICE_EXTRA_IP}
-                  baseLabel={t("1 шт включена", "1 дана қосылған")}
+                  baseLabel={t("1 IP адрес включен", "1 IP адрес қосылған")}
                   onChange={(v) => update(active, { extraIPs: v })}
                 />
               </div>
@@ -495,7 +495,7 @@ function Configurator() {
                     />
                     <SumLine
                       title={t("Доп. IPv4", "Қос. IPv4")}
-                      detail={cur.extraIPs ? t(`${cur.extraIPs} шт сверх включённого`, `Қосылғаннан тыс ${cur.extraIPs} дана`) : t("1 шт включена", "1 дана қосылған")}
+                      detail={cur.extraIPs ? t(`${cur.extraIPs} шт сверх включённого`, `Қосылғаннан тыс ${cur.extraIPs} дана`) : t("1 IP адрес включен", "1 IP адрес қосылған")}
                       price={curCalc.ips}
                     />
                   </div>
