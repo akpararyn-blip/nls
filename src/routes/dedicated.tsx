@@ -88,6 +88,15 @@ const RAID_PRICE = 9000;
 const IPMI_PRICE = 0;
 const IP_PRICE = 2250;
 
+// === Переключатели скидок ===
+// true  → скидки 3% / 6% отображаются
+// false → скидки скрыты (цена считается без скидки, шильдики не показываются)
+const PLANS_DISCOUNT_ENABLED = true;
+const CALC_DISCOUNT_ENABLED = true;
+
+type Period = 1 | 6 | 12;
+const CALC_DISCOUNT: Record<Period, number> = { 1: 0, 6: 0.03, 12: 0.06 };
+
 
 function formatPrice(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸";
@@ -98,9 +107,11 @@ interface DynamicRow {
   index: number | null;
 }
 
-function useDynamic() {
-  const [rows, setRows] = useState<DynamicRow[]>([]);
-  const [counter, setCounter] = useState(0);
+function useDynamic(initial: Array<number | null> = []) {
+  const [rows, setRows] = useState<DynamicRow[]>(
+    initial.map((index, i) => ({ id: i + 1, index })),
+  );
+  const [counter, setCounter] = useState(initial.length);
 
   const add = () => {
     const id = counter + 1;
@@ -113,6 +124,7 @@ function useDynamic() {
 
   return { rows, add, update, remove };
 }
+
 
 function scrollToCalculator() {
   const el = document.getElementById("calculator");
