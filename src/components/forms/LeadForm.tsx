@@ -24,6 +24,8 @@ export interface LeadFormProps {
   noRedirect?: boolean;
   /** Показать поля «Адрес» и «Город» (только для страницы /internet) */
   showAddress?: boolean;
+  /** Запретить редактирование поля комментария (для заявок из конфигураторов) */
+  messageReadOnly?: boolean;
 }
 
 const CITY_NAMES_RU: Record<CityKey, string> = {
