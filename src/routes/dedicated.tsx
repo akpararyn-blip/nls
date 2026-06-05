@@ -584,6 +584,9 @@ function Calculator() {
                   hideLabel
                 />
               </div>
+            </div>
+
+
 
 
             <div className="calc-summary">
