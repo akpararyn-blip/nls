@@ -51,12 +51,12 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "epyc",
-        name: "Epyc 9754, DDR5, SSD, HDD",
+        name: "Epyc 9754, DDR5, SSD, HDD — 2.4 ГГц / vCPU",
         prices: { cpu: 1600, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
       {
         id: "e5v4",
-        name: "E5-2680 v4, SSD, HDD",
+        name: "E5-2680 v4, SSD, HDD — 2.4 ГГц / vCPU",
         prices: { cpu: 1500, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
