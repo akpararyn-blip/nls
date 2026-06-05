@@ -15,29 +15,38 @@ export const USE_INTERNAL_ROUTING = true;
 export type ServicePath =
   | "/internet"
   | "/it-sks"
+  | "/it"
   | "/colocation"
   | "/dedicated"
   | "/colocation-full"
-  | "/vps";
+  | "/vps"
+  | "/iaas"
+  | "/cloud";
 
 /** Поддомен → внутренний путь, который он представляет */
 export const DOMAIN_TO_PATH: Record<string, ServicePath> = {
   "internet.nls.kz": "/internet",
   "lan.nls.kz": "/it-sks",
+  "it.nls.kz": "/it",
   "colocation.nls.kz": "/colocation",
   "dedicated.nls.kz": "/dedicated",
   "rack.nls.kz": "/colocation-full",
   "server.nls.kz": "/vps",
+  "iaas.nls.kz": "/iaas",
+  "cloud.nls.kz": "/cloud",
 };
 
 /** Внутренний путь → внешний поддомен */
 export const PATH_TO_DOMAIN: Record<ServicePath, string> = {
   "/internet": "internet.nls.kz",
   "/it-sks": "lan.nls.kz",
+  "/it": "it.nls.kz",
   "/colocation": "colocation.nls.kz",
   "/dedicated": "dedicated.nls.kz",
   "/colocation-full": "rack.nls.kz",
   "/vps": "server.nls.kz",
+  "/iaas": "iaas.nls.kz",
+  "/cloud": "cloud.nls.kz",
 };
 
 const SERVICE_PATHS = new Set<string>(Object.keys(PATH_TO_DOMAIN));

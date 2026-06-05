@@ -1,114 +1,47 @@
-## 1. Страница `/vps` (`src/routes/vps.tsx`)
+## Что делаем
 
-**1.1 Убрать HDD из конфигуратора**
-- Удалить `PRICE_HDD`, `HDD_MIN`, `HDD_STEP`, состояния `hdd`/`hddInput`, `showHdd`/`cityKey`, блок `<ResourceInputRow>` для HDD, строку HDD в summary, и `hdd` из всех `subject`.
-- Упростить `ResourceKey`, `onDiskInput`, `commitDisk`, `stepDisk` — оставить только SSD/RAM.
+1. **Новые внутренние маршруты + поддомены**
+   В `src/config/links.ts` расширяем типы и мапы:
+   - `/it` ↔ `it.nls.kz`
+   - `/iaas` ↔ `iaas.nls.kz`
+   - `/cloud` ↔ `cloud.nls.kz`
 
-**1.2 RAM с возможностью ввода**
-- Заменить `<ResourceRow>` для RAM на `<ResourceInputRow>` по аналогии с SSD: добавить `ramInput` state, валидацию (мин 1 ГБ, шаг 1).
-- Обобщить `onDiskInput`/`commitDisk`/`stepDisk` чтобы работали с полями `ssd` и `ram` (мин/шаг параметром).
+   Это даёт автоматическую работу `SmartLink` (в режиме поддоменов ссылки на «свою» услугу превращаются во внутренние, на «чужую» — во внешние).
 
-**1.3 Уменьшить «Ваша конфигурация»**
-- В `src/styles/nls.css` ужать `.summary-card`: меньше padding, меньше шрифт `.summary-header`, `.summary-total-amount`, меньше gap в `.summary-body`.
+2. **Новая страница `src/routes/it.tsx`** — полноценная страница «IT аутсорсинг» по контенту из тз. Содержит:
+   - Hero (H1, подзаголовок, 3 буллета, CTA «Получить бесплатный IT-аудит» → открывает `openConsultationModal`).
+   - «Почему мы» — 4 карточки преимуществ с иконками `lucide-react` (Wallet, Zap, Eye, ShieldCheck).
+   - «Наши услуги» — сетка карточек, сгруппированных по 4 категориям (Инфраструктура и сети / Рабочие места и коммуникации / Безопасность и удалённая работа / Оборудование и ЦОД). Внутри карточек услуг с описаниями.
+   - «4 шага» — горизонтальный/вертикальный степпер.
+   - Финальный CTA-блок с `LeadForm` (поля: имя, телефон, компания) — переиспользуем существующий `LeadForm`, отправка в Telegram как на других страницах.
+   - SEO: `head()` с уникальными `title`, `description`, `og:title`, `og:description`.
+   - Двуязычность через `useT()` (RU/KZ) — как на других страницах.
+   - Обёрнуть в `SiteLayout`.
 
-**1.4 Мобильная версия — показать «Ваша конфигурация» под конфигуратором**
-- В CSS убрать `display:none` на `.calc-summary` в мобильном брейкпоинте (или заменить на `display:block`), порядок уже даст вертикальная сетка. Нижняя плашка `.mobile-calc-bar` остаётся.
+   Стилистика hero, заголовков, секций — повторить классы и подход с `/dedicated` / `/it-sks`. Новые специфичные стили (степпер, сетка категорий услуг) добавить в `src/styles/nls.css` отдельной секцией `/* IT outsourcing */`.
 
----
+3. **Замена внешних ссылок на nlsit.kz → внутренний `/it` через `SmartLink`** в:
+   - `src/components/nls/Header.tsx` (мега-меню «IT услуги»): `<a href="https://nlsit.kz">` → `<SmartLink to="/it">`, убрать `ExternalIcon`.
+   - `src/components/nls/Footer.tsx` (колонка «Интернет и IT»): аналогично.
+   - `src/components/nls/MobileNav.tsx` (группа «IT услуги»): аналогично.
 
-## 2. Страница `/dedicated` (`src/routes/dedicated.tsx` + `src/components/nls/DedicatedPlans.tsx`)
+   При `USE_INTERNAL_ROUTING = true` это будет внутренний `/it`. При `false` и при заходе с другого поддомена — автоматически уйдёт на `https://it.nls.kz` благодаря маппингу из п.1.
 
-**2.1–2.4 Hero**
-- H1: «Аренда серверов в дата-центре NLS» → «Аренда высокопроизводительных физических серверов в дата-центре NLS» (RU + KZ).
-- Subtitle: → «Готовые сервера с настраиваемой конфигурацией под ваши требования.»
-- `features`: «Настройка под задачу» → «Размещены в Алматы и в Астане»; «До 10 000 Мбит/с» → «С каналом до 100 Мбит/с».
-
-**2.5 Готовые конфигурации — «Всего ядер/потоков»**
-- В `DedicatedPlans.tsx` тип `Plan` расширить полем `cores: string` (например `"28C/56T"`).
-- Заполнить для всех 4 карточек.
-- В `plan-specs` после CPU добавить пункт с иконкой и подписью «Всего ядер/потоков» — значение `plan.cores`.
-
-**2.6 Готовые конфигурации — IPMI в `plan-extras`**
-- Добавить `<span className="plan-tag">IPMI</span>` после трёх существующих тегов.
-
-**2.7 Конфигуратор — IPMI бесплатно по умолчанию**
-- `ipmi` state по умолчанию `true`; цена IPMI = 0.
-- UI «Аппаратный IPMI 3 000 ₸/мес» → «0 ₸/мес» (или «бесплатно»).
-- В summary блок «Дополнительно» (или отдельный) показывать IPMI с ценой `0 ₸`, даже когда total раздела = 0 → ввести проп `alwaysShow` для `SummarySection`.
-
-**2.8 Конфигуратор — `100 Mbit/s — 0 ₸` в сетевых портах**
-- Добавить в `networkOptions` первой позицией `{ name: "100 Mbit/s", price: 0 }`.
-- В summary отдельным разделом «Сетевой порт» рендерить фиксированный пункт `100 Mbit/s — 0 ₸` если в `networkItems` нет позиции с этим именем; пользовательские дополнительные порты добавляются ниже.
-
-**2.9 «Ваша конфигурация» — раздел «Интернет»**
-- После раздела «Сетевой порт» добавить `<SummarySection title="Интернет" items={[{ name: "100 Мбит/с", price: 0 }]} total={0} alwaysShow />` (RU+KZ).
-
-**2.10 Лимиты в `DynamicSection`**
-- Добавить проп `maxRows`: «Сетевой порт» = 20, «Накопители» = 25 (и/или `min(25, cpu.diskNumber)` — см. п.2.14).
-- При достижении лимита кнопка «+ Добавить …» disabled/скрыта.
-
-**2.11 Название плана в заявку (готовые конфигурации)**
-- В `DedicatedPlans.tsx` уже передаётся `plan.model` — оставить, но проверить, что в subject именно `plan-title` (model). Subject: `Заказ тарифа: <plan.model> | <plan.ram>, <plan.ssd>, ...`.
-
-**2.12 Параметры конфигуратора в заявку**
-- В обеих кнопках «Заказать» (десктоп + `.mobile-calc-bar`) заменить `openConsultationModal` на `openConsultationModalWith({ subject })`.
-- `buildSubject(calc, ipCount, raid, ipmi, period)` собирает строку: `Заказ сервера (конфигуратор): CPU=<name>; RAM=<name>; Накопители: <a>, <b>; Сетевой порт: 100 Mbit/s + доп; Интернет: 100 Мбит/с; IPMI; [RAID]; IP x<n>; Итого <total>/мес`.
-
-**2.13 «Ваша конфигурация» — бесплатный IP**
-- Вынести IP из `extras` в отдельный `SummarySection` «IP адрес» с `alwaysShow`: всегда строка «1 публичный IPv4 — 0 ₸», при `ipCount > 1` — дополнительная строка `+(n-1) IP — <price>`.
-
-**2.14 Фильтрация накопителей по формфактору CPU**
-- Поля `formFactor` и `diskNumber` уже есть в `cpuOptions`/`storageOptions` — использовать.
-- В `Calculator()` вычислить `cpuFF = cpuOptions[cpuIdx]?.formFactor`.
-- `allowedStorage = storageOptions.filter(o => !cpuFF ? true : cpuFF === 3.5 ? true : o.formFactor === 2.5)` — передать в `DynamicSection options`.
-- При смене CPU сбрасывать `storage.rows[].index = null` для тех, чей текущий вариант больше не допустим.
-- `maxStorageRows = Math.min(25, cpuOptions[cpuIdx]?.diskNumber ?? 25)` — передать как `maxRows`.
-
-**2.15 Период оплаты (1 / 6 / 12 мес) в «Готовых конфигурациях»**
-- В `DedicatedPlans.tsx` добавить state `period: 1 | 6 | 12` (общий, сверху над `.plans-grid`).
-- Переключатель из трёх кнопок «1 месяц / 6 месяцев / 12 месяцев». На 6 и 12 — шильдики `−3%` и `−6%` (новые CSS-классы `.plan-period-switch`, `.plan-period-btn`, `.plan-discount-badge`).
-- Цена в карточке:
-  - 1 мес: `plan.price`
-  - 6 мес: `round(plan.price * 6 * 0.97)`, экономия = `round(plan.price * 6 * 0.03)`
-  - 12 мес: `round(plan.price * 12 * 0.94)`, экономия = `round(plan.price * 12 * 0.06)`
-- В `.plan-price` показывать сумму и подпись `₸ за <n> мес.`
-- Под ценой для 6/12 строка «Экономия: <amount> ₸» (`.plan-saving`).
-- В `subject` кнопки «Заказать» добавить выбранный период и цену за период.
-
----
+4. **Страницы `/iaas` и `/cloud` пока НЕ создаём** — только регистрируем их в `links.ts` (как просил пользователь, «добавь, что они будут»). Сами `routes/iaas.tsx` и `routes/cloud.tsx` будут позднее. Никакие ссылки на них в навигации сейчас не добавляем.
 
 ## Технические детали
-- Все новые строки RU + KZ через `useT()`.
-- Файлы:
-  - edit: `src/routes/vps.tsx`, `src/routes/dedicated.tsx`, `src/components/nls/DedicatedPlans.tsx`, `src/styles/nls.css`.
 
----
+- Файл маршрута: `createFileRoute("/it")` — после создания файла `routeTree.gen.ts` пересоберётся автоматически (его не редактируем).
+- `LeadForm` уже принимает конфигурируемые поля — проверим существующий API; если нужно, передадим source-метку `"IT аутсорсинг"` для Telegram-сообщения.
+- Hero: использовать тот же класс-обёртку, что и на `/dedicated` (`section-hero` или аналог из `nls.css`), чтобы визуально совпадало.
+- Иконки сервисных категорий из `lucide-react` (Server, Network, Wifi, Monitor, PhoneCall, Mail, Lock, Video, HardDrive, RefreshCw, Truck).
+- Анимаций/новых зависимостей не добавляем.
 
-## 3. Модальная форма на мобильных (iOS / Android)
+## Файлы
 
-**Проблема:** на мобильных у модалки два прокручиваемых контейнера (`.modal-overlay` с `overflow-y:auto` + `.modal-content` с `max-height:calc(100vh-24px); overflow-y:auto`). На iOS это ломает momentum-скролл и `100vh` (адресная панель), из-за чего верхний `×` и нижняя «Отправить» становятся недоступны. На `/internet` форма ещё длиннее (Адрес/Город).
-
-**Правки в `src/styles/nls.css`, секция `@media (max-width: 600px)`:**
-- `.modal-overlay`: убрать `overflow-y:auto` и `align-items:flex-start`; вернуть центрирование, добавить safe-area паддинги.
-- `.modal-content`: `max-height: 100dvh` (с фолбэком на `calc(100vh - 16px)`), `overflow-y:auto`, `-webkit-overflow-scrolling:touch`, `overscroll-behavior:contain`; `display:flex; flex-direction:column`.
-- `.form-modal-content .close-modal`: на мобильных вынести в `position:fixed` поверх скролла с `z-index:11` и `top/right: max(10px, env(safe-area-inset-*))` — крестик всегда виден.
-- `.form-modal-content > form` на мобильных: `padding-bottom: max(22px, env(safe-area-inset-bottom))` — кнопка «Отправить» всегда доезжает.
-
-Никакого JS, без изменений в `LeadForm.tsx` / `Modals.tsx`.
-
----
-
-## 4. Секция «Как мы работаем» на `/internet` — мобильная вёрстка
-
-**Проблема:** 9 шагов разбиты на две grid-сетки (`.how-grid--5` и `.how-grid--4`). На мобильных (`max-width:720px`) обе становятся 2-колоночными, но в первой 5 элементов → последний 5-й висит в одиночку в строке и занимает половину ширины, выглядит криво. На Android/iOS это особенно заметно.
-
-**Правка в `src/styles/nls.css` (блок `@media (max-width: 720px)` около строки 6151):**
-- Для `.how-grid--5` сделать одиночный остаточный 5-й элемент во всю ширину:
-  ```css
-  .how-grid--5 .how-step:nth-child(5):last-child { grid-column: 1 / -1; }
-  ```
-- Опционально центрировать его контент.
-
-Итого на мобильных: ряды 2 + 2 + 1 (full-width) в первой группе, и 2 + 2 во второй — всё строго по 2 в ряд, без «висячих» половинок.
-
-Без изменений в `internet.tsx`.
+- edit: `src/config/links.ts`
+- new:  `src/routes/it.tsx`
+- edit: `src/components/nls/Header.tsx`
+- edit: `src/components/nls/Footer.tsx`
+- edit: `src/components/nls/MobileNav.tsx`
+- edit: `src/styles/nls.css` (новые стили для секций IT-страницы)

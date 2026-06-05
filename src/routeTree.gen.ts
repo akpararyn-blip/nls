@@ -15,6 +15,7 @@ import { Route as RequisitesRouteImport } from './routes/requisites'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ItSksRouteImport } from './routes/it-sks'
+import { Route as ItRouteImport } from './routes/it'
 import { Route as InternetRouteImport } from './routes/internet'
 import { Route as HrRouteImport } from './routes/hr'
 import { Route as DedicatedRouteImport } from './routes/dedicated'
@@ -52,6 +53,11 @@ const LoginRoute = LoginRouteImport.update({
 const ItSksRoute = ItSksRouteImport.update({
   id: '/it-sks',
   path: '/it-sks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ItRoute = ItRouteImport.update({
+  id: '/it',
+  path: '/it',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InternetRoute = InternetRouteImport.update({
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
+  '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
+  '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/dedicated': typeof DedicatedRoute
   '/hr': typeof HrRoute
   '/internet': typeof InternetRoute
+  '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/dedicated'
     | '/hr'
     | '/internet'
+    | '/it'
     | '/it-sks'
     | '/login'
     | '/privacy'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/dedicated'
     | '/hr'
     | '/internet'
+    | '/it'
     | '/it-sks'
     | '/login'
     | '/privacy'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/dedicated'
     | '/hr'
     | '/internet'
+    | '/it'
     | '/it-sks'
     | '/login'
     | '/privacy'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   DedicatedRoute: typeof DedicatedRoute
   HrRoute: typeof HrRoute
   InternetRoute: typeof InternetRoute
+  ItRoute: typeof ItRoute
   ItSksRoute: typeof ItSksRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/it-sks'
       fullPath: '/it-sks'
       preLoaderRoute: typeof ItSksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/it': {
+      id: '/it'
+      path: '/it'
+      fullPath: '/it'
+      preLoaderRoute: typeof ItRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/internet': {
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   DedicatedRoute: DedicatedRoute,
   HrRoute: HrRoute,
   InternetRoute: InternetRoute,
+  ItRoute: ItRoute,
   ItSksRoute: ItSksRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,

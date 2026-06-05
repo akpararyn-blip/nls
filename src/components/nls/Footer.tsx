@@ -61,9 +61,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" className="footer-link-external">
-                  {t("IT аутсорсинг", "IT аутсорсинг")}
-                </a>
+                <SmartLink to="/it">{t("IT аутсорсинг", "IT аутсорсинг")}</SmartLink>
               </li>
               <li>
                 <SmartLink to="/it-sks">{t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}</SmartLink>

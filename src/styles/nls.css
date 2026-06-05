@@ -6361,3 +6361,120 @@ body::before, body::after { display: none !important; }
   color: #f97316;
   margin-top: 1px;
 }
+
+/* ====== IT Outsourcing page ====== */
+.it-services-section {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+.it-services-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-top: 40px;
+}
+.it-services-category-header {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.it-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.it-service-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.it-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -16px rgba(15, 23, 42, 0.18);
+  border-color: var(--color-orange);
+}
+.it-service-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-orange);
+  margin-bottom: 14px;
+}
+.it-service-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--color-text-dark, #0f172a);
+}
+.it-service-card p {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-text-light, #475569);
+  margin: 0;
+}
+
+/* IT process — 4 steps grid */
+.it-process-grid {
+  list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  counter-reset: it-step;
+}
+.it-process-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  overflow: hidden;
+}
+.it-process-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-orange), #fb923c);
+}
+.it-process-num {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-orange);
+  margin-bottom: 12px;
+}
+.it-process-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--color-orange);
+  margin-bottom: 14px;
+}
+.it-process-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.it-process-card p {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-text-light, #475569);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .it-services-section { padding: 56px 0; }
+  .it-services-categories { gap: 36px; }
+}

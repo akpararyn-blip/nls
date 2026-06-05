@@ -173,20 +173,10 @@ export function Header() {
                     </div>
                     <div className="mega-menu-group">
                       <div className="mega-menu-group-title">{t("IT услуги", "IT қызметтері")}</div>
-                      <a
-                        href="https://nlsit.kz"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mega-menu-link"
-                      >
+                      <SmartLink to="/it" className="mega-menu-link">
                         <ShieldCheck className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("IT аутсорсинг", "IT аутсорсинг")}</span>
-                        <ExternalIcon
-                          width={13}
-                          height={13}
-                          className="mega-menu-external"
-                        />
-                      </a>
+                      </SmartLink>
                       <SmartLink to="/it-sks" className="mega-menu-link">
                         <Network className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}</span>
