@@ -7,7 +7,7 @@ import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
 import { useMobileBarVisibility } from "@/hooks/use-mobile-bar";
 import dedicatedHero from "@/assets/server-dedicated.png";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/dedicated")({
   head: () => ({
@@ -263,7 +263,29 @@ function Calculator() {
   const [ipmi] = useState(true); // IPMI всегда включён — отключить нельзя
   const [ipCount, setIpCount] = useState(1);
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  const mobileBarRef = useRef<HTMLDivElement>(null);
   const [period, setPeriod] = useState<Period>(1);
+
+  // Закрытие раскрытой панели по клику вне неё
+  useEffect(() => {
+    if (!mobileExpanded) return;
+    const onDocPointer = (e: MouseEvent | TouchEvent) => {
+      if (mobileBarRef.current && !mobileBarRef.current.contains(e.target as Node)) {
+        setMobileExpanded(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileExpanded(false);
+    };
+    document.addEventListener("mousedown", onDocPointer);
+    document.addEventListener("touchstart", onDocPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocPointer);
+      document.removeEventListener("touchstart", onDocPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [mobileExpanded]);
 
   const storage = useDynamic();
   // 100 Mbit/s — фиксированный порт (рендерится статически выше кнопки),
@@ -699,7 +721,7 @@ function Calculator() {
         </div>
       </section>
 
-      <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
+      <div ref={mobileBarRef} className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
         <button
           type="button"
           className={`mobile-toggle-arrow${mobileExpanded ? " expanded" : ""}`}

@@ -2374,7 +2374,10 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     border-top: 1px solid #e2e8f0;
 }
 .mobile-summary-detail.expanded {
-    max-height: 500px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 .mobile-summary-inner { padding: 16px 20px; }
 
@@ -4897,6 +4900,10 @@ a.contacts-city-row:hover { color: var(--color-orange); }
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
+  }
+  /* Не даём плавающей панели перекрывать контент страницы */
+  body.has-mobile-bar {
+    padding-bottom: 84px;
   }
 }
 
