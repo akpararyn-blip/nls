@@ -98,6 +98,7 @@ export function Modals() {
                 messageRows={2}
                 defaultMessage={consultation.subject ?? undefined}
                 subject={consultation.subject ?? undefined}
+                messageReadOnly={Boolean(consultation.subject)}
                 onSuccess={closeModals}
                 showAddress={showAddress}
               />

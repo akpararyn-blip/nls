@@ -12,17 +12,17 @@ import { Cpu, MemoryStick, HardDrive, Database, Globe, Shield, Archive } from "l
 export const Route = createFileRoute("/iaas")({
   head: () => ({
     meta: [
-      { title: "Виртуальный дата-центр на VMware Cloud Director — NLS Kazakhstan" },
+      { title: "Виртуальный дата‑центр на VMware Cloud Director — NLS Kazakhstan" },
       {
         name: "description",
         content:
-          "Виртуальный дата-центр на базе VMware Cloud Director. Гибкая конфигурация vCPU, vRAM, SSD/HDD, резервные копии Veeam. Дата-центры в Алматы, Астане и Шымкенте.",
+          "Виртуальный дата‑центр на базе VMware Cloud Director. Гибкая конфигурация vCPU, vRAM, SSD/HDD, резервные копии Veeam. Дата‑центры в Алматы, Астане и Шымкенте.",
       },
-      { property: "og:title", content: "Виртуальный дата-центр на VMware Cloud Director — NLS Kazakhstan" },
+      { property: "og:title", content: "Виртуальный дата‑центр на VMware Cloud Director — NLS Kazakhstan" },
       {
         property: "og:description",
         content:
-          "Соберите виртуальный дата-центр на VMware Cloud Director: vCPU, vRAM, SSD/HDD, IP, Veeam Backup и архив.",
+          "Соберите виртуальный дата‑центр на VMware Cloud Director: vCPU, vRAM, SSD/HDD, IP, Veeam Backup и архив.",
       },
     ],
   }),
@@ -188,10 +188,10 @@ function Hero() {
             Cloud Director
           </span>
           <h1>
-            <span style={{ color: "var(--color-orange)" }}>{t("Виртуальный дата-центр", "Виртуалдық дата-центр")}</span>
+            <span style={{ color: "var(--color-orange)" }}>{t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}</span>
           </h1>
           <p className="hero-subtitle">
-            {t("Виртуальный дата-центр на базе VMware", "VMware негізіндегі виртуалды дата-орталық")}
+            {t("Виртуальный дата‑центр на базе VMware", "VMware негізіндегі виртуалды дата-орталық")}
           </p>
 
           <ul className="hero-bullets">
@@ -217,7 +217,7 @@ function Hero() {
           <div className="hero-img-wrapper">
             <img
               src={iaasHero}
-              alt={t("Виртуальный дата-центр VMware Cloud Director", "VMware Cloud Director виртуалды дата-орталығы")}
+              alt={t("Виртуальный дата‑центр VMware Cloud Director", "VMware Cloud Director виртуалды дата-орталығы")}
               width={1024}
               height={1024}
             />
@@ -384,7 +384,7 @@ function Calculator() {
       if (noDisks) {
         issues.push(
           t(
-            `Виртуальный дата-центр ${idx + 1}: добавьте хотя бы 1 ГБ vSSD${hddAvail ? " или vHDD" : ""}.`,
+            `Виртуальный дата‑центр ${idx + 1}: добавьте хотя бы 1 ГБ vSSD${hddAvail ? " или vHDD" : ""}.`,
             `Виртуалды дата-орталық ${idx + 1}: кемінде 1 ГБ vSSD${hddAvail ? " немесе vHDD" : ""} қосыңыз.`,
           ),
         );
@@ -392,7 +392,7 @@ function Calculator() {
       if (v.veeam > 0 && v.archive === 0) {
         issues.push(
           t(
-            `Виртуальный дата-центр ${idx + 1}: для Veeam Backup укажите объём архивного диска.`,
+            `Виртуальный дата‑центр ${idx + 1}: для Veeam Backup укажите объём архивного диска.`,
             `Виртуалды дата-орталық ${idx + 1}: Veeam Backup үшін архивтік диск көлемін көрсетіңіз.`,
           ),
         );
@@ -400,7 +400,7 @@ function Calculator() {
       if (v.veeam === 0 && v.archive > 0) {
         issues.push(
           t(
-            `Виртуальный дата-центр ${idx + 1}: для архивного диска добавьте лицензию Veeam Backup.`,
+            `Виртуальный дата‑центр ${idx + 1}: для архивного диска добавьте лицензию Veeam Backup.`,
             `Виртуалды дата-орталық ${idx + 1}: архивтік диск үшін Veeam Backup лицензиясын қосыңыз.`,
           ),
         );
@@ -416,7 +416,7 @@ function Calculator() {
       const loc = getLocation(v.city);
       const cl = getCluster(v.city, v.clusterId);
       const seg = [
-        `Виртуальный дата-центр ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
+        `Виртуальный дата‑центр ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
         `vCPU ${v.cpu}`,
         `vRAM ${v.ram} ГБ`,
         `vSSD ${v.ssd} ГБ`,
@@ -445,7 +445,7 @@ function Calculator() {
         <div className="container">
           <div className="section-title">
             <span className="section-eyebrow">{t("Конструктор", "Құрастырғыш")}</span>
-            <h2>{t("Конфигуратор виртуального дата-центра", "Виртуалды дата-орталығының конфигураторы")}</h2>
+            <h2>{t("Конфигуратор виртуального дата‑центра", "Виртуалды дата-орталығының конфигураторы")}</h2>
             <p>
               {t(
                 "Соберите конфигурацию под свою задачу — добавляйте несколько VDC в один заказ",
@@ -486,7 +486,7 @@ function Calculator() {
                 return (
                   <div key={v.id} className="vdc-card">
                     <div className="vdc-card__header">
-                      <h3>{t(`Виртуальный дата-центр ${idx + 1}`, `Виртуалды дата-орталық ${idx + 1}`)}</h3>
+                      <h3>{t(`Виртуальный дата‑центр ${idx + 1}`, `Виртуалды дата-орталық ${idx + 1}`)}</h3>
                       {vdcs.length > 1 && (
                         <button
                           type="button"
@@ -648,7 +648,7 @@ function Calculator() {
               })}
 
               <button type="button" className="btn-add-vdc" onClick={addVdc}>
-                + {t("Добавить дата-центр", "Дата-орталық қосу")}
+                + {t("Добавить дата‑центр", "Дата-орталық қосу")}
               </button>
             </div>
 
@@ -860,7 +860,7 @@ function VdcSummary({ vdc, index }: { vdc: Vdc; index: number }) {
     <div className="summary-category iaas-summary">
       <div className="iaas-summary__head">
         <div className="iaas-summary__title">
-          {t(`Виртуальный дата-центр ${index + 1}`, `Виртуалды дата-орталық ${index + 1}`)}
+          {t(`Виртуальный дата‑центр ${index + 1}`, `Виртуалды дата-орталық ${index + 1}`)}
         </div>
         <div className="iaas-summary__meta">
           {t(loc.nameRu, loc.nameKz)} · {cluster.name}

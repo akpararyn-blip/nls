@@ -124,7 +124,7 @@ export function MobileNav() {
             </li>
             <li>
               <SmartLink to="/iaas" onClick={close}>
-                {t("Виртуальный дата-центр", "Виртуалдық дата-центр")}
+                {t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}
               </SmartLink>
             </li>
             <li>

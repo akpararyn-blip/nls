@@ -24,6 +24,8 @@ export interface LeadFormProps {
   noRedirect?: boolean;
   /** Показать поля «Адрес» и «Город» (только для страницы /internet) */
   showAddress?: boolean;
+  /** Запретить редактирование поля комментария (для заявок из конфигураторов) */
+  messageReadOnly?: boolean;
 }
 
 const CITY_NAMES_RU: Record<CityKey, string> = {
@@ -48,6 +50,7 @@ export function LeadForm({
   onSuccess,
   noRedirect,
   showAddress = false,
+  messageReadOnly = false,
 }: LeadFormProps) {
   const navigate = useNavigate();
   const t = useT();
@@ -206,7 +209,18 @@ export function LeadForm({
           rows={messageRows}
           ref={messageRef}
           defaultValue={defaultMessage}
+          readOnly={messageReadOnly}
+          aria-readonly={messageReadOnly}
+          style={messageReadOnly ? { backgroundColor: "var(--color-bg-muted, #f5f5f5)", cursor: "not-allowed" } : undefined}
         />
+        {messageReadOnly && (
+          <small style={{ color: "var(--color-text-light)", fontSize: "0.8em", display: "block", marginTop: 4 }}>
+            {t(
+              "Состав заявки из конфигуратора зафиксирован и недоступен для изменения.",
+              "Конфигуратордан жасалған өтінімнің құрамы тіркелген және өзгертуге болмайды."
+            )}
+          </small>
+        )}
       </div>
 
       <ConsentCheckbox id={id("consent")} checked={consent} onChange={setConsent} />
