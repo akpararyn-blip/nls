@@ -566,7 +566,7 @@ function Calculator() {
                       <span className="toggle-slider" />
                     </label>
                   </div>
-                  {compatibleStorageCount >= 2 && !raid && (
+                  {compatibleStorageCount >= 2 && (!hasIdenticalPair || !raid) && (
                     <div className="calc-alert-box" role="alert" style={{ marginTop: 8 }}>
                       <svg
                         className="calc-alert-icon"
@@ -583,8 +583,8 @@ function Calculator() {
                       </svg>
                       <span>
                         {t(
-                          "Рекомендуем добавить RAID-контроллер.",
-                          "RAID-контроллерді қосуды ұсынамыз."
+                          "Без RAID ваши данные в опасности. Рекомендуем добавить второй диск.",
+                          "RAID-сыз деректеріңіз қауіпте. Екінші дискіні қосуды ұсынамыз."
                         )}
                       </span>
                     </div>
