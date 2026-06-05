@@ -309,9 +309,10 @@ function Calculator() {
     const storageItems = storage.rows
       .filter((r) => r.index !== null && !incompatibleStorageIds.has(r.id))
       .map((r) => storageOptions[r.index as number]);
-    const networkItems = network.rows
+    const extraNetworkItems = network.rows
       .filter((r) => r.index !== null)
       .map((r) => networkOptions[r.index as number]);
+    const networkItems = [networkOptions[0], ...extraNetworkItems];
     const softwareItems = software.rows
       .filter((r) => r.index !== null)
       .map((r) => softwareOptions[r.index as number]);
