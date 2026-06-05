@@ -51,12 +51,12 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "epyc",
-        name: "Epyc 9754, DDR5, SSD, HDD",
+        name: "Epyc 9754, DDR5, SSD, HDD — 2.4 ГГц / vCPU",
         prices: { cpu: 1600, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
       {
         id: "e5v4",
-        name: "E5-2680 v4, SSD, HDD",
+        name: "E5-2680 v4, SSD, HDD — 2.4 ГГц / vCPU",
         prices: { cpu: 1500, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -68,7 +68,7 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD",
+        name: "E5-2643 v3, DDR4, SSD — 3.4 ГГц / vCPU",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -79,8 +79,8 @@ const LOCATIONS: Location[] = [
     nameKz: "Шымкент",
     clusters: [
       {
-        id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD",
+        id: "e5v4-shy",
+        name: "E5-2680 v4, SSD — 2.4 ГГц / vCPU",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -387,7 +387,7 @@ function Calculator() {
       const loc = getLocation(v.city);
       const cl = getCluster(v.city, v.clusterId);
       const seg = [
-        `ВДЦ ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
+        `Виртуальный дата-центр ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
         `vCPU ${v.cpu}`,
         `vRAM ${v.ram} ГБ`,
         `vSSD ${v.ssd} ГБ`,
@@ -454,7 +454,7 @@ function Calculator() {
                 return (
                   <div key={v.id} className="vdc-card">
                     <div className="vdc-card__header">
-                      <h3>{t(`Дата-центр ${idx + 1}`, `Дата-орталық ${idx + 1}`)}</h3>
+                      <h3>{t(`Виртуальный дата-центр ${idx + 1}`, `Виртуалды дата-орталық ${idx + 1}`)}</h3>
                       {vdcs.length > 1 && (
                         <button
                           type="button"
@@ -468,7 +468,7 @@ function Calculator() {
                     </div>
 
                     <div className="calc-field">
-                      <label className="calc-field-label">{t("Город", "Қала")}</label>
+                      <label className="calc-field-label">{t("Локация", "Орналасу")}</label>
                       <div className="vdc-tabs">
                         {LOCATIONS.map((loc) => (
                           <button
@@ -592,7 +592,7 @@ function Calculator() {
                     />
 
                     <div className="vdc-card__footer">
-                      <span>{t("Стоимость ВДЦ за 1 мес.", "ВДО құны 1 айға")}</span>
+                      <span>{t("Стоимость виртуального дата-центра за 1 мес.", "Виртуалды дата-орталығының құны 1 айға")}</span>
                       <strong>{formatPrice(monthly)}</strong>
                     </div>
                   </div>
@@ -628,6 +628,7 @@ function Calculator() {
                   </button>
                 </div>
               </div>
+              <Recommendation />
               <CalculatorDisclaimer />
             </div>
           </div>
@@ -652,6 +653,7 @@ function Calculator() {
               {t("Цены без учета НДС", "Бағалар ҚҚС-сыз")}
             </p>
           </div>
+          <Recommendation />
           <CalculatorDisclaimer />
         </div>
         <div className="mobile-bar-main">
@@ -728,47 +730,81 @@ function ResourceRow({
   );
 }
 
+function Recommendation() {
+  const t = useT();
+  return (
+    <div className="calc-recommendation">
+      <div className="calc-recommendation__title">
+        {t("Рекомендуем также предусмотреть место:", "Сонымен қатар орын қарастырыңыз:")}
+      </div>
+      <ul className="calc-recommendation__list">
+        <li>
+          {t(
+            "Под ISO-образы для установки и обслуживания виртуальной машины",
+            "Виртуалды машинаны орнату және қызмет көрсетуге арналған ISO-бейнелер үшін",
+          )}
+        </li>
+        <li>
+          {t(
+            "Под снапшоты, если планируете их использовать",
+            "Снапшоттарды пайдалануды жоспарласаңыз, оларға арналған",
+          )}
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 function VdcSummary({ vdc, index }: { vdc: Vdc; index: number }) {
   const t = useT();
   const loc = getLocation(vdc.city);
   const cluster = getCluster(vdc.city, vdc.clusterId);
   const p = cluster.prices;
-  type Line = { label: string; detail: string; price: number };
+  type Line = { label: string; qty: string; price: number };
   const lines: Line[] = [
-    { label: "vCPU", detail: `${vdc.cpu} × ${p.cpu} ₸`, price: vdc.cpu * p.cpu },
-    { label: "vRAM", detail: `${vdc.ram} ГБ × ${p.ram} ₸`, price: vdc.ram * p.ram },
-    { label: "vSSD", detail: `${vdc.ssd} ГБ × ${p.ssd} ₸`, price: vdc.ssd * p.ssd },
+    { label: "vCPU", qty: `${vdc.cpu} × ${formatPrice(p.cpu)}`, price: vdc.cpu * p.cpu },
+    { label: "vRAM", qty: `${vdc.ram} ГБ × ${formatPrice(p.ram)}`, price: vdc.ram * p.ram },
+    { label: "vSSD", qty: `${vdc.ssd} ГБ × ${formatPrice(p.ssd)}`, price: vdc.ssd * p.ssd },
   ];
   if (p.hdd !== null && vdc.hdd > 0) {
-    lines.push({ label: "vHDD", detail: `${vdc.hdd} ГБ × ${p.hdd} ₸`, price: vdc.hdd * p.hdd });
+    lines.push({ label: "vHDD", qty: `${vdc.hdd} ГБ × ${formatPrice(p.hdd)}`, price: vdc.hdd * p.hdd });
   }
-  lines.push({ label: t("IP", "IP"), detail: `${vdc.ip} × ${p.ip} ₸`, price: vdc.ip * p.ip });
+  lines.push({ label: "IP", qty: `${vdc.ip} × ${formatPrice(p.ip)}`, price: vdc.ip * p.ip });
   if (vdc.veeam > 0) {
-    lines.push({ label: "Veeam", detail: `${vdc.veeam} × ${p.veeam} ₸`, price: vdc.veeam * p.veeam });
+    lines.push({ label: "Veeam", qty: `${vdc.veeam} × ${formatPrice(p.veeam)}`, price: vdc.veeam * p.veeam });
   }
   if (vdc.archive > 0) {
     lines.push({
       label: t("Архив", "Архив"),
-      detail: `${vdc.archive} ГБ × ${p.archive} ₸`,
+      qty: `${vdc.archive} ГБ × ${formatPrice(p.archive)}`,
       price: vdc.archive * p.archive,
     });
   }
   const sum = lines.reduce((s, l) => s + l.price, 0);
 
   return (
-    <div className="summary-category">
-      <div className="sum-row">
-        <span className="sum-label">
-          {t(`ВДЦ ${index + 1}`, `ВДО ${index + 1}`)}: {t(loc.nameRu, loc.nameKz)}
-        </span>
-        <span className="sum-value">{formatPrice(sum)}</span>
-      </div>
-      <div className="sum-detail" style={{ opacity: 0.85 }}>{cluster.name}</div>
-      {lines.map((l, i) => (
-        <div className="sum-detail" key={i}>
-          {l.label} — {l.detail} = {formatPrice(l.price)}
+    <div className="summary-category iaas-summary">
+      <div className="iaas-summary__head">
+        <div className="iaas-summary__title">
+          {t(`Виртуальный дата-центр ${index + 1}`, `Виртуалды дата-орталық ${index + 1}`)}
         </div>
-      ))}
+        <div className="iaas-summary__meta">
+          {t(loc.nameRu, loc.nameKz)} · {cluster.name}
+        </div>
+      </div>
+      <ul className="iaas-summary__list">
+        {lines.map((l, i) => (
+          <li key={i} className="iaas-summary__item">
+            <span className="iaas-summary__label">{l.label}</span>
+            <span className="iaas-summary__qty">{l.qty}</span>
+            <span className="iaas-summary__price">{formatPrice(l.price)}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="iaas-summary__subtotal">
+        <span>{t("Итого за месяц", "Айға барлығы")}</span>
+        <strong>{formatPrice(sum)}</strong>
+      </div>
     </div>
   );
 }
