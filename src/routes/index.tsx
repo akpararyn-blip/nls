@@ -58,7 +58,7 @@ function IndexPage() {
   }, []);
   if (servicePath) {
     const ServiceComponent = SERVICE_COMPONENTS[servicePath];
-    return <ServiceComponent />;
+    if (ServiceComponent) return <ServiceComponent />;
   }
 
   return (
