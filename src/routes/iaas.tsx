@@ -577,6 +577,14 @@ function Calculator() {
                       onBlur={() => commitField(v.id, "veeam")}
                       flash={hint && hint.vdcId === v.id && hint.field === "veeam" ? hint.text : null}
                     />
+                    {v.veeam === 0 && v.archive > 0 && (
+                      <div className="calc-pair-warning">
+                        {t(
+                          "Для работы архивного диска требуется Veeam Backup — добавьте хотя бы одну лицензию.",
+                          "Архивтік дискті пайдалану үшін Veeam Backup қажет — кемінде бір лицензия қосыңыз."
+                        )}
+                      </div>
+                    )}
                     <ResourceRow
                       icon={<Archive size={20} strokeWidth={1.8} />}
                       label={t("Архивный диск", "Архивтік диск")}
@@ -589,6 +597,14 @@ function Calculator() {
                       onBlur={() => commitField(v.id, "archive")}
                       flash={hint && hint.vdcId === v.id && hint.field === "archive" ? hint.text : null}
                     />
+                    {v.veeam > 0 && v.archive === 0 && (
+                      <div className="calc-pair-warning">
+                        {t(
+                          "Veeam Backup сохраняет резервные копии на архивный диск — укажите его объём.",
+                          "Veeam Backup сақтық көшірмелерді архивтік дискіге сақтайды — оның көлемін көрсетіңіз."
+                        )}
+                      </div>
+                    )}
 
                     <div className="vdc-card__footer">
                       <span>{t("Стоимость виртуального дата-центра за 1 мес.", "Виртуалды дата-орталығының құны 1 айға")}</span>
