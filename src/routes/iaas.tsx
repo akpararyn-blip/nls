@@ -136,16 +136,16 @@ function makeVdc(id: number): Vdc {
     id,
     city: "almaty",
     clusterId: "epyc",
-    cpu: 2,
-    ram: 4,
-    ssd: 50,
+    cpu: 1,
+    ram: 1,
+    ssd: 0,
     hdd: 0,
     ip: 1,
     veeam: 0,
     archive: 0,
-    iCpu: "2",
-    iRam: "4",
-    iSsd: "50",
+    iCpu: "1",
+    iRam: "1",
+    iSsd: "0",
     iHdd: "0",
     iIp: "1",
     iVeeam: "0",
@@ -375,6 +375,41 @@ function Calculator() {
   const periodLabelRu = period === 1 ? "Итого за 1 месяц" : `Итого за ${period} мес.`;
   const periodLabelKz = period === 1 ? "1 айға барлығы" : `${period} айға барлығы`;
 
+  const orderIssues = useMemo(() => {
+    const issues: string[] = [];
+    vdcs.forEach((v, idx) => {
+      const cl = getCluster(v.city, v.clusterId);
+      const hddAvail = cl.prices.hdd !== null;
+      const noDisks = v.ssd === 0 && (!hddAvail || v.hdd === 0);
+      if (noDisks) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: добавьте хотя бы 1 ГБ vSSD${hddAvail ? " или vHDD" : ""} — без дисков виртуальная машина не запустится.`,
+            `Виртуалды дата-орталық ${idx + 1}: кемінде 1 ГБ vSSD${hddAvail ? " немесе vHDD" : ""} қосыңыз.`,
+          ),
+        );
+      }
+      if (v.veeam > 0 && v.archive === 0) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: для Veeam Backup укажите объём архивного диска.`,
+            `Виртуалды дата-орталық ${idx + 1}: Veeam Backup үшін архивтік диск көлемін көрсетіңіз.`,
+          ),
+        );
+      }
+      if (v.veeam === 0 && v.archive > 0) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: для архивного диска добавьте лицензию Veeam Backup.`,
+            `Виртуалды дата-орталық ${idx + 1}: архивтік диск үшін Veeam Backup лицензиясын қосыңыз.`,
+          ),
+        );
+      }
+    });
+    return issues;
+  }, [vdcs, t]);
+  const canOrder = orderIssues.length === 0;
+
   const buildSubject = () => {
     const parts: string[] = ["Заказ облачного сервера (VMware Cloud Director):"];
     vdcs.forEach((v, idx) => {
@@ -399,7 +434,10 @@ function Calculator() {
     return parts.join(" || ");
   };
 
-  const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
+  const orderClick = () => {
+    if (!canOrder) return;
+    openConsultationModalWith({ subject: buildSubject() });
+  };
 
   return (
     <>
@@ -633,7 +671,20 @@ function Calculator() {
                     </div>
                   )}
                   <p className="summary-vat">{t("Цены указаны без учёта НДС", "Бағалар ҚҚС-сыз көрсетілген")}</p>
-                  <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+                  {!canOrder && (
+                    <div className="calc-order-block">
+                      {orderIssues.map((msg, i) => (
+                        <div key={i}>{msg}</div>
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-primary calc-order-btn"
+                    onClick={orderClick}
+                    disabled={!canOrder}
+                    aria-disabled={!canOrder}
+                  >
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
@@ -666,6 +717,13 @@ function Calculator() {
           <Recommendation />
           <CalculatorDisclaimer />
         </div>
+        {!canOrder && (
+          <div className="calc-order-block calc-order-block--mobile">
+            {orderIssues.map((msg, i) => (
+              <div key={i}>{msg}</div>
+            ))}
+          </div>
+        )}
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">
             <div className="mobile-bar-label">{t(periodLabelRu, periodLabelKz)}</div>
@@ -676,7 +734,13 @@ function Calculator() {
               </div>
             )}
           </div>
-          <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+          <button
+            type="button"
+            className="btn btn-primary calc-order-btn"
+            onClick={orderClick}
+            disabled={!canOrder}
+            aria-disabled={!canOrder}
+          >
             {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>
