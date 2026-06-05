@@ -121,7 +121,7 @@ type Period = 1 | 6 | 12;
 // Переключатель скидок для готовых конфигураций.
 // true  → отображаются скидки 3% / 6% (как сейчас)
 // false → скидки скрыты, цена 6 / 12 мес. = цена × кол-во месяцев без скидки
-const PLANS_DISCOUNT_ENABLED = true;
+const PLANS_DISCOUNT_ENABLED = false;
 const RAW_DISCOUNT: Record<Period, number> = { 1: 0, 6: 0.03, 12: 0.06 };
 const DISCOUNT: Record<Period, number> = PLANS_DISCOUNT_ENABLED
   ? RAW_DISCOUNT
