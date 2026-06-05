@@ -264,7 +264,7 @@ function CrossSell() {
                 {t("Настроим рабочие места, почту, серверы и IP-телефонию.", "Жұмыс орындарын, поштаны, серверлерді және IP-телефонияны баптаймыз.")}
               </li>
             </ul>
-            <Link to="/" className="btn btn-outline">
+            <Link to="/it" className="btn btn-outline">
               {t("Узнать про IT-аутсорсинг", "IT-аутсорсинг туралы білу")}
               <ArrowRight size={18} />
             </Link>
