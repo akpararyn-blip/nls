@@ -717,6 +717,13 @@ function Calculator() {
           <Recommendation />
           <CalculatorDisclaimer />
         </div>
+        {!canOrder && (
+          <div className="calc-order-block calc-order-block--mobile">
+            {orderIssues.map((msg, i) => (
+              <div key={i}>{msg}</div>
+            ))}
+          </div>
+        )}
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">
             <div className="mobile-bar-label">{t(periodLabelRu, periodLabelKz)}</div>
@@ -727,7 +734,13 @@ function Calculator() {
               </div>
             )}
           </div>
-          <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+          <button
+            type="button"
+            className="btn btn-primary calc-order-btn"
+            onClick={orderClick}
+            disabled={!canOrder}
+            aria-disabled={!canOrder}
+          >
             {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>
