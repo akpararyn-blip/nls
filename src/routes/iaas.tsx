@@ -40,7 +40,7 @@ type Prices = {
   veeam: number;
   archive: number;
 };
-type Cluster = { id: string; name: string; prices: Prices };
+type Cluster = { id: string; name: string; cpuFreq: string; prices: Prices };
 type Location = { id: CityId; nameRu: string; nameKz: string; clusters: Cluster[] };
 
 const LOCATIONS: Location[] = [
@@ -51,12 +51,14 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "epyc",
-        name: "Epyc 9754, DDR5, SSD, HDD — 2.4 ГГц / vCPU",
+        name: "Epyc 9754, DDR5, SSD, HDD",
+        cpuFreq: "2.4 ГГц",
         prices: { cpu: 1600, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
       {
         id: "e5v4",
-        name: "E5-2680 v4, SSD, HDD — 2.4 ГГц / vCPU",
+        name: "E5-2680 v4, SSD, HDD",
+        cpuFreq: "2.4 ГГц",
         prices: { cpu: 1500, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -68,7 +70,8 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD — 3.4 ГГц / vCPU",
+        name: "E5-2643 v3, DDR4, SSD",
+        cpuFreq: "3.4 ГГц",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -80,7 +83,8 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v4-shy",
-        name: "E5-2680 v4, SSD — 2.4 ГГц / vCPU",
+        name: "E5-2680 v4, SSD",
+        cpuFreq: "2.4 ГГц",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
@@ -501,7 +505,7 @@ function Calculator() {
 
                     <ResourceRow
                       icon={<Cpu size={20} strokeWidth={1.8} />}
-                      label={t("vCPU", "vCPU")}
+                      label={t(`vCPU (${cluster.cpuFreq})`, `vCPU (${cluster.cpuFreq})`)}
                       hint={t(`${cluster.prices.cpu} ₸ за ядро`, `ядро үшін ${cluster.prices.cpu} ₸`)}
                       unit="vCPU"
                       input={v.iCpu}
