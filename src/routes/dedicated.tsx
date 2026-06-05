@@ -567,7 +567,7 @@ function Calculator() {
 
               <div className="calc-field">
                 <label className="calc-field-label">{t("Сетевой порт", "Желілік порт")}</label>
-                <div className="calc-added-item visible" style={{ opacity: 0.95 }}>
+                <div className="calc-added-item visible" style={{ opacity: 0.95, marginBottom: 10 }}>
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
                     <div
                       className="calc-select"
