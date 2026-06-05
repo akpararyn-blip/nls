@@ -721,7 +721,7 @@ function Calculator() {
         </div>
       </section>
 
-      <div className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
+      <div ref={mobileBarRef} className={`mobile-calc-bar${barVisible ? " is-visible" : ""}`}>
         <button
           type="button"
           className={`mobile-toggle-arrow${mobileExpanded ? " expanded" : ""}`}
