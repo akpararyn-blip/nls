@@ -91,7 +91,7 @@ const IP_PRICE = 2250;
 // === Переключатели скидок ===
 // true  → скидки 3% / 6% отображаются
 // false → скидки скрыты (цена считается без скидки, шильдики не показываются)
-const PLANS_DISCOUNT_ENABLED = true;
+const PLANS_DISCOUNT_ENABLED = false;
 const CALC_DISCOUNT_ENABLED = true;
 
 type Period = 1 | 6 | 12;
