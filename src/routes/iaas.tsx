@@ -653,6 +653,7 @@ function Calculator() {
               {t("Цены без учета НДС", "Бағалар ҚҚС-сыз")}
             </p>
           </div>
+          <Recommendation />
           <CalculatorDisclaimer />
         </div>
         <div className="mobile-bar-main">
