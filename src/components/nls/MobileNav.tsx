@@ -123,6 +123,11 @@ export function MobileNav() {
               </SmartLink>
             </li>
             <li>
+              <SmartLink to="/iaas" onClick={close}>
+                {t("Облачный сервер", "Бұлттық сервер")}
+              </SmartLink>
+            </li>
+            <li>
               <SmartLink to="/colocation" onClick={close}>
                 Colocation
               </SmartLink>
