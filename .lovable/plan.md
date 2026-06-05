@@ -1,47 +1,111 @@
-## Что делаем
+# Страница /iaas — Облачный сервер (VMware Cloud Director)
 
-1. **Новые внутренние маршруты + поддомены**
-   В `src/config/links.ts` расширяем типы и мапы:
-   - `/it` ↔ `it.nls.kz`
-   - `/iaas` ↔ `iaas.nls.kz`
-   - `/cloud` ↔ `cloud.nls.kz`
+## Что создаём
 
-   Это даёт автоматическую работу `SmartLink` (в режиме поддоменов ссылки на «свою» услугу превращаются во внутренние, на «чужую» — во внешние).
+Новый маршрут `src/routes/iaas.tsx` (файл уже зарегистрирован в `src/config/links.ts` и сгенерирован в `routeTree.gen.ts`). Страница состоит из двух блоков:
 
-2. **Новая страница `src/routes/it.tsx`** — полноценная страница «IT аутсорсинг» по контенту из тз. Содержит:
-   - Hero (H1, подзаголовок, 3 буллета, CTA «Получить бесплатный IT-аудит» → открывает `openConsultationModal`).
-   - «Почему мы» — 4 карточки преимуществ с иконками `lucide-react` (Wallet, Zap, Eye, ShieldCheck).
-   - «Наши услуги» — сетка карточек, сгруппированных по 4 категориям (Инфраструктура и сети / Рабочие места и коммуникации / Безопасность и удалённая работа / Оборудование и ЦОД). Внутри карточек услуг с описаниями.
-   - «4 шага» — горизонтальный/вертикальный степпер.
-   - Финальный CTA-блок с `LeadForm` (поля: имя, телефон, компания) — переиспользуем существующий `LeadForm`, отправка в Telegram как на других страницах.
-   - SEO: `head()` с уникальными `title`, `description`, `og:title`, `og:description`.
-   - Двуязычность через `useT()` (RU/KZ) — как на других страницах.
-   - Обёрнуть в `SiteLayout`.
+1. **Hero** — eyebrow «Cloud Director», заголовок «Облачный сервер», подпись «Виртуальный дата-центр на базе VMware», две кнопки: «Заказать» (открывает модалку консультации) и «Конфигуратор» (скролл к калькулятору).
+2. **Калькулятор ВДЦ** — пользователь добавляет несколько независимых дата-центров, каждый со своим городом, кластером и ресурсами.
 
-   Стилистика hero, заголовков, секций — повторить классы и подход с `/dedicated` / `/it-sks`. Новые специфичные стили (степпер, сетка категорий услуг) добавить в `src/styles/nls.css` отдельной секцией `/* IT outsourcing */`.
+Логика скидок, мобильная плашка с раскрытием по клику/свайпу, клик-вне-закрытие и `useMobileBarVisibility` переиспользуются по той же схеме, что и на `/dedicated`.
 
-3. **Замена внешних ссылок на nlsit.kz → внутренний `/it` через `SmartLink`** в:
-   - `src/components/nls/Header.tsx` (мега-меню «IT услуги»): `<a href="https://nlsit.kz">` → `<SmartLink to="/it">`, убрать `ExternalIcon`.
-   - `src/components/nls/Footer.tsx` (колонка «Интернет и IT»): аналогично.
-   - `src/components/nls/MobileNav.tsx` (группа «IT услуги»): аналогично.
+## Модель данных
 
-   При `USE_INTERNAL_ROUTING = true` это будет внутренний `/it`. При `false` и при заходе с другого поддомена — автоматически уйдёт на `https://it.nls.kz` благодаря маппингу из п.1.
+```ts
+LOCATIONS = {
+  almaty: [
+    { id: 'epyc',   name: 'Epyc 9754, DDR5, SSD, HDD',
+      prices: { cpu:1600, ram:3500, ssd:100, hdd:38, ip:2400, veeam:12000, archive:10 } },
+    { id: 'e5v4',   name: 'E5-2680 v4, SSD, HDD',
+      prices: { cpu:1500, ram:3500, ssd:100, hdd:38, ip:2400, veeam:12000, archive:10 } },
+  ],
+  astana:  [{ id:'e5v3', name:'E5-2643 v3, DDR4, SSD',
+      prices: { cpu:2300, ram:3500, ssd:100, hdd:null, ip:2400, veeam:12000, archive:10 } }],
+  shymkent:[{ id:'e5v3', name:'E5-2643 v3, DDR4, SSD',
+      prices: { cpu:2300, ram:3500, ssd:100, hdd:null, ip:2400, veeam:12000, archive:10 } }],
+}
+```
 
-4. **Страницы `/iaas` и `/cloud` пока НЕ создаём** — только регистрируем их в `links.ts` (как просил пользователь, «добавь, что они будут»). Сами `routes/iaas.tsx` и `routes/cloud.tsx` будут позднее. Никакие ссылки на них в навигации сейчас не добавляем.
+Когда у кластера `hdd === null`, ползунок и строка vHDD скрываются, значение принудительно = 0.
 
-## Технические детали
+## Диапазоны ресурсов (мин/макс, шаг)
 
-- Файл маршрута: `createFileRoute("/it")` — после создания файла `routeTree.gen.ts` пересоберётся автоматически (его не редактируем).
-- `LeadForm` уже принимает конфигурируемые поля — проверим существующий API; если нужно, передадим source-метку `"IT аутсорсинг"` для Telegram-сообщения.
-- Hero: использовать тот же класс-обёртку, что и на `/dedicated` (`section-hero` или аналог из `nls.css`), чтобы визуально совпадало.
-- Иконки сервисных категорий из `lucide-react` (Server, Network, Wifi, Monitor, PhoneCall, Mail, Lock, Video, HardDrive, RefreshCw, Truck).
-- Анимаций/новых зависимостей не добавляем.
+| Поле | Min | Max | Шаг | Старт |
+|---|---|---|---|---|
+| vCPU | 1 | 1024 | 1 | 2 |
+| vRAM, ГБ | 1 | 10240 | 1 | 4 |
+| vSSD, ГБ | 1 | 512000 | 10 | 50 |
+| vHDD, ГБ | 1 | 512000 | 10 | 1 (если доступен; иначе 0 и скрыт) |
+| IP | 1 | 256 | 1 | 1 |
+| Архив, ГБ | 1 | 512000 | 10 | 1 |
+| Veeam (шт.) | 0 | 100 | 1 | 0 |
+
+vSSD / vHDD / Архив имеют ввод-поле + кнопки −/+ (как в VPS). vCPU / vRAM / IP / Veeam — тоже поле ввода + −/+. Логика ввода (только цифры, округление к шагу, подсказки) копируется из калькулятора `vps.tsx`.
+
+## Состояние
+
+```ts
+type Vdc = {
+  id: string;
+  city: 'almaty' | 'astana' | 'shymkent';
+  clusterId: string;
+  cpu: number; ram: number; ssd: number; hdd: number;
+  ip: number; veeam: number; archive: number;
+  // строковые буферы для полей ввода
+}
+const [vdcs, setVdcs] = useState<Vdc[]>([createDefaultVdc()])
+const [period, setPeriod] = useState<1 | 6 | 12>(1)
+```
+
+Смена города → автоматически выбирается первый кластер города. Смена кластера без HDD → `hdd` обнуляется.
+
+## Расчёт цены
+
+Для каждого ВДЦ: `monthly = cpu*pCpu + ram*pRam + ssd*pSsd + hdd*pHdd + ip*pIp + veeam*pVeeam + archive*pArchive`.
+
+`total = Σ monthly`. С учётом периода: `final = total * period * (1 - discount[period])`, где `discount = {1:0, 6:0.03, 12:0.06}` — те же константы и переключатель `CALC_DISCOUNT_ENABLED`, что в `dedicated.tsx`.
+
+## UI
+
+**Шапка калькулятора:** переключатель периода (1/6/12 мес.) — капсулы с бейджами −3% / −6% над активными опциями (компонент-переключатель копируется один в один из dedicated).
+
+**Левая колонка (ВДЦ):** список карточек `.vdc-card`. Каждая карточка содержит:
+- Заголовок «Дата-центр N» + кнопка «Удалить» (показывается только если ВДЦ > 1).
+- Группа кнопок-табов «Алматы / Астана / Шымкент».
+- Группа кнопок-табов «Кластер: …» (зависит от города).
+- Строки ресурсов (label + цена за единицу + поле ввода + −/+) для vCPU, vRAM, vSSD, vHDD (если есть), IP, Veeam (шт), Архив.
+- Под каждой карточкой — стоимость данного ВДЦ за месяц.
+
+Под списком — кнопка «+ Добавить дата-центр» с пунктирной рамкой (новый стиль `.btn-add-vdc` в `src/styles/nls.css`).
+
+**Правая колонка (sticky):** `.summary-card` с раскладкой по каждому ВДЦ (город, кластер, перечень параметров с подытогами), строка «Итого за N мес.» с учётом скидки и кнопка «Заказать». Содержание (subject) для модалки — текстовая сводка всех ВДЦ.
+
+**Мобильная нижняя плашка:** копия паттерна из `dedicated.tsx` — `mobile-calc-bar` с `mobileExpanded`, `mobileBarRef`, клик-вне-закрытие, `useMobileBarVisibility('iaas-calculator')`, `body.has-mobile-bar` уже добавлен глобально.
+
+## Стили
+
+В `src/styles/nls.css` добавить минимальные новые правила:
+- `.vdc-card`, `.vdc-card__header`, `.vdc-tabs`, `.vdc-tab`, `.vdc-tab.is-active`
+- `.btn-add-vdc` (пунктирная рамка, акцентный цвет)
+- `.vdc-resource-row` (если паттерн `.calc-row` из vps/dedicated не подходит 1-в-1 — иначе переиспользуем)
+
+Все остальные стили (`.calc-section`, `.calc-grid`, `.calc-form`, `.summary-card`, `.plan-period-switch`, `.mobile-calc-bar`, hero) — уже существуют и используются как есть.
+
+## SEO / head
+
+```
+title:       Облачный сервер VMware Cloud Director — NLS Kazakhstan
+description: Виртуальный дата-центр на базе VMware. Гибкая конфигурация vCPU, vRAM, SSD/HDD, резервные копии Veeam. Дата-центры в Алматы, Астане и Шымкенте.
+og:title / og:description — то же.
+```
+
+## Что НЕ меняется
+
+- `index.tsx`, `Header`, `Footer`, `MobileNav`, `config/links.ts`, `routeTree.gen.ts` — уже содержат ссылку на `/iaas` с предыдущего хода.
+- Логика `SmartLink` / `USE_INTERNAL_ROUTING` работает автоматически (iaas.nls.kz уже в карте поддоменов).
+- Страницы `dedicated`, `vps`, `cloud` не трогаются.
 
 ## Файлы
 
-- edit: `src/config/links.ts`
-- new:  `src/routes/it.tsx`
-- edit: `src/components/nls/Header.tsx`
-- edit: `src/components/nls/Footer.tsx`
-- edit: `src/components/nls/MobileNav.tsx`
-- edit: `src/styles/nls.css` (новые стили для секций IT-страницы)
+- **создать:** `src/routes/iaas.tsx`
+- **отредактировать:** `src/styles/nls.css` (несколько новых классов для карточки ВДЦ и кнопки «Добавить»)
