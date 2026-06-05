@@ -454,7 +454,7 @@ function Calculator() {
                 return (
                   <div key={v.id} className="vdc-card">
                     <div className="vdc-card__header">
-                      <h3>{t(`Дата-центр ${idx + 1}`, `Дата-орталық ${idx + 1}`)}</h3>
+                      <h3>{t(`Виртуальный дата-центр ${idx + 1}`, `Виртуалды дата-орталық ${idx + 1}`)}</h3>
                       {vdcs.length > 1 && (
                         <button
                           type="button"
@@ -468,7 +468,7 @@ function Calculator() {
                     </div>
 
                     <div className="calc-field">
-                      <label className="calc-field-label">{t("Город", "Қала")}</label>
+                      <label className="calc-field-label">{t("Локация", "Орналасу")}</label>
                       <div className="vdc-tabs">
                         {LOCATIONS.map((loc) => (
                           <button
