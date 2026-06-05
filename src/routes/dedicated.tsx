@@ -330,12 +330,10 @@ function Calculator() {
     if (ipmi) extras.push({ name: "IPMI", price: 0 });
     if (priceRaid) extras.push({ name: t("Аппаратный RAID", "Аппараттық RAID"), price: RAID_PRICE });
 
-    // Сетевой порт: всегда фиксированный 100 Mbit/s бесплатно + пользовательские
-    const networkDisplay: Option[] = [
-      { name: "100 Mbit/s", price: 0 },
-      ...networkItems.filter((i) => i.name !== "100 Mbit/s"),
-    ];
+    // Сетевой порт: пользователь сам управляет (по умолчанию добавлен 100 Mbit/s)
+    const networkDisplay: Option[] = networkItems;
     const networkDisplayPrice = networkDisplay.reduce((s, i) => s + i.price, 0);
+
 
     // IP: всегда 1 бесплатный + при необходимости доп.
     const ipItems: Option[] = [
