@@ -387,6 +387,13 @@ function Calculator() {
 
   const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
 
+  // === Расчёт с учётом периода и скидки ===
+  const discount = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[period] : 0;
+  const periodTotal = calc.total * period * (1 - discount);
+  const periodSaving = calc.total * period * discount;
+  const periodLabelRu = period === 1 ? "Итого за 1 месяц" : `Итого за ${period} мес.`;
+  const periodLabelKz = period === 1 ? "1 айға барлығы" : `${period} айға барлығы`;
+
   return (
     <>
       <section className="calc-section" id="calculator">
@@ -396,6 +403,33 @@ function Calculator() {
             <h2>{t("Конфигуратор сервера", "Сервер конфигураторы")}</h2>
             <p>{t("Выберите параметры и рассчитайте стоимость аренды", "Параметрлерді таңдап, жалдау құнын есептеңіз")}</p>
           </div>
+
+          <div className="plan-period-switch" role="tablist" aria-label={t("Период оплаты", "Төлем мерзімі")}>
+            {([1, 6, 12] as Period[]).map((p) => {
+              const d = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[p] : 0;
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  role="tab"
+                  aria-selected={period === p}
+                  className={`plan-period-btn${period === p ? " is-active" : ""}`}
+                  onClick={() => setPeriod(p)}
+                >
+                  {p === 1
+                    ? t("1 месяц", "1 ай")
+                    : p === 6
+                      ? t("6 месяцев", "6 ай")
+                      : t("12 месяцев", "12 ай")}
+                  {d > 0 && (
+                    <span className="plan-discount-badge">−{Math.round(d * 100)}%</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+
           <div className="calc-grid">
             <div className="calc-form">
               <div className="calc-field">
