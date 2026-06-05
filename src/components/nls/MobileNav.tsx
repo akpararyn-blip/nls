@@ -98,9 +98,9 @@ export function MobileNav() {
           <div className="mobile-nav-group-title">{t("IT услуги", "IT қызметтері")}</div>
           <ul className="mobile-nav-group">
             <li>
-              <a href="https://nlsit.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
+              <SmartLink to="/it" onClick={close}>
                 {t("IT аутсорсинг", "IT аутсорсинг")}
-              </a>
+              </SmartLink>
             </li>
             <li>
               <SmartLink to="/it-sks" onClick={close}>
