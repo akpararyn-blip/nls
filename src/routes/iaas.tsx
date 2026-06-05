@@ -387,7 +387,7 @@ function Calculator() {
       const loc = getLocation(v.city);
       const cl = getCluster(v.city, v.clusterId);
       const seg = [
-        `ВДЦ ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
+        `Виртуальный дата-центр ${idx + 1}: ${loc.nameRu} / ${cl.name}`,
         `vCPU ${v.cpu}`,
         `vRAM ${v.ram} ГБ`,
         `vSSD ${v.ssd} ГБ`,
