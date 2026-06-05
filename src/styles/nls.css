@@ -1755,7 +1755,7 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     .hero { padding: 60px 0 40px; }
     .hero .container { flex-direction: column; text-align: center; }
     .hero-content { max-width: 100%; margin-bottom: 40px; }
-    .hero h1 { font-size: 2.2rem; }
+    .hero h1 { font-size: 2.0rem; overflow-wrap: break-word; }
     .hero-bullets { grid-template-columns: 1fr; text-align: left; display: inline-grid; gap: 15px; }
     .hero-img-wrapper { transform: none; }
     .hero-img-wrapper:hover { transform: none; }
@@ -1775,6 +1775,10 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     .cookie-buttons .btn {
         width: 100%;
     }
+}
+
+@media (max-width: 480px) {
+    .hero h1 { font-size: 1.7rem; }
 }
 
 /* Mobile Menu */
