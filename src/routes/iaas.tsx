@@ -58,7 +58,7 @@ const LOCATIONS: Location[] = [
       {
         id: "e5v4",
         name: "E5-2680 v4, SSD, HDD",
-        cpuFreq: "2.4 ГГц",
+        cpuFreq: "2.25 ГГц",
         prices: { cpu: 1500, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
     ],
