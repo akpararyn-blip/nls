@@ -505,7 +505,7 @@ function Calculator() {
 
                     <ResourceRow
                       icon={<Cpu size={20} strokeWidth={1.8} />}
-                      label={t("vCPU", "vCPU")}
+                      label={t(`vCPU (${cluster.cpuFreq})`, `vCPU (${cluster.cpuFreq})`)}
                       hint={t(`${cluster.prices.cpu} ₸ за ядро`, `ядро үшін ${cluster.prices.cpu} ₸`)}
                       unit="vCPU"
                       input={v.iCpu}
