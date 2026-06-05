@@ -35,7 +35,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "NLS Kazakhstan — единый оператор связи и IT-решений для бизнеса в Казахстане.",
+          "NLS Kazakhstan — единый оператор связи и IT-инфраструктуры для бизнеса в Казахстане.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

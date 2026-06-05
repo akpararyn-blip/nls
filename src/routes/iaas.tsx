@@ -685,7 +685,7 @@ function Calculator() {
                     disabled={!canOrder}
                     aria-disabled={!canOrder}
                   >
-                    {t("Консультация", "Кеңес алу")}
+                    {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
               </div>

@@ -164,7 +164,7 @@ function About() {
         <div className="hr-about-grid">
           <div className="hr-about-text">
             <span className="section-eyebrow">{t("О компании", "Компания туралы")}</span>
-            <h2>{t("NLS Kazakhstan — единый оператор связи", "NLS Kazakhstan — біртұтас байланыс операторы")}</h2>
+            <h2>{t("NLS Kazakhstan — единый оператор связи и IT-инфраструктуры", "NLS Kazakhstan — біртұтас байланыс және IT-инфрақұрылым операторы")}</h2>
             <p>
               {t(
                 "NLS Kazakhstan — опытный B2B-оператор связи с 18-летним стажем (с 2008 года). Предлагаем комплексные IT и телеком-решения для бизнеса любого масштаба в Казахстане.",
@@ -212,7 +212,7 @@ function About() {
             </div>
             <div className="hr-stat">
               <div className="hr-stat-num">15 000+</div>
-              <div className="hr-stat-label">{t("клиентов B2B", "B2B клиент")}</div>
+              <div className="hr-stat-label">{t("корпоративных клиентов", "B2B клиент")}</div>
             </div>
             <div className="hr-stat">
               <div className="hr-stat-num">3</div>

@@ -10,13 +10,13 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "NLS Kazakhstan — единый оператор связи с более чем 18-летним опытом. Полный спектр телеком и IT-решений для бизнеса в Казахстане.",
+          "NLS Kazakhstan — единый оператор связи и IT-инфраструктуры с более чем 18-летним опытом. Полный спектр телеком и IT-инфраструктуры для бизнеса в Казахстане.",
       },
       { property: "og:title", content: "О компании — NLS Kazakhstan" },
       {
         property: "og:description",
         content:
-          "Единый оператор связи: более 18 лет на рынке, более 1 000 специалистов, собственный ЦОД и магистральная сеть.",
+          "Единый оператор связи и IT-инфраструктуры: более 18 лет на рынке, более 1 000 специалистов, собственный ЦОД и магистральная сеть.",
       },
     ],
   }),
@@ -29,9 +29,9 @@ function AboutPage() {
 
   const stats = [
     { value: "18+", label: t("лет на рынке", "нарықта жыл") },
-    { value: "15 000+", label: t("юридических лиц", "заңды тұлға") },
+    { value: "15 000+", label: t("корпоративных клиентов", "B2B клиент") },
     { value: "1 000+", label: t("специалистов", "маман") },
-    { value: "18 000+ км", label: t("собственной сети", "меншікті желі") },
+    { value: "18 000+", label: t("км собственной сети", "меншікті желі км") },
   ];
 
   const benefits = [
@@ -60,7 +60,7 @@ function AboutPage() {
         <div className="container">
           <span className="section-eyebrow about-hero-eyebrow">{t("О компании", "Компания туралы")}</span>
           <h1 className="about-hero-title">
-            <span style={{ color: "var(--color-orange)" }}>NLS</span> Kazakhstan — {t("единый оператор связи и IT", "біртұтас байланыс және IT операторы")}
+            <span style={{ color: "var(--color-orange)" }}>NLS</span> Kazakhstan — {t("единый оператор связи и IT-инфраструктуры", "біртұтас байланыс және IT-инфрақұрылым операторы")}
           </h1>
           <p className="about-hero-text">
             {t(

@@ -192,10 +192,7 @@ export function Header() {
                         <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("VPS/VDS сервер", "VPS/VDS сервер")}</span>
                       </SmartLink>
-                      <SmartLink to="/iaas" className="mega-menu-link">
-                        <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}</span>
-                      </SmartLink>
+                      
                       <SmartLink to="/colocation" className="mega-menu-link">
                         <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Colocation</span>
