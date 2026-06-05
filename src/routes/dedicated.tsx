@@ -488,6 +488,18 @@ function Calculator() {
                 incompatibleIds={incompatibleStorageIds}
                 incompatibleMessage={t("Не соответствуют форм-фактору", "Форм-факторға сай келмейді")}
               />
+              {compatibleStorageCount === 1 && (
+                <div
+                  className="calc-row-error"
+                  style={{ marginTop: -8, marginBottom: 12 }}
+                  role="alert"
+                >
+                  {t(
+                    "Без RAID ваши данные в опасности. Рекомендуем добавить второй диск.",
+                    "RAID-сыз деректеріңіз қауіпте. Екінші дискіні қосуды ұсынамыз."
+                  )}
+                </div>
+              )}
 
 
               <div className="calc-field">
