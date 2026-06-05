@@ -118,7 +118,14 @@ const DiskIcon = () => (
 );
 
 type Period = 1 | 6 | 12;
-const DISCOUNT: Record<Period, number> = { 1: 0, 6: 0.03, 12: 0.06 };
+// Переключатель скидок для готовых конфигураций.
+// true  → отображаются скидки 3% / 6% (как сейчас)
+// false → скидки скрыты, цена 6 / 12 мес. = цена × кол-во месяцев без скидки
+const PLANS_DISCOUNT_ENABLED = true;
+const RAW_DISCOUNT: Record<Period, number> = { 1: 0, 6: 0.03, 12: 0.06 };
+const DISCOUNT: Record<Period, number> = PLANS_DISCOUNT_ENABLED
+  ? RAW_DISCOUNT
+  : { 1: 0, 6: 0, 12: 0 };
 
 function formatPriceNumber(n: number) {
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");

@@ -88,6 +88,15 @@ const RAID_PRICE = 9000;
 const IPMI_PRICE = 0;
 const IP_PRICE = 2250;
 
+// === Переключатели скидок ===
+// true  → скидки 3% / 6% отображаются
+// false → скидки скрыты (цена считается без скидки, шильдики не показываются)
+const PLANS_DISCOUNT_ENABLED = true;
+const CALC_DISCOUNT_ENABLED = true;
+
+type Period = 1 | 6 | 12;
+const CALC_DISCOUNT: Record<Period, number> = { 1: 0, 6: 0.03, 12: 0.06 };
+
 
 function formatPrice(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸";
@@ -98,9 +107,11 @@ interface DynamicRow {
   index: number | null;
 }
 
-function useDynamic() {
-  const [rows, setRows] = useState<DynamicRow[]>([]);
-  const [counter, setCounter] = useState(0);
+function useDynamic(initial: Array<number | null> = []) {
+  const [rows, setRows] = useState<DynamicRow[]>(
+    initial.map((index, i) => ({ id: i + 1, index })),
+  );
+  const [counter, setCounter] = useState(initial.length);
 
   const add = () => {
     const id = counter + 1;
@@ -113,6 +124,7 @@ function useDynamic() {
 
   return { rows, add, update, remove };
 }
+
 
 function scrollToCalculator() {
   const el = document.getElementById("calculator");
@@ -248,13 +260,16 @@ function Calculator() {
   const [cpuIdx, setCpuIdx] = useState<number | null>(null);
   const [ramIdx, setRamIdx] = useState<number | null>(null);
   const [raid, setRaid] = useState(false);
-  const [ipmi, setIpmi] = useState(true);
+  const [ipmi] = useState(true); // IPMI всегда включён — отключить нельзя
   const [ipCount, setIpCount] = useState(1);
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  const [period, setPeriod] = useState<Period>(1);
 
   const storage = useDynamic();
-  const network = useDynamic();
+  // По умолчанию добавлен один сетевой порт «100 Mbit/s — 0 ₸»
+  const network = useDynamic([0]);
   const software = useDynamic();
+
 
   // Формфактор накопителей фильтруем по выбранному CPU
   const cpuFF = cpuIdx !== null ? cpuOptions[cpuIdx].formFactor : undefined;
@@ -315,12 +330,10 @@ function Calculator() {
     if (ipmi) extras.push({ name: "IPMI", price: 0 });
     if (priceRaid) extras.push({ name: t("Аппаратный RAID", "Аппараттық RAID"), price: RAID_PRICE });
 
-    // Сетевой порт: всегда фиксированный 100 Mbit/s бесплатно + пользовательские
-    const networkDisplay: Option[] = [
-      { name: "100 Mbit/s", price: 0 },
-      ...networkItems.filter((i) => i.name !== "100 Mbit/s"),
-    ];
+    // Сетевой порт: пользователь сам управляет (по умолчанию добавлен 100 Mbit/s)
+    const networkDisplay: Option[] = networkItems;
     const networkDisplayPrice = networkDisplay.reduce((s, i) => s + i.price, 0);
+
 
     // IP: всегда 1 бесплатный + при необходимости доп.
     const ipItems: Option[] = [
@@ -368,11 +381,22 @@ function Calculator() {
     if (ipmi) parts.push("IPMI (бесплатно)");
     if (raid) parts.push("Аппаратный RAID");
     parts.push(`IP: ${calc.ipItems.map((i) => i.name).join(" + ")}`);
-    parts.push(`Итого: ${formatPrice(calc.total)}/мес`);
+    parts.push(`Базовая стоимость: ${formatPrice(calc.total)}/мес`);
+    parts.push(`Срок: ${period} мес.`);
+    if (discount > 0) parts.push(`Скидка: ${Math.round(discount * 100)}%`);
+    parts.push(`Итого за ${period} мес.: ${formatPrice(Math.round(periodTotal))}`);
+    if (periodSaving > 0) parts.push(`Экономия: ${formatPrice(Math.round(periodSaving))}`);
     return parts.join(" | ");
   };
 
   const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
+
+  // === Расчёт с учётом периода и скидки ===
+  const discount = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[period] : 0;
+  const periodTotal = calc.total * period * (1 - discount);
+  const periodSaving = calc.total * period * discount;
+  const periodLabelRu = period === 1 ? "Итого за 1 месяц" : `Итого за ${period} мес.`;
+  const periodLabelKz = period === 1 ? "1 айға барлығы" : `${period} айға барлығы`;
 
   return (
     <>
@@ -383,6 +407,33 @@ function Calculator() {
             <h2>{t("Конфигуратор сервера", "Сервер конфигураторы")}</h2>
             <p>{t("Выберите параметры и рассчитайте стоимость аренды", "Параметрлерді таңдап, жалдау құнын есептеңіз")}</p>
           </div>
+
+          <div className="plan-period-switch" role="tablist" aria-label={t("Период оплаты", "Төлем мерзімі")}>
+            {([1, 6, 12] as Period[]).map((p) => {
+              const d = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[p] : 0;
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  role="tab"
+                  aria-selected={period === p}
+                  className={`plan-period-btn${period === p ? " is-active" : ""}`}
+                  onClick={() => setPeriod(p)}
+                >
+                  {p === 1
+                    ? t("1 месяц", "1 ай")
+                    : p === 6
+                      ? t("6 месяцев", "6 ай")
+                      : t("12 месяцев", "12 ай")}
+                  {d > 0 && (
+                    <span className="plan-discount-badge">−{Math.round(d * 100)}%</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+
           <div className="calc-grid">
             <div className="calc-form">
               <div className="calc-field">
@@ -463,10 +514,11 @@ function Calculator() {
                     <div className="calc-toggle-label">
                       {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">{t("бесплатно", "тегін")}</span>
                     </div>
-                    <label className="toggle-switch">
-                      <input type="checkbox" checked={ipmi} onChange={(e) => setIpmi(e.target.checked)} />
+                    <label className="toggle-switch" title={t("IPMI всегда включён", "IPMI әрқашан қосулы")}>
+                      <input type="checkbox" checked={ipmi} disabled readOnly />
                       <span className="toggle-slider" />
                     </label>
+
                   </div>
                 </div>
               </div>
@@ -559,14 +611,20 @@ function Calculator() {
                 </div>
                 <div className="summary-footer">
                   <div className="summary-total-row">
-                    <span className="summary-total-label">{t("Итого за 1 месяц", "1 айға барлығы")}</span>
-                    <span className="summary-total-amount">{formatPrice(calc.total)}</span>
+                    <span className="summary-total-label">{t(periodLabelRu, periodLabelKz)}</span>
+                    <span className="summary-total-amount">{formatPrice(Math.round(periodTotal))}</span>
                   </div>
+                  {periodSaving > 0 && (
+                    <div className="plan-saving" style={{ marginTop: 4 }}>
+                      {t(`Экономия: ${formatPrice(Math.round(periodSaving))}`, `Үнемдеу: ${formatPrice(Math.round(periodSaving))}`)}
+                    </div>
+                  )}
                   <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
                   <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
+
               </div>
               <CalculatorDisclaimer />
             </div>
@@ -602,9 +660,15 @@ function Calculator() {
         </div>
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">
-            <div className="mobile-bar-label">{t("Итого за 1 месяц", "1 айға барлығы")}</div>
-            <div className="mobile-bar-price">{formatPrice(calc.total)}</div>
+            <div className="mobile-bar-label">{t(periodLabelRu, periodLabelKz)}</div>
+            <div className="mobile-bar-price">{formatPrice(Math.round(periodTotal))}</div>
+            {periodSaving > 0 && (
+              <div className="plan-saving" style={{ fontSize: "0.7rem" }}>
+                {t(`−${formatPrice(Math.round(periodSaving))}`, `−${formatPrice(Math.round(periodSaving))}`)}
+              </div>
+            )}
           </div>
+
           <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
             {t("Заказать", "Тапсырыс беру")}
           </button>
