@@ -51,7 +51,7 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "epyc",
-        name: "Epyc 9754, DDR5, SSD, HDD",
+        name: "AMD Epyc 9754, DDR5, SSD, HDD",
         cpuFreq: "2.4 ГГц",
         prices: { cpu: 1600, ram: 3500, ssd: 100, hdd: 38, ip: 2400, veeam: 12000, archive: 10 },
       },
@@ -65,7 +65,7 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v3",
-        name: "E5-2643 v3, DDR4, SSD",
+        name: "Intel E5-2643 v3, DDR4, SSD",
         cpuFreq: "3.4 ГГц",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
@@ -78,7 +78,7 @@ const LOCATIONS: Location[] = [
     clusters: [
       {
         id: "e5v4-shy",
-        name: "E5-2680 v4, SSD",
+        name: "Intel E5-2680 v4, DDR4, SSD",
         cpuFreq: "2.4 ГГц",
         prices: { cpu: 2300, ram: 3500, ssd: 100, hdd: null, ip: 2400, veeam: 12000, archive: 10 },
       },
