@@ -266,8 +266,9 @@ function Calculator() {
   const [period, setPeriod] = useState<Period>(1);
 
   const storage = useDynamic();
-  // По умолчанию добавлен один сетевой порт «100 Mbit/s — 0 ₸»
-  const network = useDynamic([0]);
+  // 100 Mbit/s — фиксированный порт (рендерится статически выше кнопки),
+  // в DynamicSection доступны только 1 Gbit/s и 10 Gbit/s
+  const network = useDynamic();
   const software = useDynamic();
 
 
@@ -308,9 +309,10 @@ function Calculator() {
     const storageItems = storage.rows
       .filter((r) => r.index !== null && !incompatibleStorageIds.has(r.id))
       .map((r) => storageOptions[r.index as number]);
-    const networkItems = network.rows
+    const extraNetworkItems = network.rows
       .filter((r) => r.index !== null)
       .map((r) => networkOptions[r.index as number]);
+    const networkItems = [networkOptions[0], ...extraNetworkItems];
     const softwareItems = software.rows
       .filter((r) => r.index !== null)
       .map((r) => softwareOptions[r.index as number]);
@@ -486,6 +488,18 @@ function Calculator() {
                 incompatibleIds={incompatibleStorageIds}
                 incompatibleMessage={t("Не соответствуют форм-фактору", "Форм-факторға сай келмейді")}
               />
+              {compatibleStorageCount === 1 && (
+                <div
+                  className="calc-row-error"
+                  style={{ marginTop: -8, marginBottom: 12 }}
+                  role="alert"
+                >
+                  {t(
+                    "Без RAID ваши данные в опасности. Рекомендуем добавить второй диск.",
+                    "RAID-сыз деректеріңіз қауіпте. Екінші дискіні қосуды ұсынамыз."
+                  )}
+                </div>
+              )}
 
 
               <div className="calc-field">
@@ -551,18 +565,40 @@ function Calculator() {
                 </div>
               </div>
 
-              <DynamicSection
-                label={t("Сетевой порт", "Желілік порт")}
-                addLabel={t("Добавить порт", "Порт қосу")}
-                placeholder={t("Выберите порт", "Портты таңдаңыз")}
-                options={networkOptions}
-                maxRows={20}
-                rows={network.rows}
-                onAdd={network.add}
-                onChange={network.update}
-                onRemove={network.remove}
-              />
+              <div className="calc-field">
+                <label className="calc-field-label">{t("Сетевой порт", "Желілік порт")}</label>
+                <div className="calc-added-item visible" style={{ opacity: 0.95 }}>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div
+                      className="calc-select"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "not-allowed",
+                        background: "var(--color-surface-2, #f5f6fa)",
+                      }}
+                    >
+                      100 Mbit/s — {formatPrice(0)}
+                    </div>
+                  </div>
+                </div>
+                <DynamicSection
+                  label=""
+                  addLabel={t("Добавить порт", "Порт қосу")}
+                  placeholder={t("Выберите порт", "Портты таңдаңыз")}
+                  options={networkOptions}
+                  allowedIdx={[1, 2]}
+                  maxRows={20}
+                  rows={network.rows}
+                  onAdd={network.add}
+                  onChange={network.update}
+                  onRemove={network.remove}
+                  hideLabel
+                />
+              </div>
             </div>
+
+
 
 
             <div className="calc-summary">
@@ -692,6 +728,7 @@ function DynamicSection({
   onRemove,
   incompatibleIds,
   incompatibleMessage,
+  hideLabel,
 }: {
   label: string;
   addLabel: string;
@@ -705,6 +742,7 @@ function DynamicSection({
   onRemove: (id: number) => void;
   incompatibleIds?: Set<number>;
   incompatibleMessage?: string;
+  hideLabel?: boolean;
 }) {
   const t = useT();
   const limitReached = maxRows !== undefined && rows.length >= maxRows;
@@ -713,8 +751,8 @@ function DynamicSection({
     .filter(({ i }) => (allowedIdx ? allowedIdx.includes(i) : true));
 
   return (
-    <div className="calc-field">
-      <label className="calc-field-label">{label}</label>
+    <div className={hideLabel ? "" : "calc-field"}>
+      {!hideLabel && <label className="calc-field-label">{label}</label>}
       <div className="calc-add-row">
         <button
           type="button"
