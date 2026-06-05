@@ -520,22 +520,40 @@ function Calculator() {
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
                       {t("Аппаратный RAID", "Аппараттық RAID")} <span className="calc-toggle-price">9 000 {t("₸/мес", "₸/ай")}</span>
-                      {compatibleStorageCount >= 2 && (
-                        <span className="calc-toggle-price" style={{ marginLeft: 8, color: "var(--color-primary)" }}>
-                          {t("(включён авто при 2+ дисках)", "(2+ диск кезінде авто қосылған)")}
-                        </span>
-                      )}
                     </div>
                     <label className="toggle-switch">
                       <input
                         type="checkbox"
                         checked={raid}
-                        disabled={compatibleStorageCount >= 2}
+                        disabled={compatibleStorageCount < 2}
                         onChange={(e) => setRaid(e.target.checked)}
                       />
                       <span className="toggle-slider" />
                     </label>
                   </div>
+                  {compatibleStorageCount >= 2 && !raid && (
+                    <div className="calc-alert-box" role="alert" style={{ marginTop: 8 }}>
+                      <svg
+                        className="calc-alert-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                      </svg>
+                      <span>
+                        {t(
+                          "Рекомендуем добавить RAID-контроллер.",
+                          "RAID-контроллерді қосуды ұсынамыз."
+                        )}
+                      </span>
+                    </div>
+                  )}
                   <div className="calc-toggle-row">
                     <div className="calc-toggle-label">
                       {t("Аппаратный IPMI", "Аппараттық IPMI")} <span className="calc-toggle-price">{t("бесплатно", "тегін")}</span>
