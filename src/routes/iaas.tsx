@@ -12,13 +12,13 @@ import { Cpu, MemoryStick, HardDrive, Database, Globe, Shield, Archive } from "l
 export const Route = createFileRoute("/iaas")({
   head: () => ({
     meta: [
-      { title: "Облачный сервер VMware Cloud Director — NLS Kazakhstan" },
+      { title: "Виртуальный дата-центр на VMware Cloud Director — NLS Kazakhstan" },
       {
         name: "description",
         content:
           "Виртуальный дата-центр на базе VMware Cloud Director. Гибкая конфигурация vCPU, vRAM, SSD/HDD, резервные копии Veeam. Дата-центры в Алматы, Астане и Шымкенте.",
       },
-      { property: "og:title", content: "Облачный сервер VMware Cloud Director — NLS Kazakhstan" },
+      { property: "og:title", content: "Виртуальный дата-центр на VMware Cloud Director — NLS Kazakhstan" },
       {
         property: "og:description",
         content:
@@ -188,7 +188,7 @@ function Hero() {
             Cloud Director
           </span>
           <h1>
-            <span style={{ color: "var(--color-orange)" }}>{t("Облачный сервер", "Бұлттық сервер")}</span>
+            <span style={{ color: "var(--color-orange)" }}>{t("Виртуальный дата-центр", "Виртуалдық дата-центр")}</span>
           </h1>
           <p className="hero-subtitle">
             {t("Виртуальный дата-центр на базе VMware", "VMware негізіндегі виртуалды дата-орталық")}

@@ -197,7 +197,7 @@ function Tariffs() {
                   <span className="plan-spec-icon"><Cpu size={20} strokeWidth={1.8} /></span>
                   <span className="plan-spec-text">
                     <span className="plan-spec-label">{t("Ядра CPU", "CPU ядролары")}</span>
-                    <span className="plan-spec-value">x{plan.cpu}</span>
+                    <span className="plan-spec-value">{plan.cpu}</span>
                   </span>
                 </li>
                 <li className="plan-spec">
