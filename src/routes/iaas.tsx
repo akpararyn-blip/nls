@@ -341,11 +341,6 @@ function Calculator() {
       n = max;
       showHint(id, field, t(`Максимум ${max}`, `Ең көп ${max}`));
     }
-    if (step > 1 && n % step !== 0) {
-      const rounded = Math.round(n / step) * step;
-      showHint(id, field, t(`Шаг ${step} — округлили до ${rounded}`, `Қадам ${step} — ${rounded}-ға дейін домалақталды`));
-      n = rounded;
-    }
     updateVdc(id, { [field]: n, [inputKey(field)]: String(n) } as Partial<Vdc>);
   };
 
