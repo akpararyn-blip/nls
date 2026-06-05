@@ -4901,6 +4901,10 @@ a.contacts-city-row:hover { color: var(--color-orange); }
     opacity: 1;
     pointer-events: auto;
   }
+  /* Не даём плавающей панели перекрывать контент страницы */
+  body.has-mobile-bar {
+    padding-bottom: 84px;
+  }
 }
 
 /* ===== Floating contact widget shifts up when mobile bar is visible ===== */
