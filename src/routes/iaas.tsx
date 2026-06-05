@@ -375,6 +375,41 @@ function Calculator() {
   const periodLabelRu = period === 1 ? "Итого за 1 месяц" : `Итого за ${period} мес.`;
   const periodLabelKz = period === 1 ? "1 айға барлығы" : `${period} айға барлығы`;
 
+  const orderIssues = useMemo(() => {
+    const issues: string[] = [];
+    vdcs.forEach((v, idx) => {
+      const cl = getCluster(v.city, v.clusterId);
+      const hddAvail = cl.prices.hdd !== null;
+      const noDisks = v.ssd === 0 && (!hddAvail || v.hdd === 0);
+      if (noDisks) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: добавьте хотя бы 1 ГБ vSSD${hddAvail ? " или vHDD" : ""} — без дисков виртуальная машина не запустится.`,
+            `Виртуалды дата-орталық ${idx + 1}: кемінде 1 ГБ vSSD${hddAvail ? " немесе vHDD" : ""} қосыңыз.`,
+          ),
+        );
+      }
+      if (v.veeam > 0 && v.archive === 0) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: для Veeam Backup укажите объём архивного диска.`,
+            `Виртуалды дата-орталық ${idx + 1}: Veeam Backup үшін архивтік диск көлемін көрсетіңіз.`,
+          ),
+        );
+      }
+      if (v.veeam === 0 && v.archive > 0) {
+        issues.push(
+          t(
+            `Виртуальный дата-центр ${idx + 1}: для архивного диска добавьте лицензию Veeam Backup.`,
+            `Виртуалды дата-орталық ${idx + 1}: архивтік диск үшін Veeam Backup лицензиясын қосыңыз.`,
+          ),
+        );
+      }
+    });
+    return issues;
+  }, [vdcs, t]);
+  const canOrder = orderIssues.length === 0;
+
   const buildSubject = () => {
     const parts: string[] = ["Заказ облачного сервера (VMware Cloud Director):"];
     vdcs.forEach((v, idx) => {
@@ -399,7 +434,10 @@ function Calculator() {
     return parts.join(" || ");
   };
 
-  const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
+  const orderClick = () => {
+    if (!canOrder) return;
+    openConsultationModalWith({ subject: buildSubject() });
+  };
 
   return (
     <>
