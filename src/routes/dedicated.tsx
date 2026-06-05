@@ -656,9 +656,15 @@ function Calculator() {
         </div>
         <div className="mobile-bar-main">
           <div className="mobile-bar-left">
-            <div className="mobile-bar-label">{t("Итого за 1 месяц", "1 айға барлығы")}</div>
-            <div className="mobile-bar-price">{formatPrice(calc.total)}</div>
+            <div className="mobile-bar-label">{t(periodLabelRu, periodLabelKz)}</div>
+            <div className="mobile-bar-price">{formatPrice(Math.round(periodTotal))}</div>
+            {periodSaving > 0 && (
+              <div className="plan-saving" style={{ fontSize: "0.7rem" }}>
+                {t(`−${formatPrice(Math.round(periodSaving))}`, `−${formatPrice(Math.round(periodSaving))}`)}
+              </div>
+            )}
           </div>
+
           <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
             {t("Заказать", "Тапсырыс беру")}
           </button>
