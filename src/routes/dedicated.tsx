@@ -607,14 +607,20 @@ function Calculator() {
                 </div>
                 <div className="summary-footer">
                   <div className="summary-total-row">
-                    <span className="summary-total-label">{t("Итого за 1 месяц", "1 айға барлығы")}</span>
-                    <span className="summary-total-amount">{formatPrice(calc.total)}</span>
+                    <span className="summary-total-label">{t(periodLabelRu, periodLabelKz)}</span>
+                    <span className="summary-total-amount">{formatPrice(Math.round(periodTotal))}</span>
                   </div>
+                  {periodSaving > 0 && (
+                    <div className="plan-saving" style={{ marginTop: 4 }}>
+                      {t(`Экономия: ${formatPrice(Math.round(periodSaving))}`, `Үнемдеу: ${formatPrice(Math.round(periodSaving))}`)}
+                    </div>
+                  )}
                   <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
                   <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
+
               </div>
               <CalculatorDisclaimer />
             </div>
