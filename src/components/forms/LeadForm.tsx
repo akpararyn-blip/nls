@@ -50,6 +50,7 @@ export function LeadForm({
   onSuccess,
   noRedirect,
   showAddress = false,
+  messageReadOnly = false,
 }: LeadFormProps) {
   const navigate = useNavigate();
   const t = useT();
