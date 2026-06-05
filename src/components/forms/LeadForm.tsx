@@ -209,7 +209,18 @@ export function LeadForm({
           rows={messageRows}
           ref={messageRef}
           defaultValue={defaultMessage}
+          readOnly={messageReadOnly}
+          aria-readonly={messageReadOnly}
+          style={messageReadOnly ? { backgroundColor: "var(--color-bg-muted, #f5f5f5)", cursor: "not-allowed" } : undefined}
         />
+        {messageReadOnly && (
+          <small style={{ color: "var(--color-text-light)", fontSize: "0.8em", display: "block", marginTop: 4 }}>
+            {t(
+              "Состав заявки из конфигуратора зафиксирован и недоступен для изменения.",
+              "Конфигуратордан жасалған өтінімнің құрамы тіркелген және өзгертуге болмайды."
+            )}
+          </small>
+        )}
       </div>
 
       <ConsentCheckbox id={id("consent")} checked={consent} onChange={setConsent} />
