@@ -716,6 +716,7 @@ function DynamicSection({
   onRemove,
   incompatibleIds,
   incompatibleMessage,
+  hideLabel,
 }: {
   label: string;
   addLabel: string;
@@ -729,6 +730,7 @@ function DynamicSection({
   onRemove: (id: number) => void;
   incompatibleIds?: Set<number>;
   incompatibleMessage?: string;
+  hideLabel?: boolean;
 }) {
   const t = useT();
   const limitReached = maxRows !== undefined && rows.length >= maxRows;
@@ -737,8 +739,8 @@ function DynamicSection({
     .filter(({ i }) => (allowedIdx ? allowedIdx.includes(i) : true));
 
   return (
-    <div className="calc-field">
-      <label className="calc-field-label">{label}</label>
+    <div className={hideLabel ? "" : "calc-field"}>
+      {!hideLabel && <label className="calc-field-label">{label}</label>}
       <div className="calc-add-row">
         <button
           type="button"
