@@ -43,6 +43,14 @@ export function Footer() {
               >
                 <YoutubeIcon width={20} height={20} />
               </a>
+              <a
+                href="https://www.tiktok.com/@meganetkz"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <TikTokIcon width={20} height={20} />
+              </a>
             </div>
           </div>
 
