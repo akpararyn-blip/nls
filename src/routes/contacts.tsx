@@ -267,6 +267,10 @@ function SocialsSection() {
               <Youtube size={22} />
               <span>YouTube</span>
             </a>
+            <a href="https://www.tiktok.com/@meganetkz" target="_blank" rel="noreferrer" className="contacts-social" aria-label="TikTok">
+              <TikTokIcon width={22} height={22} />
+              <span>TikTok</span>
+            </a>
           </div>
         </div>
       </div>
