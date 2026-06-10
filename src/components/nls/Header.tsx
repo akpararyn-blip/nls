@@ -98,6 +98,14 @@ export function Header() {
               >
                 <YoutubeIcon width={18} height={18} />
               </a>
+              <a
+                href="https://www.tiktok.com/@meganetkz"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <TikTokIcon width={18} height={18} />
+              </a>
             </div>
             <div
               className={`lang-switcher${langOpen ? " open" : ""}`}
