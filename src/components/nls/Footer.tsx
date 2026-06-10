@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useCity, CITIES } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
-import { InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
+import { InstagramIcon, LinkedinIcon, TikTokIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
 import { StoreBadges } from "./StoreBadges";
 import logoLightUrl from "@/assets/logo-light.svg";
 
