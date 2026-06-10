@@ -10,7 +10,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
     <>
       <Header />
       <MobileNav />
-      {children}
+      <main className="site-content">{children}</main>
       <Footer />
       <Modals />
       <CookieBanner />
