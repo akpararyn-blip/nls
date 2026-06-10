@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useCity, CITIES } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
-import { InstagramIcon, LinkedinIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
+import { InstagramIcon, LinkedinIcon, TikTokIcon, WhatsAppIcon, YoutubeIcon } from "./Icons";
 import { StoreBadges } from "./StoreBadges";
 import logoLightUrl from "@/assets/logo-light.svg";
 
@@ -42,6 +42,14 @@ export function Footer() {
                 aria-label="YouTube"
               >
                 <YoutubeIcon width={20} height={20} />
+              </a>
+              <a
+                href="https://www.tiktok.com/@meganetkz"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <TikTokIcon width={20} height={20} />
               </a>
             </div>
           </div>

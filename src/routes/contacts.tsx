@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useT } from "@/lib/lang-context";
+import { TikTokIcon } from "@/components/nls/Icons";
 import {
   Phone,
   MapPin,
@@ -265,6 +266,10 @@ function SocialsSection() {
             <a href="https://www.youtube.com/@nlskazakhstan8630" target="_blank" rel="noreferrer" className="contacts-social" aria-label="YouTube">
               <Youtube size={22} />
               <span>YouTube</span>
+            </a>
+            <a href="https://www.tiktok.com/@meganetkz" target="_blank" rel="noreferrer" className="contacts-social" aria-label="TikTok">
+              <TikTokIcon width={22} height={22} />
+              <span>TikTok</span>
             </a>
           </div>
         </div>

@@ -10,6 +10,7 @@ import {
   LinkedinIcon,
   MenuIcon,
   PinIcon,
+  TikTokIcon,
   YoutubeIcon,
 } from "./Icons";
 import {
@@ -96,6 +97,14 @@ export function Header() {
                 aria-label="YouTube"
               >
                 <YoutubeIcon width={18} height={18} />
+              </a>
+              <a
+                href="https://www.tiktok.com/@meganetkz"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <TikTokIcon width={18} height={18} />
               </a>
             </div>
             <div
