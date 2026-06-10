@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
+import { RelatedServices } from "@/components/nls/RelatedServices";
 import { useCity } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon } from "@/components/nls/Icons";
@@ -167,6 +168,7 @@ export function IaasPage() {
     <SiteLayout>
       <Hero />
       <Calculator />
+      <RelatedServices exclude="iaas" />
     </SiteLayout>
   );
 }
