@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { EnterpriseDataCenterBlocks } from "@/components/nls/EnterpriseBlocks";
+import { RelatedServices } from "@/components/nls/RelatedServices";
 import { useCity } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
@@ -66,6 +67,7 @@ export function ColocationPage() {
       <EnterpriseDataCenterBlocks />
       <Configurator />
       <Faq />
+      <RelatedServices exclude="colocation" />
       <FinalCTA />
     </SiteLayout>
   );
