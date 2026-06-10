@@ -6728,3 +6728,126 @@ body::before, body::after { display: none !important; }
   cursor: not-allowed;
   pointer-events: none;
 }
+
+/* ===== Related services (cross-sell) ===== */
+.related-services {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+.related-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 24px;
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  overflow: hidden;
+}
+.related-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,103,0,0.06), rgba(255,103,0,0));
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+.related-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-orange);
+  box-shadow: 0 18px 40px -18px var(--color-orange-glow);
+}
+.related-card:hover::before { opacity: 1; }
+.related-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-orange-light));
+  color: #fff;
+  box-shadow: 0 8px 20px -6px var(--color-orange-glow);
+}
+.related-card__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a;
+}
+.related-card__desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-light);
+  margin: 0;
+}
+.related-card__bullets {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.related-card__bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #334155;
+}
+.related-card__bullets li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-orange);
+}
+.related-card__cta {
+  margin-top: auto;
+  padding-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--color-orange);
+  font-size: 0.95rem;
+}
+.related-card:hover .related-card__cta svg {
+  transform: translateX(3px);
+}
+.related-card__cta svg { transition: transform .2s ease; }
+
+@media (max-width: 1100px) {
+  .related-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .related-services { padding: 56px 0; }
+  .related-grid {
+    grid-template-columns: none;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 20px 16px;
+    margin: 32px -20px 0;
+    scroll-padding-left: 20px;
+  }
+  .related-grid::-webkit-scrollbar { display: none; }
+  .related-card {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+}
