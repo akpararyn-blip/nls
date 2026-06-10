@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useT } from "@/lib/lang-context";
+import { TikTokIcon } from "@/components/nls/Icons";
 import {
   Phone,
   MapPin,
