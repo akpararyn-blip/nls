@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/nls/SiteLayout";
 import { CalculatorDisclaimer } from "@/components/nls/CalculatorDisclaimer";
 import { DedicatedPlans } from "@/components/nls/DedicatedPlans";
 import { RelatedServices } from "@/components/nls/RelatedServices";
+import { SupportPromo } from "@/components/nls/SupportPromo";
 import { useCity } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon, ChevronUpIcon, CloseIcon, ServerIcon } from "@/components/nls/Icons";
@@ -139,6 +140,7 @@ export function DedicatedPage() {
       <DedicatedPlans />
       <CustomBuildCTA />
       <Calculator />
+      <SupportPromo />
       <RelatedServices exclude="dedicated" />
       <AfterCalcCTA />
     </SiteLayout>
