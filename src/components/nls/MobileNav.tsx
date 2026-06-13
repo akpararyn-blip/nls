@@ -6,7 +6,6 @@ import { SmartLink } from "./SmartLink";
 import {
   InstagramIcon,
   LinkedinIcon,
-  TikTokIcon,
   YoutubeIcon,
   PinIcon,
   GlobeIcon,
@@ -27,7 +26,7 @@ import {
   Briefcase,
   Mail,
   ExternalLink,
-  LogIn,
+  Download,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react";
@@ -136,7 +135,7 @@ export function MobileNav() {
               onClick={() => setLang("ru")}
               className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
             >
-              RU
+              RU<span className="mobile-lang-beta">beta</span>
             </button>
             <span style={{ opacity: 0.4 }}>/</span>
             <button
@@ -144,7 +143,7 @@ export function MobileNav() {
               onClick={() => setLang("kz")}
               className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
             >
-              KZ
+              KZ<span className="mobile-lang-beta">beta</span>
             </button>
           </div>
         </div>
@@ -160,11 +159,8 @@ export function MobileNav() {
           >
             {t("Получить консультацию", "Кеңес алу")}
           </button>
-          <Link to="/login" className="btn btn-outline mobile-nav__login-btn" onClick={close}>
-            <LogIn size={16} strokeWidth={2} />
-            {t("Войти", "Кіру")}
-          </Link>
         </div>
+
 
         <div className="mobile-nav__section-title">{t("Услуги", "Қызметтер")}</div>
         <ul className="mobile-nav__groups">
@@ -197,6 +193,12 @@ export function MobileNav() {
 
         <div className="mobile-nav__section-title">{t("Компания", "Компания")}</div>
         <ul className="mobile-nav__plain">
+          <li>
+            <Link to="/login" onClick={close} className="mobile-nav__item">
+              <Download size={18} strokeWidth={1.8} />
+              <span>{t("Скачать личный кабинет", "Жеке кабинетті жүктеу")}</span>
+            </Link>
+          </li>
           <li>
             <Link to="/about" onClick={close} className="mobile-nav__item">
               <Info size={18} strokeWidth={1.8} />
@@ -238,9 +240,6 @@ export function MobileNav() {
           </a>
           <a href="https://www.youtube.com/@nlskazakhstan8630" target="_blank" rel="noreferrer" aria-label="YouTube">
             <YoutubeIcon width={20} height={20} />
-          </a>
-          <a href="https://www.tiktok.com/@meganetkz" target="_blank" rel="noreferrer" aria-label="TikTok">
-            <TikTokIcon width={20} height={20} />
           </a>
         </div>
       </div>
