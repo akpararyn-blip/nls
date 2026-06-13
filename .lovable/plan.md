@@ -1,89 +1,32 @@
-# Валидация телефона, страница /spam и доработка Telegram-сообщения
+## Проблема
 
-## 1) Утилита валидации (`src/lib/phone-validation.ts` — новый файл)
+В режиме `USE_INTERNAL_ROUTING = false` главная страница каждого поддомена (`iaas.nls.kz`, `cloud.nls.kz` и т.д.) должна автоматически отрисовывать компонент соответствующей услуги. Это делает `IndexPage` в `src/routes/index.tsx` через словарь `SERVICE_COMPONENTS`.
 
-Функция `isPhoneSuspicious(phone: string): boolean`:
+Сейчас в `SERVICE_COMPONENTS` зарегистрированы только давно существующие услуги (`/internet`, `/it-sks`, `/it`, `/colocation`, `/dedicated`, `/colocation-full`, `/vps`). Недавно добавленные `/iaas`, `/cloud`, `/object-storage`, `/cloud-storage` в этот словарь не попали.
 
-- Извлекаем только цифры; ведущую `8` заменяем на `7`.
-- Если итого не ровно **11 цифр** → подозрительный.
-- Первые 4 цифры должны входить в whitelist:
-  ```
-  7700 7701 7702 7705 7706 7707 7708
-  7727 7747 7717
-  7770 7771 7774 7775 7776 7777 7778
-  7710 7711 7712 7713 7714 7715 7716 7718
-  7721 7722 7723 7724 7725 7726 7728 7729
-  7760 7761 7762 7763 7764
-  7750 7751
-  ```
-- В оставшихся 7 цифрах считаем максимальную частоту одной цифры; если `>= 6` → подозрительный
-  (покрывает `+7 777 777 77 74`, `+7 700 000 00 00`).
+Поэтому на `iaas.nls.kz/` `currentDomainPath` возвращает `/iaas`, но компонент не находится — и пользователь видит общую главную NLS вместо страницы IaaS. То же самое произошло бы на `cloud.nls.kz/`, `…/object-storage`-поддомене и т.д. (хотя сейчас отдельных поддоменов для них нет, `cloud.nls.kz` точно сломан).
 
-## 2) Подключение в формах
+Вторая проблема: `IaasPage` экспортируется, а `CloudPage`, `ObjectStoragePage`, `CloudStoragePage` объявлены как обычные функции внутри файла-роута и наружу не выставлены — импортировать их в `index.tsx` сейчас невозможно.
 
-### `src/components/forms/LeadForm.tsx`
-- После `submitLead(...)` + `saveLastOrder(...)`: если `isPhoneSuspicious(phone)` → `navigate({ to: "/spam" })`, иначе `/thank-you`.
-- Заявка всё равно уходит в Telegram (помечается как спам — см. п.4).
+## Что меняем
 
-### `src/components/forms/HrApplyForm.tsx`
-- Аналогично: если телефон подозрительный → `/spam`, иначе `/thank-you?type=hr`.
+1. **`src/routes/cloud.tsx`** — добавить `export` к `function CloudPage()`.
+2. **`src/routes/object-storage.tsx`** — добавить `export` к `function ObjectStoragePage()`.
+3. **`src/routes/cloud-storage.tsx`** — добавить `export` к `function CloudStoragePage()`.
+4. **`src/routes/index.tsx`**:
+   - Импортировать `IaasPage`, `CloudPage`, `ObjectStoragePage`, `CloudStoragePage`.
+   - Расширить `SERVICE_COMPONENTS`:
+     ```ts
+     "/iaas": IaasPage,
+     "/cloud": CloudPage,
+     "/object-storage": ObjectStoragePage,
+     "/cloud-storage": CloudStoragePage,
+     ```
 
-## 3) Страница `/spam` (`src/routes/spam.tsx`)
+После этого `iaas.nls.kz/` отрисует страницу IaaS, `cloud.nls.kz/` — хаб облачных решений, а ссылки на эти услуги с других поддоменов уже корректно переписываются в `resolveLink` (этот код трогать не надо).
 
-- По структуре похожа на `thank-you.tsx`, но:
-  - `meta`: title «Заявка получена — NLS Kazakhstan», `robots: noindex, nofollow`.
-  - Контейнер с классом **`.spam-card`** (НЕ `.thank-you-card`).
-  - Содержимое (RU / KZ через `useT`):
-    - Заголовок: **«Странно…»**
-    - Параграф: «Ваша заявка принята, однако нашему отделу продаж она кажется некорректной. Если с вами не свяжутся в течение рабочего дня — пожалуйста, напишите нам в WhatsApp.»
-    - Кнопка WhatsApp с номером `city.whatsapp` (отображается сам номер).
-  - Без блока с номером заказа, данными заявки и кнопок «вернуться/позвонить».
-- Зарегистрировать в `src/routeTree.gen.ts`.
-- Добавить класс `.spam-card` в `src/styles/nls.css` (собственные стили, без `@extend` от `.thank-you-card`).
+## Что не трогаем
 
-## 4) Доработка Telegram-сообщения (`src/lib/submitLead.ts` + `src/services/telegramApi.ts`)
-
-### 4.1 Передаём флаг спама
-- В `SubmitLeadOptions` добавить `isSpam?: boolean`.
-- В `LeadForm`/`HrApplyForm` передавать `isSpam: isPhoneSuspicious(phone)` в `submitLead`.
-
-### 4.2 Парсинг UTM
-- Из `window.location.search` достаём `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term` (берём только присутствующие).
-- «Чистая» ссылка страницы: `window.location.origin + window.location.pathname` (без query и hash).
-- «Полная» ссылка: исходный `window.location.href` (со всеми UTM).
-
-### 4.3 Новый порядок и формат текста
-
-```
-🚨 ДАННАЯ ЗАЯВКА УЛИЧЕНА КАК СПАМ 🚨      ← только если isSpam = true
-
-🔔 <b>{formName}</b>
-📄 Страница: {pageTitle}
-🔗 {cleanUrl}                              ← без UTM-меток
-
-<b>Данные заявки:</b>
-• <b>{поле}:</b> {значение}
-...
-• <b>Проверить ИИН:</b> https://pk.adata.kz/...   ← если есть iin
-
-🏙 Город: {city}                           ← перемещён сюда, после данных
-
-<b>UTM-метки:</b>                          ← блок только если есть хоть одна
-utm_source=...
-utm_medium=...
-utm_campaign=...
-utm_content=...
-
-🔗 Полная ссылка: {fullUrl}                ← всегда в самом конце
-```
-
-- Строку `🛡 reCAPTCHA: …` **полностью убрать**.
-- Если UTM-меток нет — блок «UTM-метки» не печатаем, но «Полная ссылка» в конце остаётся (равна clean URL).
-- Заголовок спама — только при `isSpam = true`, отделён пустой строкой от остального.
-
-## Технические детали
-
-- Маска `formatKzPhone` уже нормализует номер с `+7`, валидация работает с цифрами после нормализации.
-- Никаких UI-ошибок в форме не показываем — пользователь должен думать, что заявка принята.
-- `escapeHtml` применяем ко всем подставляемым значениям, включая URL и UTM-параметры.
-- Изменения только в `submitLead.ts` и формах; `telegramApi.ts` не меняется (он просто отправляет готовый текст).
+- `src/config/links.ts` — там логика хоста и `/cloud`-хаба уже корректна.
+- `USE_INTERNAL_ROUTING` оставляем как есть (управляется вручную перед билдом).
+- Никаких изменений в форме, валидации телефона, странице `/spam`, GTM и т.д.
