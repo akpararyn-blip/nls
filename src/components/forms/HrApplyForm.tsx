@@ -7,6 +7,7 @@ import { submitLead } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
 import { useT } from "@/lib/lang-context";
+import { isPhoneSuspicious } from "@/lib/phone-validation";
 
 export function HrApplyForm() {
   const navigate = useNavigate();

@@ -131,7 +131,7 @@ export function LeadForm({
       setConsent(false);
       if (onSuccess) onSuccess();
       if (!noRedirect) {
-        navigate({ to: "/thank-you" });
+        navigate({ to: suspicious ? "/spam" : "/thank-you" });
       }
     } catch (err) {
       console.error(err);
