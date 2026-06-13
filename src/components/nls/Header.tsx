@@ -21,6 +21,9 @@ import {
   Cloud,
   HardDrive,
   Container,
+  Boxes,
+  Database,
+  CloudUpload,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
@@ -201,7 +204,10 @@ export function Header() {
                         <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("VPS/VDS сервер", "VPS/VDS сервер")}</span>
                       </SmartLink>
-                      
+                      <SmartLink to="/iaas" className="mega-menu-link">
+                        <Boxes className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}</span>
+                      </SmartLink>
                       <SmartLink to="/colocation" className="mega-menu-link">
                         <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>Colocation</span>
@@ -209,6 +215,14 @@ export function Header() {
                       <SmartLink to="/colocation-full" className="mega-menu-link">
                         <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("Аренда стойки", "Тіректерді жалға алу")}</span>
+                      </SmartLink>
+                      <SmartLink to="/object-storage" className="mega-menu-link">
+                        <Database className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Объектное хранилище S3", "S3 объектілік сақтау")}</span>
+                      </SmartLink>
+                      <SmartLink to="/cloud-storage" className="mega-menu-link">
+                        <CloudUpload className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Облачное хранилище", "Бұлттық сақтау")}</span>
                       </SmartLink>
                     </div>
                   </div>
