@@ -51,6 +51,10 @@ const SERVICE_COMPONENTS: Partial<Record<ServicePath, () => React.ReactElement>>
   "/dedicated": DedicatedPage,
   "/colocation-full": FullRackPage,
   "/vps": VpsPage,
+  "/iaas": IaasPage,
+  "/cloud": CloudPage,
+  "/object-storage": ObjectStoragePage,
+  "/cloud-storage": CloudStoragePage,
 };
 
 function IndexPage() {
