@@ -6,7 +6,6 @@ import { SmartLink } from "./SmartLink";
 import {
   InstagramIcon,
   LinkedinIcon,
-  TikTokIcon,
   YoutubeIcon,
   PinIcon,
   GlobeIcon,
@@ -27,7 +26,7 @@ import {
   Briefcase,
   Mail,
   ExternalLink,
-  LogIn,
+  Download,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react";
