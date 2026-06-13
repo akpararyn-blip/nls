@@ -10,7 +10,6 @@ import {
   LinkedinIcon,
   MenuIcon,
   PinIcon,
-  TikTokIcon,
   YoutubeIcon,
 } from "./Icons";
 import {
