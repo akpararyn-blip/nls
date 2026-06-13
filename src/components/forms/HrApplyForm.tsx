@@ -33,11 +33,13 @@ export function HrApplyForm() {
         [t("Телефон", "Телефон")]: form.phone,
         [t("Должность", "Лауазым")]: form.position,
       };
+      const suspicious = isPhoneSuspicious(form.phone);
       await submitLead({
         formName: "HR — отклик на вакансию",
         action: "hr_apply",
         target: "hr",
         fields,
+        isSpam: suspicious,
       });
 
       const orderNumber = generateOrderNumber();
