@@ -195,26 +195,14 @@ export function Header() {
                       </SmartLink>
                     </div>
                     <div className="mega-menu-group">
-                      <div className="mega-menu-group-title">{t("Серверы", "Серверлер")}</div>
-                      <SmartLink to="/dedicated" className="mega-menu-link">
-                        <Server className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("Dedicated сервер", "Dedicated сервер")}</span>
-                      </SmartLink>
-                      <SmartLink to="/vps" className="mega-menu-link">
-                        <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("VPS/VDS сервер", "VPS/VDS сервер")}</span>
-                      </SmartLink>
+                      <div className="mega-menu-group-title">{t("Облачные решения", "Бұлттық шешімдер")}</div>
                       <SmartLink to="/iaas" className="mega-menu-link">
                         <Boxes className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}</span>
                       </SmartLink>
-                      <SmartLink to="/colocation" className="mega-menu-link">
-                        <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>Colocation</span>
-                      </SmartLink>
-                      <SmartLink to="/colocation-full" className="mega-menu-link">
-                        <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
-                        <span>{t("Аренда стойки", "Тіректерді жалға алу")}</span>
+                      <SmartLink to="/vps" className="mega-menu-link">
+                        <Cloud className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("VPS/VDS сервер", "VPS/VDS сервер")}</span>
                       </SmartLink>
                       <SmartLink to="/object-storage" className="mega-menu-link">
                         <Database className="mega-menu-icon" size={18} strokeWidth={1.75} />
@@ -223,6 +211,21 @@ export function Header() {
                       <SmartLink to="/cloud-storage" className="mega-menu-link">
                         <CloudUpload className="mega-menu-icon" size={18} strokeWidth={1.75} />
                         <span>{t("Облачное хранилище", "Бұлттық сақтау")}</span>
+                      </SmartLink>
+                    </div>
+                    <div className="mega-menu-group">
+                      <div className="mega-menu-group-title">{t("Услуги дата-центра", "Дата-орталық қызметтері")}</div>
+                      <SmartLink to="/colocation" className="mega-menu-link">
+                        <HardDrive className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Размещение сервера", "Серверді орналастыру")}</span>
+                      </SmartLink>
+                      <SmartLink to="/colocation-full" className="mega-menu-link">
+                        <Container className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Аренда стойки", "Тіректі жалға алу")}</span>
+                      </SmartLink>
+                      <SmartLink to="/dedicated" className="mega-menu-link">
+                        <Server className="mega-menu-icon" size={18} strokeWidth={1.75} />
+                        <span>{t("Аренда сервера", "Серверді жалға алу")}</span>
                       </SmartLink>
                     </div>
                   </div>
