@@ -4,6 +4,7 @@ import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
 import { submitLead } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
+import { isPhoneSuspicious } from "@/lib/phone-validation";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
 import { useT } from "@/lib/lang-context";
 import { useCity, type CityKey } from "@/lib/city-context";
@@ -111,7 +112,8 @@ export function LeadForm({
         ...(subject ? { [t("Тема", "Тақырып")]: subject } : {}),
       };
 
-      await submitLead({ formName, action, fields, city: cityRu, iin });
+      const suspicious = isPhoneSuspicious(phone);
+      await submitLead({ formName, action, fields, city: cityRu, iin, isSpam: suspicious });
 
       // Сохраняем заявку для страницы thank-you
       const orderNumber = generateOrderNumber();
