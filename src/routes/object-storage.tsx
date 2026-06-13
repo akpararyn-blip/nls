@@ -33,7 +33,7 @@ function scrollToCalc() {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function ObjectStoragePage() {
+export function ObjectStoragePage() {
   return (
     <SiteLayout>
       <Hero />
