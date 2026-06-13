@@ -15,6 +15,10 @@ import { DedicatedPage } from "./dedicated";
 import { FullRackPage } from "./colocation-full";
 import { VpsPage } from "./vps";
 import { ItOutsourcingPage } from "./it";
+import { IaasPage } from "./iaas";
+import { CloudPage } from "./cloud";
+import { ObjectStoragePage } from "./object-storage";
+import { CloudStoragePage } from "./cloud-storage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,6 +51,10 @@ const SERVICE_COMPONENTS: Partial<Record<ServicePath, () => React.ReactElement>>
   "/dedicated": DedicatedPage,
   "/colocation-full": FullRackPage,
   "/vps": VpsPage,
+  "/iaas": IaasPage,
+  "/cloud": CloudPage,
+  "/object-storage": ObjectStoragePage,
+  "/cloud-storage": CloudStoragePage,
 };
 
 function IndexPage() {

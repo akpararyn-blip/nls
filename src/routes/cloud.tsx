@@ -22,7 +22,7 @@ export const Route = createFileRoute("/cloud")({
   component: CloudPage,
 });
 
-function CloudPage() {
+export function CloudPage() {
   return (
     <SiteLayout>
       <CloudHub />
