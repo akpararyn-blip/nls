@@ -194,6 +194,12 @@ export function MobileNav() {
         <div className="mobile-nav__section-title">{t("Компания", "Компания")}</div>
         <ul className="mobile-nav__plain">
           <li>
+            <Link to="/login" onClick={close} className="mobile-nav__item">
+              <Download size={18} strokeWidth={1.8} />
+              <span>{t("Скачать личный кабинет", "Жеке кабинетті жүктеу")}</span>
+            </Link>
+          </li>
+          <li>
             <Link to="/about" onClick={close} className="mobile-nav__item">
               <Info size={18} strokeWidth={1.8} />
               <span>{t("О компании", "Компания туралы")}</span>
@@ -234,9 +240,6 @@ export function MobileNav() {
           </a>
           <a href="https://www.youtube.com/@nlskazakhstan8630" target="_blank" rel="noreferrer" aria-label="YouTube">
             <YoutubeIcon width={20} height={20} />
-          </a>
-          <a href="https://www.tiktok.com/@meganetkz" target="_blank" rel="noreferrer" aria-label="TikTok">
-            <TikTokIcon width={20} height={20} />
           </a>
         </div>
       </div>
