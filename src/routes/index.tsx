@@ -15,6 +15,10 @@ import { DedicatedPage } from "./dedicated";
 import { FullRackPage } from "./colocation-full";
 import { VpsPage } from "./vps";
 import { ItOutsourcingPage } from "./it";
+import { IaasPage } from "./iaas";
+import { CloudPage } from "./cloud";
+import { ObjectStoragePage } from "./object-storage";
+import { CloudStoragePage } from "./cloud-storage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
