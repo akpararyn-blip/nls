@@ -1,97 +1,133 @@
+# План: поддомены iaas/cloud, новая группа «ЦОД», хаб облачных решений, обновления Dedicated/мобильного меню/футера
 
-# Новые страницы: Объектное S3 и Облачное хранилище
+## 1. GTM для новых поддоменов
+`src/config/gtm.ts` — в `HOST_TO_GTM` добавить:
+- `"iaas.nls.kz": "GTM-PSQKW2CG"`
+- `"cloud.nls.kz": "GTM-5QZ8PR2Q"`
 
-## Маршруты
-- `src/routes/object-storage.tsx` → `/object-storage` — S3, 110 ₸/ГБ
-- `src/routes/cloud-storage.tsx` → `/cloud-storage` — Cloud, 100 ₸/ГБ, скидки 6 мес = −3%, 12 мес = −6%
+## 2. Маршрутизация поддоменов (`src/config/links.ts`)
 
-TanStack Router сам обновит `routeTree.gen.ts` после создания файлов.
+**a) iaas.nls.kz/** уже корректно открывает `/iaas` через существующий механизм (`currentDomainPath` + `to === "/"` → `internalTo: ownPath`). Только проверка.
 
-## Структура каждой страницы
-По образцу `vps.tsx` / `iaas.tsx` через `SiteLayout`:
+**b) cloud.nls.kz/** становится хабом (новый маршрут `/cloud`, см. §4). `cloud.nls.kz ↔ /cloud` в `DOMAIN_TO_PATH` / `PATH_TO_DOMAIN`.
 
-1. **Hero** — H1, подзаголовок, 2 CTA («Рассчитать стоимость», «Получить консультацию»), иллюстрация.
-2. **Преимущества** — 4–6 карточек (Tier III ЦОД в Казахстане, SLA 99.9%, S3-совместимый API / снэпшоты и версионирование, шифрование на лету, гео-репликация, оплата по факту).
-3. **Калькулятор** + `<CalculatorDisclaimer />`.
-4. **Use-cases / для кого** — 3–4 карточки (бэкапы, медиа, статика сайтов, аналитика; для cloud — командное файловое хранилище, архивы, обмен файлами).
-5. **FAQ** — 3–5 вопросов в формате других страниц.
-6. **`<SupportPromo />`** — блок «Превосходная техподдержка 24/7» (тот же, что и на серверных страницах).
-7. **«С этим покупают» / `<RelatedServices exclude="object-storage" />`** (или `"cloud-storage"`) — обновлённый блок «Что ещё может пригодиться», см. ниже.
+**c) На любом поддомене ссылки на 7 «облачных + ЦОД» услуг ведут на cloud.nls.kz/<service>.**
 
-Формы и CTA переиспользуют `openConsultationModal` из `useCity()` — новых форм не создаём.
-
-## Калькулятор — `src/components/nls/StorageCalculator.tsx`
-
-Props:
+В `ServicePath` добавить `/object-storage`, `/cloud-storage` (для них в `PATH_TO_DOMAIN` ставим `cloud.nls.kz`). Ввести:
 ```ts
-{
-  pricePerGb: number;          // 110 или 100
-  discounts?: { months: number; percent: number }[]; // только для cloud: [{6,3},{12,6}]
-  storageId: "object" | "cloud";
-}
+const CLOUD_HUB_PATHS = new Set<ServicePath>([
+  "/iaas", "/vps", "/object-storage", "/cloud-storage",
+  "/colocation", "/colocation-full", "/dedicated",
+]);
 ```
 
-UX:
-- **Слайдер** с нелинейной шкалой через массив из 20 опорных значений:
-  `[1, 100, 200, …, 1000, 2000, …, 10000]`. Реализация: `<input type="range" min=0 max=19 step=1>`, отображаемое значение = `steps[index]`.
-- **Числовое поле** рядом — ручной ввод точного объёма в ГБ (1…10 000); цена считается от введённого значения, ближайшая точка слайдера подсвечивается.
-- **Быстрые пресеты-кнопки:** `100 / 500 / 1 000 / 5 000 / 10 000 ГБ`.
-- По умолчанию **1 ГБ**.
-- Большой блок результата:
-  - Месячная цена: `volume × pricePerGb` (с `formatPrice` и `₸/мес`).
-  - Для cloud: segmented control **1 мес / 6 мес / 12 мес**. При выборе 6/12 — итог за период со скидкой, бейдж «−3%»/«−6%», подпись «эквивалент … ₸/мес».
-- CTA «Заказать» → `openConsultationModal`.
+Логика `resolveLink` при `USE_INTERNAL_ROUTING = false`:
+1. `to === "/"` → `ownPath`.
+2. `to === ownPath` → `/`.
+3. `host === "cloud.nls.kz"` и `to ∈ CLOUD_HUB_PATHS` → внутренний `to` (cloud.nls.kz обслуживает все 7 маршрутов).
+4. `to ∈ CLOUD_HUB_PATHS` и `host ≠ cloud.nls.kz` → внешний `https://cloud.nls.kz<to>`.
+5. `to ∈ PATH_TO_DOMAIN` (internet/it/it-sks) и хост ≠ родного → внешний `https://<domain>`.
+6. Иначе внутренний.
 
-Стили — новые классы в `src/styles/nls.css` (`.storage-calc`, `.storage-calc__slider`, `.storage-calc__presets`, `.storage-calc__result`, `.storage-calc__period`), переиспользуем существующие CSS-переменные.
+`USE_INTERNAL_ROUTING = true` (текущий режим) — всё ходит внутри без изменений.
 
-## Обновление мега-меню и MobileNav
+## 3. Реструктуризация меню
 
-В Header (мега-меню, группа «Серверы») и в `MobileNav.tsx` (группа «Серверы», после IaaS) добавляем 2 ссылки:
-- `/object-storage` — «Объектное хранилище S3» (иконка `Database`)
-- `/cloud-storage` — «Облачное хранилище» (иконка `CloudUpload` / `FolderCloud`)
+Группы:
+1. **Интернет** — `/internet`
+2. **IT услуги** — `/it`, `/it-sks`
+3. **Облачные решения** — Виртуальный дата-центр (`/iaas`), VPS/VDS сервер (`/vps`), Объектное хранилище S3 (`/object-storage`), Облачное хранилище (`/cloud-storage`)
+4. **Услуги дата-центра** — Размещение сервера (`/colocation`), Аренда стойки (`/colocation-full`), Аренда сервера (`/dedicated`)
 
-IaaS в мега-меню сейчас отсутствует — добавляем и его (иконка `Cloud`/`Boxes`), чтобы группа Серверы была полной. В мобильном меню IaaS уже есть.
+Файлы: `Header.tsx`, `MobileNav.tsx`, `Footer.tsx`. Контент страниц (h1, тексты) не меняется — переименование только в навигации.
 
-## Блок «Что ещё может пригодиться» / «С этим покупают»
+## 4. Новая хаб-страница `/cloud`
 
-`src/components/nls/RelatedServices.tsx`:
-- Расширяем тип:
-  ```ts
-  type RelatedServiceId =
-    | "dedicated" | "vps" | "colocation" | "colocation-full"
-    | "iaas" | "object-storage" | "cloud-storage";
-  ```
-- Добавляем 2 элемента (icon, title, desc, 3 буллита RU/KZ, ссылка на новую страницу). После `filter(exclude)` всегда показываем ровно **6 карточек**.
+Файлы:
+- `src/routes/cloud.tsx` (новый)
+- `src/components/nls/CloudHub.tsx` (новый)
+- `src/routeTree.gen.ts` — добавить запись по образцу.
 
-Оптимизация сетки `.related-grid` в `src/styles/nls.css` под 6 карточек:
-- ≥1200px: `grid-template-columns: repeat(3, 1fr)` (2 ряда × 3).
-- 768–1199px: `repeat(2, 1fr)`.
-- <768px: 1 колонка.
-- Чуть уменьшаем внутренние отступы карточек и `line-clamp: 3` для `.related-card__desc`, чтобы 6 карточек выглядели опрятно.
+Контент:
+- Стандартные header/footer через `SiteLayout`.
+- Hero: «Облачные решения и услуги дата-центра».
+- Основной блок:
+  - **Desktop (≥768px)**: две колонки 50/50. Слева «Облачные решения» (4 карточки), справа «Услуги дата-центра» (3 карточки). Сверху каждой колонки — заголовок группы.
+  - **Mobile (<768px)**: переключатель табов «Облачные решения / Дата-центр», под ним вертикальная сетка компактных широких карточек (иконка слева, заголовок + 1 предложение справа) — 3 шт. помещаются на экран телефона.
+- Карточка: `SmartLink` на путь услуги, иконка lucide, заголовок (название из меню), краткое описание.
+- Внизу — `SupportPromo`. Без `RelatedServices` (вся страница и есть related).
 
-На существующих 5 серверных страницах **код менять не нужно** — `<RelatedServices />` сам подтянет 6 услуг. На двух новых страницах вставляем `<RelatedServices exclude="object-storage" />` / `"cloud-storage"`.
+SEO: title «Облачные решения и услуги дата-центра — NLS Kazakhstan», description, h1.
 
-## SupportPromo
-На обеих новых страницах вставляем `<SupportPromo />` сразу перед `<RelatedServices />` — компонент уже существует и используется без пропсов.
+## 5. Обновление страницы Dedicated
 
-## i18n
-Все строки через `useT()` с парой RU/KZ — стиль как на других страницах.
+`src/routes/dedicated.tsx` (или соответствующий компонент с готовыми конфигурациями серверов) — заменить карточку «готовый сервер за 227 320 ₸» на:
 
-## SEO
-В `createFileRoute(...).head` обеих страниц: `<title>` ≤60, meta description ≤160, og:title / og:description. Один `<h1>` в Hero.
+```
+Сервер: HP DL360 Gen10
+Процессор: 2 × Intel® Xeon® Gold 6140
+Всего ядер/потоков: 36C / 72T
+Частота: 2.30 GHz
+Память: 128 GB
+Накопители: 4 × 480 GB SSD
+RAID, 100 Мбит/с, 1 IP, IPMI
+от 224 800 ₸
+```
+
+Старую цену 227 320 заменить на 224 800. Поля характеристик привести к новому списку (модель сервера, CPU, ядра/потоки, частота, RAM, диски, доп. характеристики строкой).
+
+## 6. Доработка мобильного меню (`MobileNav.tsx` + CSS)
+
+Цель — максимально удобное выезжающее меню.
+
+Состав (проверить, что всё есть):
+- Город, язык, телефон (как сейчас).
+- Кнопка «Консультация» — добавить (сейчас её в мобильном меню нет, а в шапке на десктопе есть).
+- Услуги — 4 группы в новом составе (см. §3).
+- О компании, Вакансии, Интернет для физ. лиц, Контакты.
+- Соц. иконки внизу (Instagram, LinkedIn, YouTube, TikTok) — добавить, сейчас отсутствуют.
+- Кнопка «Войти» — добавить.
+
+Дизайн (через design directions, после утверждения плана):
+- Аккуратная типографика, секционные разделители, отступы под палец (мин. 44px touch target).
+- Группы услуг с раскрытием (accordion) или просто визуальной группировкой с подзаголовком и иконкой.
+- Иконки lucide рядом с пунктами услуг (как в мега-меню).
+- Sticky-шапка меню (лого + крестик), скролл-контейнер для списка, sticky-низ с CTA «Консультация» и телефоном.
+- Активный пункт подсвечен.
+
+CSS — стили в `src/styles/nls.css` для `.mobile-nav`, `.mobile-nav__section`, `.mobile-nav__cta-bar` и т.д.
+
+## 7. Доработка футера (`Footer.tsx`)
+
+- Привести список услуг в футере к новой структуре из 4 групп (см. §3) с правильными названиями.
+- Добавить в столбец услуг: `/iaas`, `/object-storage`, `/cloud-storage`, ссылку на `/cloud` (хаб).
+- Проверить, что соц. иконки (включая TikTok) и контакты актуальны.
+
+## 8. CSS (`src/styles/nls.css`)
+- `.cloud-hub`, `.cloud-hub__columns`, `.cloud-hub__tabs` (mobile only), `.cloud-hub__card`.
+- Обновлённые стили `.mobile-nav` под новый дизайн.
+
+## 9. Проверки
+- `/iaas` корректно отображается как главная iaas.nls.kz (визуально — текущая страница).
+- `/cloud` открывается как хаб; в превью (`USE_INTERNAL_ROUTING = true`) все карточки ведут на внутренние маршруты.
+- Меню (десктоп и мобильное) содержит все 4 группы и все пункты.
+- Футер обновлён.
+- Dedicated показывает новый конфиг и цену 224 800.
+
+## Затронутые файлы
+- `src/config/gtm.ts`
+- `src/config/links.ts`
+- `src/components/nls/Header.tsx`
+- `src/components/nls/MobileNav.tsx`
+- `src/components/nls/Footer.tsx`
+- `src/components/nls/CloudHub.tsx` (новый)
+- `src/routes/cloud.tsx` (новый)
+- `src/routes/dedicated.tsx` (или `DedicatedPlans.tsx`)
+- `src/routeTree.gen.ts`
+- `src/styles/nls.css`
 
 ## Что НЕ трогаем
-- Калькуляторы и формы существующих страниц.
-- Главную, About, Contacts, Internet, IT, IT-СКС, HR.
-- Footer / Modals / FloatingContact логику.
-- Компонент `SupportPromo`.
-
-## Файлы
-- created: `src/routes/object-storage.tsx`
-- created: `src/routes/cloud-storage.tsx`
-- created: `src/components/nls/StorageCalculator.tsx`
-- edited: `src/components/nls/RelatedServices.tsx`
-- edited: `src/components/nls/Header.tsx`
-- edited: `src/components/nls/MobileNav.tsx`
-- edited: `src/styles/nls.css`
-- авто: `src/routeTree.gen.ts`
+- Контент и калькуляторы существующих страниц услуг (кроме указанной правки готового сервера в Dedicated).
+- `RelatedServices`, `SupportPromo`.
+- Главную `/`, About, Contacts, HR, Internet, IT.
+- Логику форм, инициализацию GTM, reCAPTCHA.

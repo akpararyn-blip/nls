@@ -16,6 +16,8 @@ const HOST_TO_GTM: Record<string, string> = {
   "lan.nls.kz": "GTM-PT6RVBPF",
   "rack.nls.kz": "GTM-WFDBFNWW",
   "server.nls.kz": "GTM-PLJN2C4N",
+  "iaas.nls.kz": "GTM-PSQKW2CG",
+  "cloud.nls.kz": "GTM-5QZ8PR2Q",
 };
 
 /** Возвращает GTM ID для текущего хоста или null, если трекинг не нужен. */

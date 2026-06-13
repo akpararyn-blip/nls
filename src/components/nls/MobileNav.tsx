@@ -1,15 +1,52 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCity } from "@/lib/city-context";
 import { useLang } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
-import { CloseIcon, GlobeIcon, PinIcon } from "./Icons";
-import { Phone } from "lucide-react";
+import {
+  InstagramIcon,
+  LinkedinIcon,
+  TikTokIcon,
+  YoutubeIcon,
+  PinIcon,
+  GlobeIcon,
+} from "./Icons";
+import {
+  Phone,
+  Wifi,
+  ShieldCheck,
+  Network,
+  Cloud,
+  Boxes,
+  Database,
+  CloudUpload,
+  HardDrive,
+  Container,
+  Server,
+  Info,
+  Briefcase,
+  Mail,
+  ExternalLink,
+  LogIn,
+  ChevronDown,
+  type LucideIcon,
+} from "lucide-react";
 import logoUrl from "@/assets/logo.svg";
 
+type GroupKey = "internet" | "it" | "cloud" | "dc";
+
+type Item = { to: string; label: string; Icon: LucideIcon };
+
 export function MobileNav() {
-  const { city, mobileNavOpen, setMobileNavOpen, openCityModal } = useCity();
+  const {
+    city,
+    mobileNavOpen,
+    setMobileNavOpen,
+    openCityModal,
+    openConsultationModal,
+  } = useCity();
   const { lang, setLang, t } = useLang();
+  const [openGroup, setOpenGroup] = useState<GroupKey | null>("cloud");
 
   const close = () => setMobileNavOpen(false);
 
@@ -21,171 +58,200 @@ export function MobileNav() {
 
   const phoneHref = `tel:${city.phone.replace(/\s+/g, "")}`;
 
+  const groups: Array<{ key: GroupKey; title: string; items: Item[] }> = [
+    {
+      key: "internet",
+      title: t("Интернет", "Интернет"),
+      items: [
+        { to: "/internet", label: t("Интернет для бизнеса", "Бизнеске арналған интернет"), Icon: Wifi },
+      ],
+    },
+    {
+      key: "it",
+      title: t("IT услуги", "IT қызметтері"),
+      items: [
+        { to: "/it", label: t("IT аутсорсинг", "IT аутсорсинг"), Icon: ShieldCheck },
+        { to: "/it-sks", label: t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру"), Icon: Network },
+      ],
+    },
+    {
+      key: "cloud",
+      title: t("Облачные решения", "Бұлттық шешімдер"),
+      items: [
+        { to: "/iaas", label: t("Виртуальный дата‑центр", "Виртуалды дата-орталық"), Icon: Boxes },
+        { to: "/vps", label: t("VPS/VDS сервер", "VPS/VDS сервер"), Icon: Cloud },
+        { to: "/object-storage", label: t("Объектное хранилище S3", "S3 объектілік сақтау"), Icon: Database },
+        { to: "/cloud-storage", label: t("Облачное хранилище", "Бұлттық сақтау"), Icon: CloudUpload },
+      ],
+    },
+    {
+      key: "dc",
+      title: t("Услуги дата-центра", "Дата-орталық қызметтері"),
+      items: [
+        { to: "/colocation", label: t("Размещение сервера", "Серверді орналастыру"), Icon: HardDrive },
+        { to: "/colocation-full", label: t("Аренда стойки", "Тіректі жалға алу"), Icon: Container },
+        { to: "/dedicated", label: t("Аренда сервера", "Серверді жалға алу"), Icon: Server },
+      ],
+    },
+  ];
+
+  const toggleGroup = (key: GroupKey) =>
+    setOpenGroup((cur) => (cur === key ? null : key));
+
   return (
     <div className={`mobile-nav${mobileNavOpen ? " active" : ""}`}>
-      <div className="mobile-nav-header">
-        <img src={logoUrl} alt="Logo" style={{ height: 30 }} />
+      {/* Sticky header */}
+      <div className="mobile-nav__top">
+        <Link to="/" onClick={close} aria-label="NLS Kazakhstan">
+          <img src={logoUrl} alt="NLS" style={{ height: 28 }} />
+        </Link>
         <button
           type="button"
-          className="mobile-close-btn"
+          className="mobile-nav__close"
           onClick={close}
           aria-label={t("Закрыть", "Жабу")}
         >
           ×
         </button>
       </div>
-      <div className="mobile-nav-settings">
-        <div
-          onClick={() => {
-            close();
-            openCityModal();
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            color: "var(--color-blue)",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          <PinIcon width={18} height={18} />
-          <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            color: "var(--color-blue)",
-            fontWeight: 600,
-          }}
-        >
-          <GlobeIcon width={18} height={18} />
+
+      {/* Scrollable body */}
+      <div className="mobile-nav__body">
+        <div className="mobile-nav__settings">
           <button
             type="button"
-            onClick={() => setLang("ru")}
-            className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
+            className="mobile-nav__chip"
+            onClick={() => {
+              close();
+              openCityModal();
+            }}
           >
-            RU<span className="lang-beta">beta</span>
+            <PinIcon width={16} height={16} />
+            <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
           </button>
-          <span style={{ opacity: 0.4 }}>/</span>
+          <div className="mobile-nav__chip mobile-nav__chip--lang">
+            <GlobeIcon width={16} height={16} />
+            <button
+              type="button"
+              onClick={() => setLang("ru")}
+              className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
+            >
+              RU
+            </button>
+            <span style={{ opacity: 0.4 }}>/</span>
+            <button
+              type="button"
+              onClick={() => setLang("kz")}
+              className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
+            >
+              KZ
+            </button>
+          </div>
+        </div>
+
+        <div className="mobile-nav__cta-top">
           <button
             type="button"
-            onClick={() => setLang("kz")}
-            className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
+            className="btn btn-primary mobile-nav__cta-btn"
+            onClick={() => {
+              close();
+              openConsultationModal();
+            }}
           >
-            KZ<span className="lang-beta">beta</span>
+            {t("Получить консультацию", "Кеңес алу")}
           </button>
+          <Link to="/login" className="btn btn-outline mobile-nav__login-btn" onClick={close}>
+            <LogIn size={16} strokeWidth={2} />
+            {t("Войти", "Кіру")}
+          </Link>
         </div>
-        <a href={phoneHref} className="mobile-nav-phone" onClick={close}>
+
+        <div className="mobile-nav__section-title">{t("Услуги", "Қызметтер")}</div>
+        <ul className="mobile-nav__groups">
+          {groups.map((g) => (
+            <li key={g.key} className={`mobile-nav__group${openGroup === g.key ? " is-open" : ""}`}>
+              <button
+                type="button"
+                className="mobile-nav__group-head"
+                onClick={() => toggleGroup(g.key)}
+                aria-expanded={openGroup === g.key}
+              >
+                <span>{g.title}</span>
+                <ChevronDown size={18} strokeWidth={2} className="mobile-nav__chev" />
+              </button>
+              {openGroup === g.key && (
+                <ul className="mobile-nav__group-items">
+                  {g.items.map((it) => (
+                    <li key={it.to}>
+                      <SmartLink to={it.to} onClick={close} className="mobile-nav__item">
+                        <it.Icon size={18} strokeWidth={1.8} />
+                        <span>{it.label}</span>
+                      </SmartLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mobile-nav__section-title">{t("Компания", "Компания")}</div>
+        <ul className="mobile-nav__plain">
+          <li>
+            <Link to="/about" onClick={close} className="mobile-nav__item">
+              <Info size={18} strokeWidth={1.8} />
+              <span>{t("О компании", "Компания туралы")}</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/hr" onClick={close} className="mobile-nav__item">
+              <Briefcase size={18} strokeWidth={1.8} />
+              <span>{t("Вакансии", "Бос жұмыс орындары")}</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/contacts" onClick={close} className="mobile-nav__item">
+              <Mail size={18} strokeWidth={1.8} />
+              <span>{t("Контакты", "Байланыс")}</span>
+            </Link>
+          </li>
+          <li>
+            <a
+              href="https://meganet.kz"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={close}
+              className="mobile-nav__item"
+            >
+              <ExternalLink size={18} strokeWidth={1.8} />
+              <span>{t("Интернет для физ. лиц", "Жеке тұлғаларға интернет")}</span>
+            </a>
+          </li>
+        </ul>
+
+        <div className="mobile-nav__socials">
+          <a href="https://www.instagram.com/nlskazakhstan/" target="_blank" rel="noreferrer" aria-label="Instagram">
+            <InstagramIcon width={20} height={20} />
+          </a>
+          <a href="https://www.linkedin.com/company/nlskz/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <LinkedinIcon width={20} height={20} />
+          </a>
+          <a href="https://www.youtube.com/@nlskazakhstan8630" target="_blank" rel="noreferrer" aria-label="YouTube">
+            <YoutubeIcon width={20} height={20} />
+          </a>
+          <a href="https://www.tiktok.com/@meganetkz" target="_blank" rel="noreferrer" aria-label="TikTok">
+            <TikTokIcon width={20} height={20} />
+          </a>
+        </div>
+      </div>
+
+      {/* Sticky bottom CTA */}
+      <div className="mobile-nav__bottom">
+        <a href={phoneHref} className="mobile-nav__phone" onClick={close}>
           <Phone size={18} strokeWidth={2} />
           <span>{city.phone}</span>
         </a>
       </div>
-      <ul>
-        <li>
-          <div className="mobile-nav-group-title">{t("Интернет", "Интернет")}</div>
-          <ul className="mobile-nav-group">
-            <li>
-              <SmartLink to="/internet" onClick={close}>
-                {t("Интернет для бизнеса", "Бизнеске арналған интернет")}
-              </SmartLink>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <div className="mobile-nav-group-title">{t("IT услуги", "IT қызметтері")}</div>
-          <ul className="mobile-nav-group">
-            <li>
-              <SmartLink to="/it" onClick={close}>
-                {t("IT аутсорсинг", "IT аутсорсинг")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/it-sks" onClick={close}>
-                {t("СКС. Монтаж сетей", "ҚКЖ. Желілерді құру")}
-              </SmartLink>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <div className="mobile-nav-group-title">{t("Серверы", "Серверлер")}</div>
-          <ul className="mobile-nav-group">
-            <li>
-              <SmartLink to="/dedicated" onClick={close}>
-                {t("Dedicated сервер", "Dedicated сервер")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/vps" onClick={close}>
-                {t("VPS/VDS сервер", "VPS/VDS сервер")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/iaas" onClick={close}>
-                {t("Виртуальный дата‑центр", "Виртуалдық дата‑центр")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/colocation" onClick={close}>
-                Colocation
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/colocation-full" onClick={close}>
-                {t("Аренда стойки", "Тіректерді жалға алу")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/object-storage" onClick={close}>
-                {t("Объектное хранилище S3", "S3 объектілік сақтау")}
-              </SmartLink>
-            </li>
-            <li>
-              <SmartLink to="/cloud-storage" onClick={close}>
-                {t("Облачное хранилище", "Бұлттық сақтау")}
-              </SmartLink>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <Link to="/about" onClick={close}>
-            {t("О компании", "Компания туралы")}
-          </Link>
-        </li>
-        <li>
-          <Link to="/hr" onClick={close}>
-            {t("Вакансии", "Бос жұмыс орындары")}
-          </Link>
-        </li>
-        <li>
-          <a href="https://meganet.kz" target="_blank" rel="noopener noreferrer" onClick={close}>
-            {t("Интернет для физ. лиц", "Жеке тұлғаларға интернет")}
-          </a>
-        </li>
-        <li>
-          <Link to="/contacts" onClick={close}>
-            {t("Контакты", "Байланыс")}
-          </Link>
-        </li>
-      </ul>
-      <button
-        type="button"
-        onClick={close}
-        aria-label={t("Закрыть меню", "Мәзірді жабу")}
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 70,
-          background: "none",
-          border: "none",
-          opacity: 0,
-          pointerEvents: "none",
-        }}
-      >
-        <CloseIcon />
-      </button>
     </div>
   );
 }

@@ -25,6 +25,7 @@ import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ColocationFullRouteImport } from './routes/colocation-full'
 import { Route as ColocationRouteImport } from './routes/colocation'
 import { Route as CloudStorageRouteImport } from './routes/cloud-storage'
+import { Route as CloudRouteImport } from './routes/cloud'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -108,6 +109,11 @@ const CloudStorageRoute = CloudStorageRouteImport.update({
   path: '/cloud-storage',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CloudRoute = CloudRouteImport.update({
+  id: '/cloud',
+  path: '/cloud',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -122,6 +128,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud': typeof CloudRoute
   '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud': typeof CloudRoute
   '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud': typeof CloudRoute
   '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/cloud'
     | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/cloud'
     | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/cloud'
     | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
@@ -246,6 +258,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CloudRoute: typeof CloudRoute
   CloudStorageRoute: typeof CloudStorageRoute
   ColocationRoute: typeof ColocationRoute
   ColocationFullRoute: typeof ColocationFullRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CloudStorageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cloud': {
+      id: '/cloud'
+      path: '/cloud'
+      fullPath: '/cloud'
+      preLoaderRoute: typeof CloudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -398,6 +418,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CloudRoute: CloudRoute,
   CloudStorageRoute: CloudStorageRoute,
   ColocationRoute: ColocationRoute,
   ColocationFullRoute: ColocationFullRoute,
