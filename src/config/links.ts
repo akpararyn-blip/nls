@@ -3,12 +3,12 @@
  *
  * USE_INTERNAL_ROUTING:
  *  - true  → весь сайт работает как сейчас, все маршруты внутренние.
- *  - false → ссылки на услуги переписываются на соответствующие поддомены
- *            (internet.nls.kz, lan.nls.kz, colocation.nls.kz, dedicated.nls.kz,
- *            rack.nls.kz, server.nls.kz). Главная страница каждого поддомена
- *            становится соответствующей услугой.
+ *  - false → ссылки на услуги переписываются на соответствующие поддомены.
  *
- * Достаточно поменять этот флаг — компоненты не трогаем.
+ * Кроме «своих» поддоменов есть особый случай — cloud.nls.kz, который
+ * выступает «хабом» облачных решений и услуг ЦОД. С любого поддомена ссылки
+ * на 7 услуг (Облачные решения + Услуги дата-центра) переписываются на
+ * cloud.nls.kz/<service>, а не на исторический «свой» поддомен.
  */
 export const USE_INTERNAL_ROUTING = true;
 
@@ -21,6 +21,8 @@ export type ServicePath =
   | "/colocation-full"
   | "/vps"
   | "/iaas"
+  | "/object-storage"
+  | "/cloud-storage"
   | "/cloud";
 
 /** Поддомен → внутренний путь, который он представляет */
@@ -36,7 +38,7 @@ export const DOMAIN_TO_PATH: Record<string, ServicePath> = {
   "cloud.nls.kz": "/cloud",
 };
 
-/** Внутренний путь → внешний поддомен */
+/** Внутренний путь → внешний поддомен (для путей без своего поддомена ведём на cloud.nls.kz) */
 export const PATH_TO_DOMAIN: Record<ServicePath, string> = {
   "/internet": "internet.nls.kz",
   "/it-sks": "lan.nls.kz",
@@ -46,10 +48,27 @@ export const PATH_TO_DOMAIN: Record<ServicePath, string> = {
   "/colocation-full": "rack.nls.kz",
   "/vps": "server.nls.kz",
   "/iaas": "iaas.nls.kz",
+  "/object-storage": "cloud.nls.kz",
+  "/cloud-storage": "cloud.nls.kz",
   "/cloud": "cloud.nls.kz",
 };
 
+/**
+ * Услуги, которые обслуживает cloud.nls.kz (хаб «Облачные решения + Услуги ЦОД»).
+ * С любого другого поддомена ссылки на эти пути ведут на cloud.nls.kz/<path>.
+ */
+const CLOUD_HUB_PATHS = new Set<ServicePath>([
+  "/iaas",
+  "/vps",
+  "/object-storage",
+  "/cloud-storage",
+  "/colocation",
+  "/colocation-full",
+  "/dedicated",
+]);
+
 const SERVICE_PATHS = new Set<string>(Object.keys(PATH_TO_DOMAIN));
+const CLOUD_HOST = "cloud.nls.kz";
 
 function isServicePath(to: string): to is ServicePath {
   return SERVICE_PATHS.has(to);
@@ -86,7 +105,7 @@ export function resolveLink(to: string, host: string | undefined): ResolvedLink 
     return { internalTo: to, externalHref: null };
   }
 
-  // Главная этого поддомена — это страница услуги (например, /internet)
+  // Главная этого поддомена — это страница услуги (например, /internet или /cloud)
   if (to === "/") {
     return { internalTo: ownPath, externalHref: null };
   }
@@ -96,7 +115,17 @@ export function resolveLink(to: string, host: string | undefined): ResolvedLink 
     return { internalTo: "/", externalHref: null };
   }
 
-  // Ссылка на «чужую» услугу превращается во внешний URL поддомена
+  // На cloud.nls.kz все «хабовые» маршруты обслуживаются внутри поддомена.
+  if (host === CLOUD_HOST && isServicePath(to) && CLOUD_HUB_PATHS.has(to)) {
+    return { internalTo: to, externalHref: null };
+  }
+
+  // С любого другого поддомена ссылка на «хабовый» маршрут ведёт на cloud.nls.kz
+  if (host !== CLOUD_HOST && isServicePath(to) && CLOUD_HUB_PATHS.has(to)) {
+    return { internalTo: null, externalHref: `https://${CLOUD_HOST}${to}` };
+  }
+
+  // Прочие сервисные пути (internet/it/it-sks) — на свой исторический поддомен
   if (isServicePath(to)) {
     const domain = PATH_TO_DOMAIN[to];
     return { internalTo: null, externalHref: `https://${domain}` };
