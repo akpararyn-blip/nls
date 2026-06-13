@@ -137,6 +137,16 @@ export function MobileNav() {
                 {t("Аренда стойки", "Тіректерді жалға алу")}
               </SmartLink>
             </li>
+            <li>
+              <SmartLink to="/object-storage" onClick={close}>
+                {t("Объектное хранилище S3", "S3 объектілік сақтау")}
+              </SmartLink>
+            </li>
+            <li>
+              <SmartLink to="/cloud-storage" onClick={close}>
+                {t("Облачное хранилище", "Бұлттық сақтау")}
+              </SmartLink>
+            </li>
           </ul>
         </li>
         <li>

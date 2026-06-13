@@ -6736,9 +6736,12 @@ body::before, body::after { display: none !important; }
 }
 .related-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
   margin-top: 40px;
+}
+@media (min-width: 1400px) {
+  .related-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .related-card {
   position: relative;

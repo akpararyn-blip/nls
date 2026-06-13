@@ -1,4 +1,4 @@
-import { Server, MonitorCog, HardDrive, Boxes, Cloud, ArrowRight } from "lucide-react";
+import { Server, MonitorCog, HardDrive, Boxes, Cloud, Database, CloudUpload, ArrowRight } from "lucide-react";
 import { SmartLink } from "./SmartLink";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "./Icons";
@@ -8,7 +8,9 @@ export type RelatedServiceId =
   | "vps"
   | "colocation"
   | "colocation-full"
-  | "iaas";
+  | "iaas"
+  | "object-storage"
+  | "cloud-storage";
 
 interface RelatedServicesProps {
   exclude: RelatedServiceId;
@@ -98,6 +100,36 @@ export function RelatedServices({ exclude }: RelatedServicesProps) {
         t("VMware Cloud Director", "VMware Cloud Director"),
         t("Резервные копии Veeam", "Veeam сақтық көшірмелері"),
         t("Локации: Алматы, Астана, Шымкент", "Локациялар: Алматы, Астана, Шымкент"),
+      ],
+    },
+    {
+      id: "object-storage",
+      to: "/object-storage",
+      Icon: Database,
+      title: t("Объектное хранилище S3", "S3 объектілік сақтау орны"),
+      desc: t(
+        "S3-совместимое хранилище для бэкапов, медиа и статики сайтов. Оплата только за фактический объём.",
+        "Сақтық көшірмелерге, медиаға және сайт статикасына арналған S3-үйлесімді сақтау. Тек нақты көлемге ақы.",
+      ),
+      bullets: [
+        t("S3-совместимый API", "S3-үйлесімді API"),
+        t("Шифрование и версионирование", "Шифрлеу және нұсқалау"),
+        t("110 ₸ за 1 ГБ в месяц", "Айына 1 ГБ үшін 110 ₸"),
+      ],
+    },
+    {
+      id: "cloud-storage",
+      to: "/cloud-storage",
+      Icon: CloudUpload,
+      title: t("Облачное хранилище", "Бұлттық сақтау орны"),
+      desc: t(
+        "Файловое облако для команды: синхронизация, совместный доступ и история версий файлов.",
+        "Командаға арналған файлдық бұлт: синхрондау, бірлескен қол жеткізу және файл нұсқалары тарихы.",
+      ),
+      bullets: [
+        t("Синхронизация устройств", "Құрылғылар синхрондауы"),
+        t("Общие папки и ссылки", "Жалпы қалталар мен сілтемелер"),
+        t("Скидки до 6% за длительный срок", "Ұзақ мерзімге дейін 6% жеңілдік"),
       ],
     },
   ];

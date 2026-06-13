@@ -13,6 +13,7 @@ import { Route as VpsRouteImport } from './routes/vps'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as RequisitesRouteImport } from './routes/requisites'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ObjectStorageRouteImport } from './routes/object-storage'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ItSksRouteImport } from './routes/it-sks'
 import { Route as ItRouteImport } from './routes/it'
@@ -23,6 +24,7 @@ import { Route as DedicatedRouteImport } from './routes/dedicated'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ColocationFullRouteImport } from './routes/colocation-full'
 import { Route as ColocationRouteImport } from './routes/colocation'
+import { Route as CloudStorageRouteImport } from './routes/cloud-storage'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -44,6 +46,11 @@ const RequisitesRoute = RequisitesRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectStorageRoute = ObjectStorageRouteImport.update({
+  id: '/object-storage',
+  path: '/object-storage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -96,6 +103,11 @@ const ColocationRoute = ColocationRouteImport.update({
   path: '/colocation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CloudStorageRoute = CloudStorageRouteImport.update({
+  id: '/cloud-storage',
+  path: '/cloud-storage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -110,6 +122,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
@@ -120,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
+  '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/thank-you': typeof ThankYouRoute
@@ -128,6 +142,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
@@ -138,6 +153,7 @@ export interface FileRoutesByTo {
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
+  '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/thank-you': typeof ThankYouRoute
@@ -147,6 +163,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cloud-storage': typeof CloudStorageRoute
   '/colocation': typeof ColocationRoute
   '/colocation-full': typeof ColocationFullRoute
   '/contacts': typeof ContactsRoute
@@ -157,6 +174,7 @@ export interface FileRoutesById {
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
   '/login': typeof LoginRoute
+  '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/thank-you': typeof ThankYouRoute
@@ -167,6 +185,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
@@ -177,6 +196,7 @@ export interface FileRouteTypes {
     | '/it'
     | '/it-sks'
     | '/login'
+    | '/object-storage'
     | '/privacy'
     | '/requisites'
     | '/thank-you'
@@ -185,6 +205,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
@@ -195,6 +216,7 @@ export interface FileRouteTypes {
     | '/it'
     | '/it-sks'
     | '/login'
+    | '/object-storage'
     | '/privacy'
     | '/requisites'
     | '/thank-you'
@@ -203,6 +225,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/cloud-storage'
     | '/colocation'
     | '/colocation-full'
     | '/contacts'
@@ -213,6 +236,7 @@ export interface FileRouteTypes {
     | '/it'
     | '/it-sks'
     | '/login'
+    | '/object-storage'
     | '/privacy'
     | '/requisites'
     | '/thank-you'
@@ -222,6 +246,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CloudStorageRoute: typeof CloudStorageRoute
   ColocationRoute: typeof ColocationRoute
   ColocationFullRoute: typeof ColocationFullRoute
   ContactsRoute: typeof ContactsRoute
@@ -232,6 +257,7 @@ export interface RootRouteChildren {
   ItRoute: typeof ItRoute
   ItSksRoute: typeof ItSksRoute
   LoginRoute: typeof LoginRoute
+  ObjectStorageRoute: typeof ObjectStorageRoute
   PrivacyRoute: typeof PrivacyRoute
   RequisitesRoute: typeof RequisitesRoute
   ThankYouRoute: typeof ThankYouRoute
@@ -266,6 +292,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/object-storage': {
+      id: '/object-storage'
+      path: '/object-storage'
+      fullPath: '/object-storage'
+      preLoaderRoute: typeof ObjectStorageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -338,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColocationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cloud-storage': {
+      id: '/cloud-storage'
+      path: '/cloud-storage'
+      fullPath: '/cloud-storage'
+      preLoaderRoute: typeof CloudStorageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -358,6 +398,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CloudStorageRoute: CloudStorageRoute,
   ColocationRoute: ColocationRoute,
   ColocationFullRoute: ColocationFullRoute,
   ContactsRoute: ContactsRoute,
@@ -368,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   ItRoute: ItRoute,
   ItSksRoute: ItSksRoute,
   LoginRoute: LoginRoute,
+  ObjectStorageRoute: ObjectStorageRoute,
   PrivacyRoute: PrivacyRoute,
   RequisitesRoute: RequisitesRoute,
   ThankYouRoute: ThankYouRoute,
