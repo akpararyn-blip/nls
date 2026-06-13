@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VpsRouteImport } from './routes/vps'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
+import { Route as SpamRouteImport } from './routes/spam'
 import { Route as RequisitesRouteImport } from './routes/requisites'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ObjectStorageRouteImport } from './routes/object-storage'
@@ -37,6 +38,11 @@ const VpsRoute = VpsRouteImport.update({
 const ThankYouRoute = ThankYouRouteImport.update({
   id: '/thank-you',
   path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpamRoute = SpamRouteImport.update({
+  id: '/spam',
+  path: '/spam',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RequisitesRoute = RequisitesRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
+  '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
+  '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/object-storage': typeof ObjectStorageRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
+  '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
 }
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/object-storage'
     | '/privacy'
     | '/requisites'
+    | '/spam'
     | '/thank-you'
     | '/vps'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/object-storage'
     | '/privacy'
     | '/requisites'
+    | '/spam'
     | '/thank-you'
     | '/vps'
   id:
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/object-storage'
     | '/privacy'
     | '/requisites'
+    | '/spam'
     | '/thank-you'
     | '/vps'
   fileRoutesById: FileRoutesById
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   ObjectStorageRoute: typeof ObjectStorageRoute
   PrivacyRoute: typeof PrivacyRoute
   RequisitesRoute: typeof RequisitesRoute
+  SpamRoute: typeof SpamRoute
   ThankYouRoute: typeof ThankYouRoute
   VpsRoute: typeof VpsRoute
 }
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/thank-you'
       fullPath: '/thank-you'
       preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spam': {
+      id: '/spam'
+      path: '/spam'
+      fullPath: '/spam'
+      preLoaderRoute: typeof SpamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/requisites': {
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   ObjectStorageRoute: ObjectStorageRoute,
   PrivacyRoute: PrivacyRoute,
   RequisitesRoute: RequisitesRoute,
+  SpamRoute: SpamRoute,
   ThankYouRoute: ThankYouRoute,
   VpsRoute: VpsRoute,
 }

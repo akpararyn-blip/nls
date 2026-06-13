@@ -7,6 +7,7 @@ import { submitLead } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
 import { useT } from "@/lib/lang-context";
+import { isPhoneSuspicious } from "@/lib/phone-validation";
 
 export function HrApplyForm() {
   const navigate = useNavigate();
@@ -32,11 +33,13 @@ export function HrApplyForm() {
         [t("Телефон", "Телефон")]: form.phone,
         [t("Должность", "Лауазым")]: form.position,
       };
+      const suspicious = isPhoneSuspicious(form.phone);
       await submitLead({
         formName: "HR — отклик на вакансию",
         action: "hr_apply",
         target: "hr",
         fields,
+        isSpam: suspicious,
       });
 
       const orderNumber = generateOrderNumber();
@@ -49,7 +52,11 @@ export function HrApplyForm() {
         at: new Date().toISOString(),
       });
 
-      navigate({ to: "/thank-you", search: { type: "hr" } });
+      if (suspicious) {
+        navigate({ to: "/spam" });
+      } else {
+        navigate({ to: "/thank-you", search: { type: "hr" } });
+      }
     } catch (err) {
       console.error(err);
       alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));

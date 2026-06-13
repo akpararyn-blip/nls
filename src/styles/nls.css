@@ -7909,3 +7909,60 @@ body::before, body::after { display: none !important; }
     .cloud-hub__column-title { display: none; }
     .cloud-hub__card { padding: 14px 14px; }
 }
+
+/* --- /spam page --- */
+.spam-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 56px 48px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 85, 123, 0.10);
+}
+.spam-card__icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(234, 179, 8, 0.14);
+  color: #b45309;
+  margin-bottom: 24px;
+}
+.spam-card__title {
+  font-size: 2rem;
+  margin: 12px 0 16px;
+  color: var(--color-text-dark);
+}
+.spam-card__lead {
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.spam-card__wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 14px;
+  background: #25d366;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.spam-card__wa:hover {
+  background: #1ebe5d;
+  transform: translateY(-1px);
+}
+@media (max-width: 600px) {
+  .spam-card {
+    padding: 40px 22px;
+  }
+  .spam-card__title {
+    font-size: 1.6rem;
+  }
+}
