@@ -52,7 +52,11 @@ export function HrApplyForm() {
         at: new Date().toISOString(),
       });
 
-      navigate({ to: "/thank-you", search: { type: "hr" } });
+      if (suspicious) {
+        navigate({ to: "/spam" });
+      } else {
+        navigate({ to: "/thank-you", search: { type: "hr" } });
+      }
     } catch (err) {
       console.error(err);
       alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));
