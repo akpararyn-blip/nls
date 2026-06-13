@@ -77,21 +77,40 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Servers */}
+          {/* Cloud solutions */}
           <div className="footer-col">
-            <h4>{t("Серверы и ЦОД", "Серверлер және Дата-орталығы")}</h4>
+            <h4>{t("Облачные решения", "Бұлттық шешімдер")}</h4>
             <ul>
               <li>
-                <SmartLink to="/dedicated">{t("Dedicated сервер", "Dedicated сервер")}</SmartLink>
+                <SmartLink to="/cloud">{t("Все решения", "Барлық шешімдер")}</SmartLink>
+              </li>
+              <li>
+                <SmartLink to="/iaas">{t("Виртуальный дата‑центр", "Виртуалды дата-орталық")}</SmartLink>
               </li>
               <li>
                 <SmartLink to="/vps">{t("VPS/VDS сервер", "VPS/VDS сервер")}</SmartLink>
               </li>
               <li>
-                <SmartLink to="/colocation">Colocation</SmartLink>
+                <SmartLink to="/object-storage">{t("Объектное хранилище S3", "S3 объектілік сақтау")}</SmartLink>
               </li>
               <li>
-                <SmartLink to="/colocation-full">{t("Аренда стойки", "Тіректерді жалға алу")}</SmartLink>
+                <SmartLink to="/cloud-storage">{t("Облачное хранилище", "Бұлттық сақтау")}</SmartLink>
+              </li>
+            </ul>
+          </div>
+
+          {/* Data-center services */}
+          <div className="footer-col">
+            <h4>{t("Услуги дата-центра", "Дата-орталық қызметтері")}</h4>
+            <ul>
+              <li>
+                <SmartLink to="/colocation">{t("Размещение сервера", "Серверді орналастыру")}</SmartLink>
+              </li>
+              <li>
+                <SmartLink to="/colocation-full">{t("Аренда стойки", "Тіректі жалға алу")}</SmartLink>
+              </li>
+              <li>
+                <SmartLink to="/dedicated">{t("Аренда сервера", "Серверді жалға алу")}</SmartLink>
               </li>
             </ul>
           </div>
