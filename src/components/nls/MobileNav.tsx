@@ -45,7 +45,21 @@ export function MobileNav() {
     openConsultationModal,
   } = useCity();
   const { lang, setLang, t } = useLang();
-  const [openGroup, setOpenGroup] = useState<GroupKey | null>("cloud");
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const groupForPath = useMemo<GroupKey | null>(() => {
+    if (pathname === "/internet") return "internet";
+    if (pathname === "/it" || pathname === "/it-sks") return "it";
+    if (["/iaas", "/vps", "/object-storage", "/cloud-storage", "/cloud"].includes(pathname)) return "cloud";
+    if (["/colocation", "/colocation-full", "/dedicated"].includes(pathname)) return "dc";
+    return null;
+  }, [pathname]);
+
+  const [openGroup, setOpenGroup] = useState<GroupKey | null>(groupForPath ?? "cloud");
+
+  useEffect(() => {
+    if (groupForPath) setOpenGroup(groupForPath);
+  }, [groupForPath]);
 
   const close = () => setMobileNavOpen(false);
 
