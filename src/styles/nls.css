@@ -7966,3 +7966,249 @@ body::before, body::after { display: none !important; }
     font-size: 1.6rem;
   }
 }
+
+/* ============================================================
+   Iteration: header/mobile/internet improvements
+   ============================================================ */
+
+/* --- 1. Desktop menu — more breathing room --- */
+@media (min-width: 993px) {
+  .header-left { gap: 56px; }
+  .top-menu { gap: 28px; }
+  .top-bar-left, .top-bar-right { gap: 32px; }
+  .dropdown-menu.mega-menu a { padding: 14px 18px; }
+  .header-right { gap: 40px; }
+}
+
+/* --- 2. Mobile header actions (lang + menu) --- */
+.mobile-header-actions {
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+.mobile-lang-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1.5px solid var(--color-blue-dark);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-blue-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mobile-lang-toggle:hover {
+  background: var(--color-blue-dark);
+  color: var(--color-white);
+}
+
+/* --- 3. Floating menu button (mobile, fixed) --- */
+.floating-menu-btn {
+  display: none;
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: 12px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-orange);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.floating-menu-btn:hover { background: #ff7f1f; }
+
+@media (max-width: 992px) {
+  /* Header no longer sticky on mobile */
+  .main-header { position: static; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+  .main-header .container { height: 70px; }
+
+  /* Show actions group; show lang toggle; show floating btn; hide standalone menu-btn (it's inside actions) */
+  .mobile-header-actions { display: inline-flex; }
+  .mobile-lang-toggle { display: inline-flex; }
+  .floating-menu-btn { display: inline-flex; }
+  /* The .mobile-menu-btn in header is the one inside mobile-header-actions — keep visible */
+  .mobile-menu-btn { display: inline-flex; padding: 6px; }
+}
+
+/* --- 4. Mobile-nav: lang pill switcher + active page highlight --- */
+.mobile-nav__lang-pill { padding: 4px 10px; }
+.mobile-lang-pill {
+  display: inline-flex;
+  background: rgba(0,85,123,0.10);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 0;
+}
+.mobile-lang-pill__btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--color-text-light);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mobile-lang-pill__btn.is-active {
+  background: var(--color-blue-dark);
+  color: var(--color-white);
+  box-shadow: 0 2px 6px rgba(0,85,123,0.18);
+}
+
+.mobile-nav .mobile-nav__item.is-active,
+.mobile-nav ul li a.mobile-nav__item.is-active {
+  background: rgba(255,103,0,0.10);
+  color: var(--color-orange);
+  font-weight: 700;
+}
+.mobile-nav .mobile-nav__item.is-active svg { color: var(--color-orange); }
+
+/* --- 5. Tariffs — 4 cards + promo + mobile filter --- */
+.tariffs-grid.tariffs-grid--4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+@media (max-width: 1200px) {
+  .tariffs-grid.tariffs-grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .tariffs-grid.tariffs-grid--4 { grid-template-columns: 1fr; }
+}
+.tariff-card--promo {
+  position: relative;
+  border: 2px solid var(--color-orange);
+  background: linear-gradient(180deg, #fff7ef 0%, #ffffff 60%);
+}
+.tariff-card .tariff-price {
+  font-size: 1.4rem;
+  margin: 6px 0 10px;
+  color: var(--color-blue-dark);
+}
+.featured-badge--promo {
+  background: var(--color-orange);
+}
+
+/* mobile filter (segmented control above cards) */
+.tariffs-mobile-filter {
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 4px;
+  margin: 0 0 18px;
+  background: rgba(0,85,123,0.10);
+  border-radius: 999px;
+  gap: 0;
+}
+.tariffs-mobile-filter__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 9px 6px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-blue-dark);
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.tariffs-mobile-filter__btn.is-active {
+  background: var(--color-blue-dark);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,85,123,0.18);
+}
+@media (max-width: 768px) {
+  .tariffs-mobile-filter { display: inline-flex; }
+}
+
+/* --- 6. Extra services mobile CTA --- */
+.extra-cta-mobile { display: none; margin-top: 20px; }
+.extra-cta-mobile__btn { width: 100%; }
+.extra-cta-mobile__choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: rgba(0,85,123,0.04);
+  border: 1px solid rgba(0,85,123,0.10);
+  border-radius: 12px;
+}
+.extra-cta-mobile__title {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  font-weight: 600;
+}
+.extra-cta-mobile__option { width: 100%; justify-content: flex-start; }
+@media (max-width: 768px) {
+  .extra-cta-mobile { display: block; }
+}
+
+/* --- 7. DC tiles subtitle --- */
+.dc-tiles-subtitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-light);
+  margin: 28px 0 12px;
+}
+.dc-tiles-subtitle:first-of-type { margin-top: 0; }
+
+/* --- 8. Hide hero image on mobile for cloud/DC pages --- */
+@media (max-width: 768px) {
+  .hero--no-image-mobile .hero-visual { display: none !important; }
+  .hero--no-image-mobile .hero-content { max-width: 100%; }
+}
+
+/* --- 9. Period switcher: more contrast + mobile fit --- */
+.plan-period-switch {
+  background: #d9e3eb;
+  border: 1px solid rgba(0,85,123,0.18);
+}
+@media (max-width: 600px) {
+  .plan-period-switch {
+    display: flex !important;
+    width: 100%;
+    max-width: 100% !important;
+    gap: 4px;
+    padding: 4px;
+  }
+  .plan-period-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .plan-discount-badge {
+    top: -6px;
+    right: -4px;
+    font-size: 0.6rem;
+    padding: 1px 5px;
+  }
+}
+
+/* --- 10. Calc order button disabled state --- */
+.calc-order-btn:disabled,
+.calc-order-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
