@@ -142,23 +142,28 @@ export function MobileNav() {
             <PinIcon width={16} height={16} />
             <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
           </button>
-          <div className="mobile-nav__chip mobile-nav__chip--lang">
+          <div className="mobile-nav__chip mobile-nav__chip--lang mobile-nav__lang-pill">
             <GlobeIcon width={16} height={16} />
-            <button
-              type="button"
-              onClick={() => setLang("ru")}
-              className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
-            >
-              RU<span className="mobile-lang-beta">beta</span>
-            </button>
-            <span style={{ opacity: 0.4 }}>/</span>
-            <button
-              type="button"
-              onClick={() => setLang("kz")}
-              className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
-            >
-              KZ<span className="mobile-lang-beta">beta</span>
-            </button>
+            <div className="mobile-lang-pill" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={lang === "ru"}
+                onClick={() => setLang("ru")}
+                className={`mobile-lang-pill__btn${lang === "ru" ? " is-active" : ""}`}
+              >
+                RU
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={lang === "kz"}
+                onClick={() => setLang("kz")}
+                className={`mobile-lang-pill__btn${lang === "kz" ? " is-active" : ""}`}
+              >
+                KZ
+              </button>
+            </div>
           </div>
         </div>
 
