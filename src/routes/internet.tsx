@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useFitText } from "@/hooks/use-fit-text";
 
@@ -8,13 +8,6 @@ import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import internetHero from "@/assets/internet-hero2.png";
 import { LeadForm } from "@/components/forms/LeadForm";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import {
   Cctv,
   Network,
@@ -27,6 +20,8 @@ import {
   Database,
   CloudUpload,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Calculator,
 } from "lucide-react";
 
@@ -136,6 +131,8 @@ function Tariffs() {
   const { openConsultationModalWith } = useCity();
   const t = useT();
   const [filter, setFilter] = useState<TariffFilter>("all");
+  const sliderViewportRef = useRef<HTMLDivElement | null>(null);
+  const [sliderEdges, setSliderEdges] = useState({ canPrev: false, canNext: true });
 
   const openTariffModal = (title: string, speedLabel: string) => {
     openConsultationModalWith({
@@ -228,13 +225,46 @@ function Tariffs() {
   const visibleCards = cards.filter((c) => filter === "all" || c.bucket === filter);
   const showCarousel = filter === "all";
 
+  useEffect(() => {
+    const viewport = sliderViewportRef.current;
+    if (!viewport || !showCarousel) return;
+
+    const updateEdges = () => {
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      setSliderEdges({
+        canPrev: viewport.scrollLeft > 2,
+        canNext: viewport.scrollLeft < maxScroll - 2,
+      });
+    };
+
+    updateEdges();
+    viewport.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges);
+
+    return () => {
+      viewport.removeEventListener("scroll", updateEdges);
+      window.removeEventListener("resize", updateEdges);
+    };
+  }, [showCarousel]);
+
+  const scrollTariffs = (direction: -1 | 1) => {
+    const viewport = sliderViewportRef.current;
+    const firstCard = viewport?.querySelector<HTMLElement>(".tariffs-v2-slider__item");
+    if (!viewport || !firstCard) return;
+
+    const scrollAmount = firstCard.getBoundingClientRect().width / 2;
+    viewport.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
+  };
+
   const renderCard = (c: TariffCardData) => (
     <article className="tariff-v2">
       <div className="tariff-v2__icon">
         <CheckIcon />
       </div>
-      <h3 className="tariff-v2__title">{c.title}</h3>
-      {c.subtitle && <p className="tariff-v2__subtitle">{c.subtitle}</p>}
+      <div className="tariff-v2__heading">
+        <h3 className="tariff-v2__title">{c.title}</h3>
+        {c.subtitle && <p className="tariff-v2__subtitle">{c.subtitle}</p>}
+      </div>
       <div className="tariff-v2__speed">
         <span className="tariff-v2__speed-label">{t("скорость до", "жылдамдық")}</span>
         <span className="tariff-v2__speed-value">
@@ -298,23 +328,43 @@ function Tariffs() {
           ))}
         </div>
 
-        {/* Desktop carousel: 3 cards visible + 4th peeking */}
+        {/* Desktop slider: 3 cards visible + 4th peeking */}
         {showCarousel && (
-          <div className="tariffs-v2-carousel">
-            <div className="tariffs-v2-carousel__wrap">
-              <Carousel opts={{ align: "start", containScroll: false }}>
-                <CarouselContent className="-ml-8">
+          <div className="tariffs-v2-slider">
+            <div
+              className={`tariffs-v2-slider__shell${sliderEdges.canPrev ? " has-left-fade" : ""}${
+                sliderEdges.canNext ? " has-right-fade" : ""
+              }`}
+            >
+              <div className="tariffs-v2-slider__viewport" ref={sliderViewportRef}>
+                <div className="tariffs-v2-slider__track">
                   {cards.map((c, i) => (
-                    <CarouselItem key={i} className="pl-8 tariffs-v2-carousel__item">
+                    <div key={i} className="tariffs-v2-slider__item">
                       {renderCard(c)}
-                    </CarouselItem>
+                    </div>
                   ))}
-                </CarouselContent>
-                <div className="tariffs-v2-carousel__nav">
-                  <CarouselPrevious className="tariffs-v2-carousel__btn" />
-                  <CarouselNext className="tariffs-v2-carousel__btn" />
                 </div>
-              </Carousel>
+              </div>
+            </div>
+            <div className="tariffs-v2-slider__nav">
+              <button
+                type="button"
+                className="tariffs-v2-slider__btn"
+                onClick={() => scrollTariffs(-1)}
+                disabled={!sliderEdges.canPrev}
+                aria-label={t("Предыдущие тарифы", "Алдыңғы тарифтер")}
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                type="button"
+                className="tariffs-v2-slider__btn"
+                onClick={() => scrollTariffs(1)}
+                disabled={!sliderEdges.canNext}
+                aria-label={t("Следующие тарифы", "Келесі тарифтер")}
+              >
+                <ChevronRight />
+              </button>
             </div>
           </div>
         )}
