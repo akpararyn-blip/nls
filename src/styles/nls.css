@@ -6936,10 +6936,10 @@ body::before, body::after { display: none !important; }
   /* Push page content below the fixed header */
   .site-content,
   main {
-    padding-top: 82px;
+    padding-top: 0px;
   }
   .hero {
-    padding-top: 24px;
+    padding-top: 106px;
   }
 }
 
@@ -7993,26 +7993,39 @@ body::before, body::after { display: none !important; }
   gap: 10px;
 }
 .mobile-lang-toggle {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 10px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
+  
+  /* Делаем идеальный круг */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
+
+  /* Эффект матового стекла, идентичный логотипу */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 24px -10px rgba(15, 23, 42, 0.25);
+
+  /* Текст */
   color: var(--color-blue-dark);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
+  font-weight: 800;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: opacity 0.15s ease;
-  /* Fixed position next to floating menu button */
-  position: fixed;
-  top: max(14px, env(safe-area-inset-top));
-  right: 68px;
-  z-index: 1001;
+  transition: all 0.2s ease;
+
+  /* Позиционирование и кликабельность */
+  margin-right: 64px;
+  pointer-events: auto;
+}
+
+/* Эффект при нажатии на переключатель */
+.mobile-lang-toggle:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.75);
 }
 .mobile-lang-toggle:hover {
   opacity: 0.7;

@@ -239,19 +239,20 @@ export function Header() {
 
           <div className="mobile-header-actions">
             {/* mobile-lang-toggle moved outside as fixed element */}
+            <button
+              type="button"
+              className="mobile-lang-toggle"
+              onClick={() => setLang(lang === "ru" ? "kz" : "ru")}
+              aria-label={t("Сменить язык", "Тілді ауыстыру")}
+            >
+              {lang === "ru" ? "KZ" : "RU"}
+            </button>
           </div>
         </div>
       </div>
 
       {/* Fixed mobile lang toggle */}
-      <button
-        type="button"
-        className="mobile-lang-toggle"
-        onClick={() => setLang(lang === "ru" ? "kz" : "ru")}
-        aria-label={t("Сменить язык", "Тілді ауыстыру")}
-      >
-        {lang === "ru" ? "KZ" : "RU"}
-      </button>
+      
 
       {/* Floating menu button (mobile only, fixed) */}
       <button

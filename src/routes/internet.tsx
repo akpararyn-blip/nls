@@ -133,6 +133,42 @@ function Tariffs() {
   const [filter, setFilter] = useState<TariffFilter>("all");
   const sliderViewportRef = useRef<HTMLDivElement | null>(null);
   const [sliderEdges, setSliderEdges] = useState({ canPrev: false, canNext: true });
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const viewport = sliderViewportRef.current;
+    if (!viewport) return;
+    
+    setIsDragging(true);
+    // Запоминаем начальную точку клика и текущее положение скролла
+    setStartX(e.pageX - viewport.offsetLeft);
+    setScrollLeft(viewport.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault(); // Предотвращаем стандартное выделение текста
+    
+    const viewport = sliderViewportRef.current;
+    if (!viewport) return;
+    
+    // Вычисляем, насколько сдвинулась мышь
+    const x = e.pageX - viewport.offsetLeft;
+    const walk = (x - startX) * 1.5; // 1.5 — это множитель скорости скролла, можно менять
+    
+    // Применяем новое значение скролла
+    viewport.scrollLeft = scrollLeft - walk;
+  };
 
   const openTariffModal = (title: string, speedLabel: string) => {
     openConsultationModalWith({
@@ -178,7 +214,7 @@ function Tariffs() {
         t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7"),
       ],
       cta: t("Узнать стоимость", "Құнын білу"),
-      ctaVariant: "btn-outline",
+      ctaVariant: "btn-primary",
       modalTitle: t("Интернет базовый — до 100 Мбит/с", "Базалық интернет — 100 Мбит/с дейін"),
       modalSpeed: "до 100 Мбит/с",
     },
@@ -216,7 +252,7 @@ function Tariffs() {
         t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер"),
       ],
       cta: t("Получить КП", "КҰ алу"),
-      ctaVariant: "btn-outline",
+      ctaVariant: "btn-primary",
       modalTitle: t("Интернет для бизнеса — до 10 000 Мбит/с", "Бизнес интернеті — 10 000 Мбит/с дейін"),
       modalSpeed: "до 10 000 Мбит/с",
     },
@@ -252,7 +288,8 @@ function Tariffs() {
     const firstCard = viewport?.querySelector<HTMLElement>(".tariffs-v2-slider__item");
     if (!viewport || !firstCard) return;
 
-    const scrollAmount = firstCard.getBoundingClientRect().width / 2;
+    // Теперь прокручиваем на полную ширину карточки
+    const scrollAmount = firstCard.getBoundingClientRect().width;
     viewport.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
   };
 
@@ -272,9 +309,12 @@ function Tariffs() {
         </span>
       </div>
       {c.price && (
-        <div className="tariff-v2__price">
-          <strong>{c.price.value}</strong>
-          <span>{c.price.period}</span>
+        <div className="tariff-v2__price-wrapper">
+          <span className="tariff-v2__speed-label">{t("стоимость", "құны")}</span>
+          <div className="tariff-v2__price">
+            <strong>{c.price.value}</strong>
+            <span>{c.price.period}</span>
+          </div>
         </div>
       )}
       <p className="tariff-v2__desc">{c.desc}</p>
@@ -336,7 +376,15 @@ function Tariffs() {
                 sliderEdges.canNext ? " has-right-fade" : ""
               }`}
             >
-              <div className="tariffs-v2-slider__viewport" ref={sliderViewportRef}>
+              <div
+                className={`tariffs-v2-slider__viewport ${isDragging ? "select-none" : ""}`}
+                ref={sliderViewportRef}
+                onMouseDown={handleMouseDown}
+                onMouseLeave={handleMouseLeave}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                style={{ cursor: isDragging ? "grabbing" : "grab" }}
+              >
                 <div className="tariffs-v2-slider__track">
                   {cards.map((c, i) => (
                     <div key={i} className="tariffs-v2-slider__item">
