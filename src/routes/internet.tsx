@@ -117,8 +117,6 @@ function Hero() {
 
 type TariffFilter = "all" | "lt100" | "lt10000";
 
-type TariffFilter = "all" | "lt100" | "lt10000";
-
 function Tariffs() {
   const { openConsultationModalWith } = useCity();
   const t = useT();
