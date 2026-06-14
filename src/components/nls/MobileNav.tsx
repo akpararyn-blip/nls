@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useCity } from "@/lib/city-context";
 import { useLang } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
@@ -45,7 +45,21 @@ export function MobileNav() {
     openConsultationModal,
   } = useCity();
   const { lang, setLang, t } = useLang();
-  const [openGroup, setOpenGroup] = useState<GroupKey | null>("cloud");
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  const groupForPath = useMemo<GroupKey | null>(() => {
+    if (pathname === "/internet") return "internet";
+    if (pathname === "/it" || pathname === "/it-sks") return "it";
+    if (["/iaas", "/vps", "/object-storage", "/cloud-storage", "/cloud"].includes(pathname)) return "cloud";
+    if (["/colocation", "/colocation-full", "/dedicated"].includes(pathname)) return "dc";
+    return null;
+  }, [pathname]);
+
+  const [openGroup, setOpenGroup] = useState<GroupKey | null>(groupForPath ?? "cloud");
+
+  useEffect(() => {
+    if (groupForPath) setOpenGroup(groupForPath);
+  }, [groupForPath]);
 
   const close = () => setMobileNavOpen(false);
 
@@ -128,23 +142,28 @@ export function MobileNav() {
             <PinIcon width={16} height={16} />
             <span className="display-city">{t(city.name.ru, city.name.kz)}</span>
           </button>
-          <div className="mobile-nav__chip mobile-nav__chip--lang">
+          <div className="mobile-nav__chip mobile-nav__chip--lang mobile-nav__lang-pill">
             <GlobeIcon width={16} height={16} />
-            <button
-              type="button"
-              onClick={() => setLang("ru")}
-              className={`mobile-lang-btn${lang === "ru" ? " active" : ""}`}
-            >
-              RU<span className="mobile-lang-beta">beta</span>
-            </button>
-            <span style={{ opacity: 0.4 }}>/</span>
-            <button
-              type="button"
-              onClick={() => setLang("kz")}
-              className={`mobile-lang-btn${lang === "kz" ? " active" : ""}`}
-            >
-              KZ<span className="mobile-lang-beta">beta</span>
-            </button>
+            <div className="mobile-lang-pill" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={lang === "ru"}
+                onClick={() => setLang("ru")}
+                className={`mobile-lang-pill__btn${lang === "ru" ? " is-active" : ""}`}
+              >
+                RU
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={lang === "kz"}
+                onClick={() => setLang("kz")}
+                className={`mobile-lang-pill__btn${lang === "kz" ? " is-active" : ""}`}
+              >
+                KZ
+              </button>
+            </div>
           </div>
         </div>
 
@@ -179,7 +198,11 @@ export function MobileNav() {
                 <ul className="mobile-nav__group-items">
                   {g.items.map((it) => (
                     <li key={it.to}>
-                      <SmartLink to={it.to} onClick={close} className="mobile-nav__item">
+                      <SmartLink
+                        to={it.to}
+                        onClick={close}
+                        className={`mobile-nav__item${pathname === it.to ? " is-active" : ""}`}
+                      >
                         <it.Icon size={18} strokeWidth={1.8} />
                         <span>{it.label}</span>
                       </SmartLink>
@@ -194,25 +217,25 @@ export function MobileNav() {
         <div className="mobile-nav__section-title">{t("Компания", "Компания")}</div>
         <ul className="mobile-nav__plain">
           <li>
-            <Link to="/login" onClick={close} className="mobile-nav__item">
+            <Link to="/login" onClick={close} className={`mobile-nav__item${pathname === "/login" ? " is-active" : ""}`}>
               <Download size={18} strokeWidth={1.8} />
               <span>{t("Скачать личный кабинет", "Жеке кабинетті жүктеу")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/about" onClick={close} className="mobile-nav__item">
+            <Link to="/about" onClick={close} className={`mobile-nav__item${pathname === "/about" ? " is-active" : ""}`}>
               <Info size={18} strokeWidth={1.8} />
               <span>{t("О компании", "Компания туралы")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/hr" onClick={close} className="mobile-nav__item">
+            <Link to="/hr" onClick={close} className={`mobile-nav__item${pathname === "/hr" ? " is-active" : ""}`}>
               <Briefcase size={18} strokeWidth={1.8} />
               <span>{t("Вакансии", "Бос жұмыс орындары")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/contacts" onClick={close} className="mobile-nav__item">
+            <Link to="/contacts" onClick={close} className={`mobile-nav__item${pathname === "/contacts" ? " is-active" : ""}`}>
               <Mail size={18} strokeWidth={1.8} />
               <span>{t("Контакты", "Байланыс")}</span>
             </Link>

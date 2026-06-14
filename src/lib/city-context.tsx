@@ -73,6 +73,12 @@ interface ModalState {
 
 export interface ConsultationOptions {
   subject?: string;
+  /** Предзаполненный текст комментария (если не задан — используется subject) */
+  defaultMessage?: string;
+  /** Доп. поля, которые попадут в Telegram-сообщение */
+  extraFields?: Record<string, string>;
+  /** Принудительно сделать поле комментария редактируемым / только для чтения */
+  messageReadOnly?: boolean;
 }
 
 interface CityContextValue {

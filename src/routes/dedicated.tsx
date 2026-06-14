@@ -183,7 +183,7 @@ function Hero() {
     t("Поддержка 24/7", "24/7 қолдау"),
   ];
   return (
-    <section className="hero">
+    <section className="hero hero--no-image-mobile">
       <div className="container">
         <div className="hero-content">
           <span className="section-eyebrow" style={{ marginBottom: 16, display: "inline-block" }}>
@@ -431,7 +431,11 @@ function Calculator() {
     return parts.join(" | ");
   };
 
-  const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
+  const canOrder = calc.cpu !== null && calc.ram !== null && calc.storageItems.length > 0;
+  const orderClick = () => {
+    if (!canOrder) return;
+    openConsultationModalWith({ subject: buildSubject() });
+  };
 
   // === Расчёт с учётом периода и скидки ===
   const discount = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[period] : 0;
@@ -725,7 +729,13 @@ function Calculator() {
                     </div>
                   )}
                   <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
-                  <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+                  <button
+                    type="button"
+                    className="btn btn-primary calc-order-btn"
+                    onClick={orderClick}
+                    disabled={!canOrder}
+                    title={!canOrder ? t("Выберите процессор, ОЗУ и накопитель", "Процессор, ЖЖҚ және жинақтаушыны таңдаңыз") : undefined}
+                  >
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
@@ -774,7 +784,12 @@ function Calculator() {
             )}
           </div>
 
-          <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+          <button
+            type="button"
+            className="btn btn-primary calc-order-btn"
+            onClick={orderClick}
+            disabled={!canOrder}
+          >
             {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>

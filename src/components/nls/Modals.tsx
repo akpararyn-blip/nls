@@ -78,13 +78,18 @@ export function Modals() {
           </div>
 
           {modal.consultation && (() => {
-            const showAddress =
+            const onInternet =
               typeof window !== "undefined" &&
               (window.location.pathname.startsWith("/internet") ||
                 window.location.hostname === "internet.nls.kz");
+            const showAddress = onInternet;
+            const defaultMessage = consultation.defaultMessage ?? consultation.subject ?? undefined;
+            const readOnly = consultation.messageReadOnly !== undefined
+              ? consultation.messageReadOnly
+              : Boolean(consultation.subject) && !onInternet;
             return (
               <LeadForm
-                key={consultation.subject ?? "modal"}
+                key={(consultation.subject ?? "") + (consultation.defaultMessage ?? "") + "modal"}
                 formName={
                   consultation.subject
                     ? `Модальное окно — ${consultation.subject}`
@@ -96,9 +101,10 @@ export function Modals() {
                 messageLabel={t("Комментарий (необязательно)", "Пікір (міндетті емес)")}
                 messageFieldKey="Комментарий"
                 messageRows={2}
-                defaultMessage={consultation.subject ?? undefined}
+                defaultMessage={defaultMessage}
                 subject={consultation.subject ?? undefined}
-                messageReadOnly={Boolean(consultation.subject)}
+                extraFields={consultation.extraFields}
+                messageReadOnly={readOnly}
                 onSuccess={closeModals}
                 showAddress={showAddress}
               />

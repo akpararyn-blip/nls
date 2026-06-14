@@ -237,16 +237,28 @@ export function Header() {
             </button>
           </div>
 
-          <button
-            type="button"
-            className="mobile-menu-btn"
-            onClick={() => setMobileNavOpen(true)}
-            aria-label={t("Меню", "Мәзір")}
-          >
-            <MenuIcon width={24} height={24} />
-          </button>
+          <div className="mobile-header-actions">
+            <button
+              type="button"
+              className="mobile-lang-toggle"
+              onClick={() => setLang(lang === "ru" ? "kz" : "ru")}
+              aria-label={t("Сменить язык", "Тілді ауыстыру")}
+            >
+              {lang === "ru" ? "KZ" : "RU"}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Floating menu button (mobile only, fixed) */}
+      <button
+        type="button"
+        className="floating-menu-btn"
+        onClick={() => setMobileNavOpen(true)}
+        aria-label={t("Меню", "Мәзір")}
+      >
+        <MenuIcon width={24} height={24} />
+      </button>
     </header>
   );
 }

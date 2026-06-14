@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useFitText } from "@/hooks/use-fit-text";
 
@@ -17,6 +17,8 @@ import {
   HardDrive,
   Cloud,
   Boxes,
+  Database,
+  CloudUpload,
   ArrowRight,
   Calculator,
 } from "lucide-react";
@@ -106,9 +108,41 @@ function Hero() {
   );
 }
 
+type TariffFilter = "all" | "lt100" | "lt10000";
+
 function Tariffs() {
-  const { openConsultationModal } = useCity();
+  const { openConsultationModalWith } = useCity();
   const t = useT();
+  const [filter, setFilter] = useState<TariffFilter>("all");
+
+  const openTariffModal = (
+    title: string,
+    speedLabel: string,
+    options?: { isMsb?: boolean }
+  ) => {
+    const tariffValue = options?.isMsb
+      ? `${speedLabel} — АКЦИОННЫЙ ТАРИФ МСБ ⚡ (запросил клиент)`
+      : speedLabel;
+    openConsultationModalWith({
+      subject: title,
+      defaultMessage: t(
+        `Интересует тариф: ${speedLabel}${options?.isMsb ? " (акционный тариф МСБ)" : ""}`,
+        `Тариф қызықтырады: ${speedLabel}${options?.isMsb ? " (МСБ акциялық тарифі)" : ""}`
+      ),
+      extraFields: { "Тариф": tariffValue },
+      messageReadOnly: false,
+    });
+  };
+
+  // speed-bucket per card: "lt100" if <=100, "lt10000" otherwise
+  const cards: Array<{ bucket: "lt100" | "lt10000" }> = [
+    { bucket: "lt100" }, // МСБ 30
+    { bucket: "lt100" }, // Базовый 100
+    { bucket: "lt10000" }, // Офис 1000
+    { bucket: "lt10000" }, // Бизнес 10000
+  ];
+  const visible = (i: number) => filter === "all" || cards[i].bucket === filter;
+
   return (
     <section className="tariffs-section">
       <div className="container">
@@ -123,85 +157,158 @@ function Tariffs() {
           </p>
         </div>
 
-        <div className="tariffs-grid tariffs-grid--3">
-          <div className="tariff-card">
-            <div className="tariff-header">
-              <div className="tariff-icon">
-                <CheckIcon />
-              </div>
-              <h3>{t("Интернет базовый", "Базалық интернет")}</h3>
-            </div>
-            <div className="tariff-speed">
-              {t("скорость до", "жылдамдық")} <span>100</span> {t("Мбит/с", "Мбит/с дейін")}
-            </div>
-            <p className="tariff-desc">
-              {t(
-                "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
-                "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
-              )}
-            </p>
-            <ul className="tariff-features">
-              <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-              <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-              <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-            </ul>
-            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
-              {t("Узнать стоимость", "Құнын білу")}
+        <div className="tariffs-mobile-filter" role="tablist" aria-label={t("Фильтр тарифов", "Тарифтер сүзгісі")}>
+          {([
+            { id: "all", label: t("Все", "Барлығы") },
+            { id: "lt100", label: t("до 100 Мбит/с", "100 Мбит/с дейін") },
+            { id: "lt10000", label: t("до 10 000 Мбит/с", "10 000 Мбит/с дейін") },
+          ] as const).map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              role="tab"
+              aria-selected={filter === f.id}
+              className={`tariffs-mobile-filter__btn${filter === f.id ? " is-active" : ""}`}
+              onClick={() => setFilter(f.id as TariffFilter)}
+            >
+              {f.label}
             </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="tariff-card tariff-featured">
-            <div className="featured-badge">{t("Хит продаж", "Сатылым хиті")}</div>
-            <div className="tariff-header">
-              <div className="tariff-icon">
-                <CheckIcon />
+        <div className="tariffs-grid tariffs-grid--4">
+          {visible(0) && (
+            <div className="tariff-card tariff-card--promo">
+              <div className="featured-badge featured-badge--promo">{t("Акция", "Акция")}</div>
+              <div className="tariff-header">
+                <div className="tariff-icon">
+                  <CheckIcon />
+                </div>
+                <h3>
+                  {t("Интернет для МСБ", "МСБ үшін интернет")}
+                  <small style={{ display: "block", fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-light)", marginTop: 2 }}>
+                    {t("(для малого и среднего бизнеса)", "(шағын және орта бизнес үшін)")}
+                  </small>
+                </h3>
               </div>
-              <h3>{t("Интернет для офиса", "Кеңсеге арналған интернет")}</h3>
+              <div className="tariff-speed">
+                {t("скорость до", "жылдамдық")} <span>30</span> {t("Мбит/с", "Мбит/с дейін")}
+              </div>
+              <div className="tariff-price">
+                <strong>10 000 ₸</strong> <span style={{ color: "var(--color-text-light)", fontWeight: 500 }}>/ {t("мес", "ай")}</span>
+              </div>
+              <p className="tariff-desc" style={{ fontSize: "0.85rem" }}>
+                {t(
+                  "Специальный акционный тариф с 15 июня 2026 г. по 31 августа 2026 г.",
+                  "15 маусым 2026 ж. — 31 тамыз 2026 ж. аралығындағы арнайы акциялық тариф."
+                )}
+              </p>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => openTariffModal(t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"), "до 30 Мбит/с", { isMsb: true })}
+              >
+                {t("Оставить заявку", "Өтінім қалдыру")}
+              </button>
             </div>
-            <div className="tariff-speed">
-              {t("скорость до", "жылдамдық ")} <span>1 000</span> {t("Мбит/с", "Мбит/с дейін")}
-            </div>
-            <p className="tariff-desc">
-              {t(
-                "Надёжное решение для малого и среднего бизнеса. Оптика заводится прямо в ваш офис или бизнес-центр.",
-                "Шағын және орта бизнеске арналған сенімді шешім. Оптика тікелей сіздің кеңсеңізге немесе бизнес-орталыққа тартылады."
-              )}
-            </p>
-            <ul className="tariff-features">
-              <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-              <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-              <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-            </ul>
-            <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
-              {t("Узнать стоимость", "Құнын білу")}
-            </button>
-          </div>
+          )}
 
-          <div className="tariff-card">
-            <div className="tariff-header">
-              <div className="tariff-icon">
-                <CheckIcon />
+          {visible(1) && (
+            <div className="tariff-card">
+              <div className="tariff-header">
+                <div className="tariff-icon">
+                  <CheckIcon />
+                </div>
+                <h3>{t("Интернет базовый", "Базалық интернет")}</h3>
               </div>
-              <h3>{t("Интернет для бизнеса", "Бизнеске арналған интернет")}</h3>
+              <div className="tariff-speed">
+                {t("скорость до", "жылдамдық")} <span>100</span> {t("Мбит/с", "Мбит/с дейін")}
+              </div>
+              <p className="tariff-desc">
+                {t(
+                  "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
+                  "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
+                )}
+              </p>
+              <ul className="tariff-features">
+                <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
+                <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
+                <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
+              </ul>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => openTariffModal(t("Интернет базовый — до 100 Мбит/с", "Базалық интернет — 100 Мбит/с дейін"), "до 100 Мбит/с")}
+              >
+                {t("Узнать стоимость", "Құнын білу")}
+              </button>
             </div>
-            <div className="tariff-speed">
-              {t("скорость до", "жылдамдық")} <span>10 000</span> {t("Мбит/с", "Мбит/с дейін")}
+          )}
+
+          {visible(2) && (
+            <div className="tariff-card tariff-featured">
+              <div className="featured-badge">{t("Хит продаж", "Сатылым хиті")}</div>
+              <div className="tariff-header">
+                <div className="tariff-icon">
+                  <CheckIcon />
+                </div>
+                <h3>{t("Интернет для офиса", "Кеңсеге арналған интернет")}</h3>
+              </div>
+              <div className="tariff-speed">
+                {t("скорость до", "жылдамдық ")} <span>1 000</span> {t("Мбит/с", "Мбит/с дейін")}
+              </div>
+              <p className="tariff-desc">
+                {t(
+                  "Надёжное решение для малого и среднего бизнеса. Оптика заводится прямо в ваш офис или бизнес-центр.",
+                  "Шағын және орта бизнеске арналған сенімді шешім. Оптика тікелей сіздің кеңсеңізге немесе бизнес-орталыққа тартылады."
+                )}
+              </p>
+              <ul className="tariff-features">
+                <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
+                <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
+                <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
+              </ul>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => openTariffModal(t("Интернет для офиса — до 1 000 Мбит/с", "Кеңсе интернеті — 1 000 Мбит/с дейін"), "до 1 000 Мбит/с")}
+              >
+                {t("Узнать стоимость", "Құнын білу")}
+              </button>
             </div>
-            <p className="tariff-desc">
-              {t(
-                "Специальные условия, выделенные каналы и максимальный уровень SLA для крупных предприятий.",
-                "Ірі кәсіпорындарға арналған арнайы шарттар, бөлінген арналар және ең жоғары SLA деңгейі."
-              )}
-            </p>
-            <ul className="tariff-features">
-              <li>{t("Гарантированная полоса (SLA 99.9%)", "Кепілді жолақ (SLA 99.9%)")}</li>
-              <li>{t("Физическое резервирование каналов", "Арналарды физикалық резервтеу")}</li>
-              <li>{t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер")}</li>
-            </ul>
-            <button type="button" className="btn btn-outline" onClick={openConsultationModal}>
-              {t("Получить КП", "КҰ алу")}
-            </button>
-          </div>
+          )}
+
+          {visible(3) && (
+            <div className="tariff-card">
+              <div className="tariff-header">
+                <div className="tariff-icon">
+                  <CheckIcon />
+                </div>
+                <h3>{t("Интернет для бизнеса", "Бизнеске арналған интернет")}</h3>
+              </div>
+              <div className="tariff-speed">
+                {t("скорость до", "жылдамдық")} <span>10 000</span> {t("Мбит/с", "Мбит/с дейін")}
+              </div>
+              <p className="tariff-desc">
+                {t(
+                  "Специальные условия, выделенные каналы и максимальный уровень SLA для крупных предприятий.",
+                  "Ірі кәсіпорындарға арналған арнайы шарттар, бөлінген арналар және ең жоғары SLA деңгейі."
+                )}
+              </p>
+              <ul className="tariff-features">
+                <li>{t("Гарантированная полоса (SLA 99.9%)", "Кепілді жолақ (SLA 99.9%)")}</li>
+                <li>{t("Физическое резервирование каналов", "Арналарды физикалық резервтеу")}</li>
+                <li>{t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер")}</li>
+              </ul>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => openTariffModal(t("Интернет для бизнеса — до 10 000 Мбит/с", "Бизнес интернеті — 10 000 Мбит/с дейін"), "до 10 000 Мбит/с")}
+              >
+                {t("Получить КП", "КҰ алу")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -361,10 +468,14 @@ function HowWeWork() {
 
 function ExtraServices() {
   const t = useT();
+  const { openConsultationModalWith } = useCity();
+  const [ctaOpen, setCtaOpen] = useState(false);
+
   const extraServices = [
     {
       icon: Wifi,
       title: t("Wi-Fi для гостей и клиентов", "Қонақтар мен клиенттерге арналған Wi-Fi"),
+      shortTitle: t("Wi-Fi для гостей", "Қонақтарға Wi-Fi"),
       text: t(
         "СМС-авторизация (согласно закону РК) и инструменты для маркетинга и аналитики.",
         "SMS-авторизация (ҚР заңына сәйкес) және маркетинг пен аналитикаға арналған құралдар."
@@ -373,6 +484,7 @@ function ExtraServices() {
     {
       icon: Cctv,
       title: t("Видеонаблюдение", "Бейнебақылау"),
+      shortTitle: t("Видеонаблюдение", "Бейнебақылау"),
       text: t(
         "Профессиональные системы с облачным хранением и доступом из любой точки мира. Контроль безопасности офиса, склада или производства 24/7.",
         "Бұлтты сақтау және әлемнің кез келген нүктесінен қолжетімділігі бар кәсіби жүйелер. Кеңсе, қойма немесе өндіріс қауіпсіздігін 24/7 бақылау."
@@ -381,6 +493,7 @@ function ExtraServices() {
     {
       icon: Network,
       title: t("СКС — монтаж локальных сетей", "ҚКЖ — жергілікті желілерді орнату"),
+      shortTitle: t("Монтаж локальных сетей", "Жергілікті желілерді орнату"),
       text: t(
         "Проектирование и монтаж структурированных кабельных систем любой сложности. Создаём надёжную ИТ-инфраструктуру «под ключ» — от небольшого офиса до крупного предприятия.",
         "Кез келген күрделіліктегі құрылымдалған кабельдік жүйелерді жобалау және орнату. Шағын кеңседен ірі кәсіпорынға дейін сенімді IT-инфрақұрылымды дайын күйінде жасаймыз."
@@ -389,12 +502,22 @@ function ExtraServices() {
     {
       icon: ShieldCheck,
       title: t("IT-аутсорсинг", "IT-аутсорсинг"),
+      shortTitle: t("IT аутсорсинг", "IT аутсорсинг"),
       text: t(
         "Полная поддержка вашей ИТ-инфраструктуры. Обеспечим бесперебойную работу серверов, компьютеров и офисной техники, чтобы вы сосредоточились на бизнесе.",
         "IT-инфрақұрылымыңызды толық қолдау. Бизнесіңізге шоғырлану үшін серверлердің, компьютерлердің және кеңсе техникасының үзіліссіз жұмысын қамтамасыз етеміз."
       ),
     },
   ];
+
+  const openServiceModal = (title: string) =>
+    openConsultationModalWith({
+      subject: t(`Консультация по доп. услуге: ${title}`, `Қосымша қызмет бойынша кеңес: ${title}`),
+      defaultMessage: t(`Интересует услуга: ${title}`, `Қызмет қызықтырады: ${title}`),
+      extraFields: { "Услуга": title },
+      messageReadOnly: false,
+    });
+
   return (
     <section className="extra-services-section">
       <div className="container">
@@ -423,6 +546,29 @@ function ExtraServices() {
             );
           })}
         </div>
+
+        {/* Mobile-only consultation CTA for additional services */}
+        <div className="extra-cta-mobile">
+          {!ctaOpen ? (
+            <button type="button" className="btn btn-primary extra-cta-mobile__btn" onClick={() => setCtaOpen(true)}>
+              {t("Консультация по доп. услугам", "Қосымша қызметтер бойынша кеңес")}
+            </button>
+          ) : (
+            <div className="extra-cta-mobile__choices">
+              <div className="extra-cta-mobile__title">{t("Выберите услугу:", "Қызметті таңдаңыз:")}</div>
+              {extraServices.map((s) => (
+                <button
+                  key={s.title}
+                  type="button"
+                  className="btn btn-outline extra-cta-mobile__option"
+                  onClick={() => openServiceModal(s.shortTitle)}
+                >
+                  {s.shortTitle}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -430,12 +576,37 @@ function ExtraServices() {
 
 function DcServices() {
   const t = useT();
-  const dcTiles = [
-    { to: "/dedicated" as const, title: t("Аренда сервера", "Серверді жалға алу"), desc: t("Dedicated серверы под ваши задачи", "Тапсырмаларыңызға арналған Dedicated серверлер"), icon: Server },
-    { to: "/colocation" as const, title: t("Размещение в ЦОД", "Дата-орталығында орналастыру"), desc: t("Colocation от 1U до серверного шкафа", "1U-дан серверлік шкафқа дейін Colocation"), icon: HardDrive },
-    { to: "/vps" as const, title: t("Виртуальный сервер VPS", "Виртуалды сервер VPS"), desc: t("Гибкие конфигурации и быстрый запуск", "Икемді конфигурациялар және жылдам іске қосу"), icon: Cloud },
-    { to: "/colocation-full" as const, title: t("Аренда серверного шкафа", "Серверлік шкафты жалға алу"), desc: t("Full Rack 42U в собственном дата‑центре", "Меншікті дата-орталықтағы Full Rack 42U"), icon: Boxes },
+  const cloudTiles = [
+    { to: "/iaas" as const, title: t("Виртуальный дата‑центр", "Виртуалды дата-орталық"), desc: t("IaaS-платформа на VMware / OpenStack", "VMware / OpenStack IaaS-платформасы"), icon: Boxes },
+    { to: "/vps" as const, title: t("VPS / VDS сервер", "VPS / VDS сервер"), desc: t("Гибкие конфигурации и быстрый запуск", "Икемді конфигурациялар және жылдам іске қосу"), icon: Cloud },
+    { to: "/object-storage" as const, title: t("Объектное хранилище S3", "S3 объектілік сақтау"), desc: t("S3-совместимое хранилище для бэкапов и данных", "Резервтік көшірмелер мен деректерге арналған S3-сақтау"), icon: Database },
+    { to: "/cloud-storage" as const, title: t("Облачное хранилище", "Бұлттық сақтау"), desc: t("Файловое облако для команд и проектов", "Командалар мен жобаларға арналған файлдық бұлт"), icon: CloudUpload },
   ];
+  const dcTiles = [
+    { to: "/colocation" as const, title: t("Размещение сервера", "Серверді орналастыру"), desc: t("Colocation от 1U", "1U-дан бастап Colocation"), icon: HardDrive },
+    { to: "/colocation-full" as const, title: t("Аренда стойки", "Тіректі жалға алу"), desc: t("Full Rack 42U в собственном дата‑центре", "Меншікті дата-орталықтағы Full Rack 42U"), icon: Boxes },
+    { to: "/dedicated" as const, title: t("Аренда сервера", "Серверді жалға алу"), desc: t("Dedicated серверы под ваши задачи", "Тапсырмаларыңызға арналған Dedicated серверлер"), icon: Server },
+  ];
+
+  const renderTile = (tile: { to: string; title: string; desc: string; icon: typeof Server }) => {
+    const Icon = tile.icon;
+    return (
+      <Link to={tile.to as "/iaas"} className="dc-tile" key={tile.to}>
+        <div className="dc-tile-accent" aria-hidden />
+        <div className="dc-tile-icon">
+          <Icon size={28} strokeWidth={1.8} />
+        </div>
+        <div className="dc-tile-body">
+          <h3>{tile.title}</h3>
+          <p>{tile.desc}</p>
+        </div>
+        <span className="dc-tile-arrow" aria-hidden>
+          <ArrowRight size={20} />
+        </span>
+      </Link>
+    );
+  };
+
   return (
     <section className="dc-tiles-section">
       <div className="container">
@@ -445,26 +616,11 @@ function DcServices() {
           <p>{t("Размещайте инфраструктуру в собственном дата‑центре NLS Kazakhstan.", "Инфрақұрылымды NLS Kazakhstan-ның меншікті дата-орталығында орналастырыңыз.")}</p>
         </div>
 
-        <div className="dc-tiles-grid">
-          {dcTiles.map((tile) => {
-            const Icon = tile.icon;
-            return (
-              <Link to={tile.to} className="dc-tile" key={tile.to}>
-                <div className="dc-tile-accent" aria-hidden />
-                <div className="dc-tile-icon">
-                  <Icon size={28} strokeWidth={1.8} />
-                </div>
-                <div className="dc-tile-body">
-                  <h3>{tile.title}</h3>
-                  <p>{tile.desc}</p>
-                </div>
-                <span className="dc-tile-arrow" aria-hidden>
-                  <ArrowRight size={20} />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+        <div className="dc-tiles-subtitle">{t("Облачные решения", "Бұлттық шешімдер")}</div>
+        <div className="dc-tiles-grid">{cloudTiles.map(renderTile)}</div>
+
+        <div className="dc-tiles-subtitle">{t("Услуги дата‑центра", "Дата-орталық қызметтері")}</div>
+        <div className="dc-tiles-grid">{dcTiles.map(renderTile)}</div>
       </div>
     </section>
   );
