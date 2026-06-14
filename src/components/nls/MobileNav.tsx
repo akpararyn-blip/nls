@@ -217,25 +217,25 @@ export function MobileNav() {
         <div className="mobile-nav__section-title">{t("Компания", "Компания")}</div>
         <ul className="mobile-nav__plain">
           <li>
-            <Link to="/login" onClick={close} className="mobile-nav__item">
+            <Link to="/login" onClick={close} className={`mobile-nav__item${pathname === "/login" ? " is-active" : ""}`}>
               <Download size={18} strokeWidth={1.8} />
               <span>{t("Скачать личный кабинет", "Жеке кабинетті жүктеу")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/about" onClick={close} className="mobile-nav__item">
+            <Link to="/about" onClick={close} className={`mobile-nav__item${pathname === "/about" ? " is-active" : ""}`}>
               <Info size={18} strokeWidth={1.8} />
               <span>{t("О компании", "Компания туралы")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/hr" onClick={close} className="mobile-nav__item">
+            <Link to="/hr" onClick={close} className={`mobile-nav__item${pathname === "/hr" ? " is-active" : ""}`}>
               <Briefcase size={18} strokeWidth={1.8} />
               <span>{t("Вакансии", "Бос жұмыс орындары")}</span>
             </Link>
           </li>
           <li>
-            <Link to="/contacts" onClick={close} className="mobile-nav__item">
+            <Link to="/contacts" onClick={close} className={`mobile-nav__item${pathname === "/contacts" ? " is-active" : ""}`}>
               <Mail size={18} strokeWidth={1.8} />
               <span>{t("Контакты", "Байланыс")}</span>
             </Link>
