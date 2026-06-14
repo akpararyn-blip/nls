@@ -784,7 +784,12 @@ function Calculator() {
             )}
           </div>
 
-          <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+          <button
+            type="button"
+            className="btn btn-primary calc-order-btn"
+            onClick={orderClick}
+            disabled={!canOrder}
+          >
             {t("Заказать", "Тапсырыс беру")}
           </button>
         </div>
