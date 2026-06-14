@@ -20,6 +20,8 @@ import {
   Database,
   CloudUpload,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Calculator,
 } from "lucide-react";
 
@@ -326,23 +328,43 @@ function Tariffs() {
           ))}
         </div>
 
-        {/* Desktop carousel: 3 cards visible + 4th peeking */}
+        {/* Desktop slider: 3 cards visible + 4th peeking */}
         {showCarousel && (
-          <div className="tariffs-v2-carousel">
-            <div className="tariffs-v2-carousel__wrap">
-              <Carousel opts={{ align: "start", containScroll: false }}>
-                <CarouselContent className="-ml-8">
+          <div className="tariffs-v2-slider">
+            <div
+              className={`tariffs-v2-slider__shell${sliderEdges.canPrev ? " has-left-fade" : ""}${
+                sliderEdges.canNext ? " has-right-fade" : ""
+              }`}
+            >
+              <div className="tariffs-v2-slider__viewport" ref={sliderViewportRef}>
+                <div className="tariffs-v2-slider__track">
                   {cards.map((c, i) => (
-                    <CarouselItem key={i} className="pl-8 tariffs-v2-carousel__item">
+                    <div key={i} className="tariffs-v2-slider__item">
                       {renderCard(c)}
-                    </CarouselItem>
+                    </div>
                   ))}
-                </CarouselContent>
-                <div className="tariffs-v2-carousel__nav">
-                  <CarouselPrevious className="tariffs-v2-carousel__btn" />
-                  <CarouselNext className="tariffs-v2-carousel__btn" />
                 </div>
-              </Carousel>
+              </div>
+            </div>
+            <div className="tariffs-v2-slider__nav">
+              <button
+                type="button"
+                className="tariffs-v2-slider__btn"
+                onClick={() => scrollTariffs(-1)}
+                disabled={!sliderEdges.canPrev}
+                aria-label={t("Предыдущие тарифы", "Алдыңғы тарифтер")}
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                type="button"
+                className="tariffs-v2-slider__btn"
+                onClick={() => scrollTariffs(1)}
+                disabled={!sliderEdges.canNext}
+                aria-label={t("Следующие тарифы", "Келесі тарифтер")}
+              >
+                <ChevronRight />
+              </button>
             </div>
           </div>
         )}
