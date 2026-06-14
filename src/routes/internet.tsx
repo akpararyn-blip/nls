@@ -117,6 +117,24 @@ function Hero() {
 
 type TariffFilter = "all" | "lt100" | "lt10000";
 
+type TariffCardData = {
+  bucket: "lt100" | "lt10000";
+  variant?: "promo" | "featured";
+  badge?: string;
+  title: string;
+  subtitle?: string;
+  speed: string;
+  speedUnit: string;
+  price?: { value: string; period: string };
+  desc: string;
+  features?: string[];
+  cta: string;
+  ctaVariant: "btn-primary" | "btn-outline";
+  modalTitle: string;
+  modalSpeed: string;
+  isMsb?: boolean;
+};
+
 function Tariffs() {
   const { openConsultationModalWith } = useCity();
   const t = useT();
@@ -141,152 +159,132 @@ function Tariffs() {
     });
   };
 
-  // speed-bucket per card: "lt100" if <=100, "lt10000" otherwise
-  const cards: Array<{ bucket: "lt100" | "lt10000" }> = [
-    { bucket: "lt100" }, // МСБ 30
-    { bucket: "lt100" }, // Базовый 100
-    { bucket: "lt10000" }, // Офис 1000
-    { bucket: "lt10000" }, // Бизнес 10000
+  const cards: TariffCardData[] = [
+    {
+      bucket: "lt100",
+      variant: "promo",
+      badge: t("Акция", "Акция"),
+      title: t("Интернет для МСБ", "МСБ үшін интернет"),
+      subtitle: t("для малого и среднего бизнеса", "шағын және орта бизнес үшін"),
+      speed: "30",
+      speedUnit: t("Мбит/с", "Мбит/с"),
+      price: { value: "10 000 ₸", period: t("/ мес", "/ ай") },
+      desc: t(
+        "Специальный акционный тариф с 15 июня по 31 августа 2026 г.",
+        "15 маусым — 31 тамыз 2026 ж. аралығындағы арнайы акциялық тариф."
+      ),
+      cta: t("Оставить заявку", "Өтінім қалдыру"),
+      ctaVariant: "btn-primary",
+      modalTitle: t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"),
+      modalSpeed: "до 30 Мбит/с",
+      isMsb: true,
+    },
+    {
+      bucket: "lt100",
+      title: t("Интернет базовый", "Базалық интернет"),
+      speed: "100",
+      speedUnit: t("Мбит/с", "Мбит/с"),
+      desc: t(
+        "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
+        "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
+      ),
+      features: [
+        t("Симметричный канал связи", "Симметриялы байланыс арнасы"),
+        t("Статический IP-адрес", "Статикалық IP-мекенжай"),
+        t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7"),
+      ],
+      cta: t("Узнать стоимость", "Құнын білу"),
+      ctaVariant: "btn-outline",
+      modalTitle: t("Интернет базовый — до 100 Мбит/с", "Базалық интернет — 100 Мбит/с дейін"),
+      modalSpeed: "до 100 Мбит/с",
+    },
+    {
+      bucket: "lt10000",
+      variant: "featured",
+      badge: t("Хит продаж", "Сатылым хиті"),
+      title: t("Интернет для офиса", "Кеңсеге арналған интернет"),
+      speed: "1 000",
+      speedUnit: t("Мбит/с", "Мбит/с"),
+      desc: t(
+        "Надёжное решение для бизнеса. Оптика — прямо в ваш офис или бизнес-центр.",
+        "Бизнеске сенімді шешім. Оптика — тікелей кеңсеңізге немесе бизнес-орталыққа."
+      ),
+      features: [
+        t("Симметричный канал связи", "Симметриялы байланыс арнасы"),
+        t("Статический IP-адрес", "Статикалық IP-мекенжай"),
+        t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7"),
+      ],
+      cta: t("Узнать стоимость", "Құнын білу"),
+      ctaVariant: "btn-primary",
+      modalTitle: t("Интернет для офиса — до 1 000 Мбит/с", "Кеңсе интернеті — 1 000 Мбит/с дейін"),
+      modalSpeed: "до 1 000 Мбит/с",
+    },
+    {
+      bucket: "lt10000",
+      title: t("Интернет для бизнеса", "Бизнеске арналған интернет"),
+      speed: "10 000",
+      speedUnit: t("Мбит/с", "Мбит/с"),
+      desc: t(
+        "Специальные условия, выделенные каналы и максимальный SLA для крупных предприятий.",
+        "Ірі кәсіпорындарға арналған арнайы шарттар, бөлінген арналар және жоғары SLA."
+      ),
+      features: [
+        t("Гарантированная полоса (SLA 99.9%)", "Кепілді жолақ (SLA 99.9%)"),
+        t("Физическое резервирование каналов", "Арналарды физикалық резервтеу"),
+        t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер"),
+      ],
+      cta: t("Получить КП", "КҰ алу"),
+      ctaVariant: "btn-outline",
+      modalTitle: t("Интернет для бизнеса — до 10 000 Мбит/с", "Бизнес интернеті — 10 000 Мбит/с дейін"),
+      modalSpeed: "до 10 000 Мбит/с",
+    },
   ];
-  const visible = (i: number) => filter === "all" || cards[i].bucket === filter;
 
+  const visibleCards = cards.filter((c) => filter === "all" || c.bucket === filter);
   const showCarousel = filter === "all";
 
-  const tariffCards = (
-    <>
-      {visible(0) && (
-        <div className="tariff-card tariff-card--promo">
-          <div className="featured-badge featured-badge--promo">{t("Акция", "Акция")}</div>
-          <div className="tariff-header">
-            <div className="tariff-icon">
-              <CheckIcon />
-            </div>
-            <h3>
-              {t("Интернет для МСБ", "МСБ үшін интернет")}
-              <small style={{ display: "block", fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-light)", marginTop: 2 }}>
-                {t("(для малого и среднего бизнеса)", "(шағын және орта бизнес үшін)")}
-              </small>
-            </h3>
-          </div>
-          <div className="tariff-speed">
-            {t("скорость до", "жылдамдық")} <span>30</span> {t("Мбит/с", "Мбит/с дейін")}
-          </div>
-          <div className="tariff-price">
-            <strong>10 000 ₸</strong> <span style={{ color: "var(--color-text-light)", fontWeight: 500 }}>/ {t("мес", "ай")}</span>
-          </div>
-          <p className="tariff-desc" style={{ fontSize: "0.85rem" }}>
-            {t(
-              "Специальный акционный тариф с 15 июня 2026 г. по 31 августа 2026 г.",
-              "15 маусым 2026 ж. — 31 тамыз 2026 ж. аралығындағы арнайы акциялық тариф."
-            )}
-          </p>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => openTariffModal(t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"), "до 30 Мбит/с", { isMsb: true })}
-          >
-            {t("Оставить заявку", "Өтінім қалдыру")}
-          </button>
+  const renderCard = (c: TariffCardData) => (
+    <article
+      className={`tariff-v2${c.variant === "promo" ? " tariff-v2--promo" : ""}${c.variant === "featured" ? " tariff-v2--featured" : ""}`}
+    >
+      {c.badge && (
+        <span className={`tariff-v2__badge${c.variant === "promo" ? " tariff-v2__badge--promo" : ""}`}>
+          {c.badge}
+        </span>
+      )}
+      <div className="tariff-v2__icon">
+        <CheckIcon />
+      </div>
+      <h3 className="tariff-v2__title">{c.title}</h3>
+      {c.subtitle && <p className="tariff-v2__subtitle">{c.subtitle}</p>}
+      <div className="tariff-v2__speed">
+        <span className="tariff-v2__speed-label">{t("скорость до", "жылдамдық")}</span>
+        <span className="tariff-v2__speed-value">
+          {c.speed} <small>{c.speedUnit}</small>
+        </span>
+      </div>
+      {c.price && (
+        <div className="tariff-v2__price">
+          <strong>{c.price.value}</strong>
+          <span>{c.price.period}</span>
         </div>
       )}
-
-      {visible(1) && (
-        <div className="tariff-card">
-          <div className="tariff-header">
-            <div className="tariff-icon">
-              <CheckIcon />
-            </div>
-            <h3>{t("Интернет базовый", "Базалық интернет")}</h3>
-          </div>
-          <div className="tariff-speed">
-            {t("скорость до", "жылдамдық")} <span>100</span> {t("Мбит/с", "Мбит/с дейін")}
-          </div>
-          <p className="tariff-desc">
-            {t(
-              "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
-              "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
-            )}
-          </p>
-          <ul className="tariff-features">
-            <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-            <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-            <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-          </ul>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => openTariffModal(t("Интернет базовый — до 100 Мбит/с", "Базалық интернет — 100 Мбит/с дейін"), "до 100 Мбит/с")}
-          >
-            {t("Узнать стоимость", "Құнын білу")}
-          </button>
-        </div>
+      <p className="tariff-v2__desc">{c.desc}</p>
+      {c.features && (
+        <ul className="tariff-v2__features">
+          {c.features.map((f) => (
+            <li key={f}>{f}</li>
+          ))}
+        </ul>
       )}
-
-      {visible(2) && (
-        <div className="tariff-card tariff-featured">
-          <div className="featured-badge">{t("Хит продаж", "Сатылым хиті")}</div>
-          <div className="tariff-header">
-            <div className="tariff-icon">
-              <CheckIcon />
-            </div>
-            <h3>{t("Интернет для офиса", "Кеңсеге арналған интернет")}</h3>
-          </div>
-          <div className="tariff-speed">
-            {t("скорость до", "жылдамдық ")} <span>1 000</span> {t("Мбит/с", "Мбит/с дейін")}
-          </div>
-          <p className="tariff-desc">
-            {t(
-              "Надёжное решение для малого и среднего бизнеса. Оптика заводится прямо в ваш офис или бизнес-центр.",
-              "Шағын және орта бизнеске арналған сенімді шешім. Оптика тікелей сіздің кеңсеңізге немесе бизнес-орталыққа тартылады."
-            )}
-          </p>
-          <ul className="tariff-features">
-            <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-            <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-            <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-          </ul>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => openTariffModal(t("Интернет для офиса — до 1 000 Мбит/с", "Кеңсе интернеті — 1 000 Мбит/с дейін"), "до 1 000 Мбит/с")}
-          >
-            {t("Узнать стоимость", "Құнын білу")}
-          </button>
-        </div>
-      )}
-
-      {visible(3) && (
-        <div className="tariff-card">
-          <div className="tariff-header">
-            <div className="tariff-icon">
-              <CheckIcon />
-            </div>
-            <h3>{t("Интернет для бизнеса", "Бизнеске арналған интернет")}</h3>
-          </div>
-          <div className="tariff-speed">
-            {t("скорость до", "жылдамдық")} <span>10 000</span> {t("Мбит/с", "Мбит/с дейін")}
-          </div>
-          <p className="tariff-desc">
-            {t(
-              "Специальные условия, выделенные каналы и максимальный уровень SLA для крупных предприятий.",
-              "Ірі кәсіпорындарға арналған арнайы шарттар, бөлінген арналар және ең жоғары SLA деңгейі."
-            )}
-          </p>
-          <ul className="tariff-features">
-            <li>{t("Гарантированная полоса (SLA 99.9%)", "Кепілді жолақ (SLA 99.9%)")}</li>
-            <li>{t("Физическое резервирование каналов", "Арналарды физикалық резервтеу")}</li>
-            <li>{t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер")}</li>
-          </ul>
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={() => openTariffModal(t("Интернет для бизнеса — до 10 000 Мбит/с", "Бизнес интернеті — 10 000 Мбит/с дейін"), "до 10 000 Мбит/с")}
-          >
-            {t("Получить КП", "КҰ алу")}
-          </button>
-        </div>
-      )}
-    </>
+      <button
+        type="button"
+        className={`btn ${c.ctaVariant} tariff-v2__cta`}
+        onClick={() => openTariffModal(c.modalTitle, c.modalSpeed, { isMsb: c.isMsb })}
+      >
+        {c.cta}
+      </button>
+    </article>
   );
 
   return (
@@ -322,165 +320,41 @@ function Tariffs() {
           ))}
         </div>
 
-        {/* Desktop carousel — 3 cards + peeking 4th */}
+        {/* Desktop carousel: 3 cards visible + 4th peeking */}
         {showCarousel && (
-          <div className="tariffs-carousel-desktop">
-            <div className="tariffs-carousel-wrap">
+          <div className="tariffs-v2-carousel">
+            <div className="tariffs-v2-carousel__wrap">
               <Carousel opts={{ align: "start", containScroll: false }}>
                 <CarouselContent className="-ml-6">
-                  {visible(0) && (
-                    <CarouselItem className="pl-6 basis-[calc(100%/3.5)]">
-                      <div className="tariff-card tariff-card--promo h-full">
-                        <div className="featured-badge featured-badge--promo">{t("Акция", "Акция")}</div>
-                        <div className="tariff-header">
-                          <div className="tariff-icon">
-                            <CheckIcon />
-                          </div>
-                          <h3>
-                            {t("Интернет для МСБ", "МСБ үшін интернет")}
-                            <small style={{ display: "block", fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-light)", marginTop: 2 }}>
-                              {t("(для малого и среднего бизнеса)", "(шағын және орта бизнес үшін)")}
-                            </small>
-                          </h3>
-                        </div>
-                        <div className="tariff-speed">
-                          {t("скорость до", "жылдамдық")} <span>30</span> {t("Мбит/с", "Мбит/с дейін")}
-                        </div>
-                        <div className="tariff-price">
-                          <strong>10 000 ₸</strong> <span style={{ color: "var(--color-text-light)", fontWeight: 500 }}>/ {t("мес", "ай")}</span>
-                        </div>
-                        <p className="tariff-desc" style={{ fontSize: "0.85rem" }}>
-                          {t(
-                            "Специальный акционный тариф с 15 июня 2026 г. по 31 августа 2026 г.",
-                            "15 маусым 2026 ж. — 31 тамыз 2026 ж. аралығындағы арнайы акциялық тариф."
-                          )}
-                        </p>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => openTariffModal(t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"), "до 30 Мбит/с", { isMsb: true })}
-                        >
-                          {t("Оставить заявку", "Өтінім қалдыру")}
-                        </button>
-                      </div>
+                  {cards.map((c, i) => (
+                    <CarouselItem key={i} className="pl-6 tariffs-v2-carousel__item">
+                      {renderCard(c)}
                     </CarouselItem>
-                  )}
-
-                  {visible(1) && (
-                    <CarouselItem className="pl-6 basis-[calc(100%/3.5)]">
-                      <div className="tariff-card h-full">
-                        <div className="tariff-header">
-                          <div className="tariff-icon">
-                            <CheckIcon />
-                          </div>
-                          <h3>{t("Интернет базовый", "Базалық интернет")}</h3>
-                        </div>
-                        <div className="tariff-speed">
-                          {t("скорость до", "жылдамдық")} <span>100</span> {t("Мбит/с", "Мбит/с дейін")}
-                        </div>
-                        <p className="tariff-desc">
-                          {t(
-                            "Оптимальный стартовый тариф для небольшого офиса и базовых задач.",
-                            "Шағын кеңсе мен базалық тапсырмаларға арналған оңтайлы бастапқы тариф."
-                          )}
-                        </p>
-                        <ul className="tariff-features">
-                          <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-                          <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-                          <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-                        </ul>
-                        <button
-                          type="button"
-                          className="btn btn-outline"
-                          onClick={() => openTariffModal(t("Интернет базовый — до 100 Мбит/с", "Базалық интернет — 100 Мбит/с дейін"), "до 100 Мбит/с")}
-                        >
-                          {t("Узнать стоимость", "Құнын білу")}
-                        </button>
-                      </div>
-                    </CarouselItem>
-                  )}
-
-                  {visible(2) && (
-                    <CarouselItem className="pl-6 basis-[calc(100%/3.5)]">
-                      <div className="tariff-card tariff-featured h-full">
-                        <div className="featured-badge">{t("Хит продаж", "Сатылым хиті")}</div>
-                        <div className="tariff-header">
-                          <div className="tariff-icon">
-                            <CheckIcon />
-                          </div>
-                          <h3>{t("Интернет для офиса", "Кеңсеге арналған интернет")}</h3>
-                        </div>
-                        <div className="tariff-speed">
-                          {t("скорость до", "жылдамдық ")} <span>1 000</span> {t("Мбит/с", "Мбит/с дейін")}
-                        </div>
-                        <p className="tariff-desc">
-                          {t(
-                            "Надёжное решение для малого и среднего бизнеса. Оптика заводится прямо в ваш офис или бизнес-центр.",
-                            "Шағын және орта бизнеске арналған сенімді шешім. Оптика тікелей сіздің кеңсеңізге немесе бизнес-орталыққа тартылады."
-                          )}
-                        </p>
-                        <ul className="tariff-features">
-                          <li>{t("Симметричный канал связи", "Симметриялы байланыс арнасы")}</li>
-                          <li>{t("Статический IP-адрес", "Статикалық IP-мекенжай")}</li>
-                          <li>{t("Приоритетная техподдержка 24/7", "Техникалық қолдау 24/7")}</li>
-                        </ul>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => openTariffModal(t("Интернет для офиса — до 1 000 Мбит/с", "Кеңсе интернеті — 1 000 Мбит/с дейін"), "до 1 000 Мбит/с")}
-                        >
-                          {t("Узнать стоимость", "Құнын білу")}
-                        </button>
-                      </div>
-                    </CarouselItem>
-                  )}
-
-                  {visible(3) && (
-                    <CarouselItem className="pl-6 basis-[calc(100%/3.5)]">
-                      <div className="tariff-card h-full">
-                        <div className="tariff-header">
-                          <div className="tariff-icon">
-                            <CheckIcon />
-                          </div>
-                          <h3>{t("Интернет для бизнеса", "Бизнеске арналған интернет")}</h3>
-                        </div>
-                        <div className="tariff-speed">
-                          {t("скорость до", "жылдамдық")} <span>10 000</span> {t("Мбит/с", "Мбит/с дейін")}
-                        </div>
-                        <p className="tariff-desc">
-                          {t(
-                            "Специальные условия, выделенные каналы и максимальный уровень SLA для крупных предприятий.",
-                            "Ірі кәсіпорындарға арналған арнайы шарттар, бөлінген арналар және ең жоғары SLA деңгейі."
-                          )}
-                        </p>
-                        <ul className="tariff-features">
-                          <li>{t("Гарантированная полоса (SLA 99.9%)", "Кепілді жолақ (SLA 99.9%)")}</li>
-                          <li>{t("Физическое резервирование каналов", "Арналарды физикалық резервтеу")}</li>
-                          <li>{t("Закреплённый персональный менеджер", "Бекітілген жеке менеджер")}</li>
-                        </ul>
-                        <button
-                          type="button"
-                          className="btn btn-outline"
-                          onClick={() => openTariffModal(t("Интернет для бизнеса — до 10 000 Мбит/с", "Бизнес интернеті — 10 000 Мбит/с дейін"), "до 10 000 Мбит/с")}
-                        >
-                          {t("Получить КП", "КҰ алу")}
-                        </button>
-                      </div>
-                    </CarouselItem>
-                  )}
+                  ))}
                 </CarouselContent>
-                <div className="tariffs-carousel-nav">
-                  <CarouselPrevious className="tariffs-carousel-btn" />
-                  <CarouselNext className="tariffs-carousel-btn" />
+                <div className="tariffs-v2-carousel__nav">
+                  <CarouselPrevious className="tariffs-v2-carousel__btn" />
+                  <CarouselNext className="tariffs-v2-carousel__btn" />
                 </div>
               </Carousel>
             </div>
           </div>
         )}
 
-        {/* Mobile grid (and fallback for filtered desktop) */}
-        <div className="tariffs-grid tariffs-grid--4 tariffs-grid--mobile">
-          {tariffCards}
+        {/* Filtered desktop view: simple grid */}
+        {!showCarousel && (
+          <div className="tariffs-v2-grid tariffs-v2-grid--desktop">
+            {visibleCards.map((c, i) => (
+              <div key={i}>{renderCard(c)}</div>
+            ))}
+          </div>
+        )}
+
+        {/* Mobile grid (always) */}
+        <div className="tariffs-v2-grid tariffs-v2-grid--mobile">
+          {visibleCards.map((c, i) => (
+            <div key={i}>{renderCard(c)}</div>
+          ))}
         </div>
       </div>
     </section>

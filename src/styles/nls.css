@@ -8299,3 +8299,255 @@ body::before, body::after { display: none !important; }
   cursor: not-allowed;
   filter: grayscale(0.4);
 }
+
+/* ============================================================
+   Tariffs v2 — clean rebuild (internet page tariff cards)
+   ============================================================ */
+
+.tariffs-v2-grid {
+  display: grid;
+  gap: 24px;
+}
+.tariffs-v2-grid--desktop {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tariffs-v2-grid--mobile {
+  display: none;
+}
+
+/* Carousel: 3.4 cards visible -> 3 full + ~0.4 of 4th peeking */
+.tariffs-v2-carousel { display: block; }
+.tariffs-v2-carousel__wrap {
+  position: relative;
+}
+.tariffs-v2-carousel__wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(245,247,250,0) 0%, var(--color-bg) 90%);
+  pointer-events: none;
+  z-index: 3;
+}
+.tariffs-v2-carousel__item {
+  /* override basis-full from CarouselItem */
+  flex: 0 0 calc(100% / 3.4) !important;
+  max-width: calc(100% / 3.4) !important;
+  display: flex;
+}
+.tariffs-v2-carousel__item > .tariff-v2 {
+  width: 100%;
+}
+
+.tariffs-v2-carousel__nav {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+.tariffs-v2-carousel__btn {
+  position: static !important;
+  transform: none !important;
+  translate: none !important;
+  inset: auto !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--color-blue-dark) !important;
+  background: transparent !important;
+  color: var(--color-blue-dark) !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.tariffs-v2-carousel__btn:hover:not(:disabled) {
+  background: var(--color-blue-dark) !important;
+  color: #fff !important;
+}
+.tariffs-v2-carousel__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.tariffs-v2-carousel__btn svg { width: 18px; height: 18px; }
+
+/* Card */
+.tariff-v2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  border: 1px solid rgba(0, 85, 123, 0.08);
+  border-radius: var(--card-radius);
+  padding: 32px 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: var(--transition);
+  height: 100%;
+  min-height: 460px;
+}
+.tariff-v2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 85, 123, 0.1);
+}
+.tariff-v2--featured {
+  border-color: var(--color-orange);
+  box-shadow: 0 15px 40px rgba(255, 103, 0, 0.08);
+}
+.tariff-v2--promo {
+  border: 2px solid var(--color-orange);
+  background: linear-gradient(180deg, #fff7ef 0%, #ffffff 60%);
+}
+
+.tariff-v2__badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-orange-light));
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  box-shadow: 0 5px 15px var(--color-orange-glow);
+  z-index: 2;
+}
+.tariff-v2__badge--promo { background: var(--color-orange); }
+
+.tariff-v2__icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 85, 123, 0.06);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-blue);
+  margin-bottom: 18px;
+}
+.tariff-v2--featured .tariff-v2__icon,
+.tariff-v2--promo .tariff-v2__icon {
+  background: rgba(255, 103, 0, 0.1);
+  color: var(--color-orange);
+}
+.tariff-v2__icon > svg {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.tariff-v2__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-blue-dark);
+  margin: 0 0 4px;
+}
+.tariff-v2__subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+
+.tariff-v2__speed {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+.tariff-v2__speed-label {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+.tariff-v2__speed-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-blue-dark);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.tariff-v2__speed-value small {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  margin-left: 4px;
+}
+
+.tariff-v2__price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+.tariff-v2__price strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-blue-dark);
+}
+.tariff-v2__price span {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+
+.tariff-v2__desc {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  line-height: 1.5;
+  margin: 0 0 18px;
+}
+
+.tariff-v2__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  flex: 1;
+}
+.tariff-v2__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+.tariff-v2__features li::before {
+  content: "✓";
+  color: var(--color-orange);
+  font-weight: 800;
+  font-size: 1rem;
+  flex: none;
+  line-height: 1.4;
+}
+
+.tariff-v2__cta {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Tablet — fewer columns */
+@media (max-width: 1024px) {
+  .tariffs-v2-carousel__item {
+    flex: 0 0 calc(100% / 2.4) !important;
+    max-width: calc(100% / 2.4) !important;
+  }
+  .tariffs-v2-grid--desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile — hide carousel, show stacked grid */
+@media (max-width: 768px) {
+  .tariffs-v2-carousel { display: none; }
+  .tariffs-v2-grid--desktop { display: none; }
+  .tariffs-v2-grid--mobile { display: grid; grid-template-columns: 1fr; }
+  .tariff-v2 { min-height: 0; padding: 28px 22px; }
+}
