@@ -246,19 +246,11 @@ export function Header() {
             >
               {lang === "ru" ? "KZ" : "RU"}
             </button>
-            <button
-              type="button"
-              className="mobile-menu-btn"
-              onClick={() => setMobileNavOpen(true)}
-              aria-label={t("Меню", "Мәзір")}
-            >
-              <MenuIcon width={24} height={24} />
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Floating menu button (mobile only) — visible after scroll */}
+      {/* Floating menu button (mobile only, fixed) */}
       <button
         type="button"
         className="floating-menu-btn"
