@@ -119,8 +119,6 @@ type TariffFilter = "all" | "lt100" | "lt10000";
 
 type TariffCardData = {
   bucket: "lt100" | "lt10000";
-  variant?: "promo" | "featured";
-  badge?: string;
   title: string;
   subtitle?: string;
   speed: string;
@@ -132,7 +130,6 @@ type TariffCardData = {
   ctaVariant: "btn-primary" | "btn-outline";
   modalTitle: string;
   modalSpeed: string;
-  isMsb?: boolean;
 };
 
 function Tariffs() {
