@@ -27,6 +27,8 @@ export interface LeadFormProps {
   showAddress?: boolean;
   /** Запретить редактирование поля комментария (для заявок из конфигураторов) */
   messageReadOnly?: boolean;
+  /** Доп. поля, попадающие в текст заявки (например, выбранный тариф/услуга) */
+  extraFields?: Record<string, string>;
 }
 
 const CITY_NAMES_RU: Record<CityKey, string> = {
