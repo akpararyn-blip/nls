@@ -54,6 +54,7 @@ export function LeadForm({
   noRedirect,
   showAddress = false,
   messageReadOnly = false,
+  extraFields,
 }: LeadFormProps) {
   const navigate = useNavigate();
   const t = useT();
