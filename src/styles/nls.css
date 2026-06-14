@@ -8393,30 +8393,16 @@ body::before, body::after { display: none !important; }
   box-shadow: 0 20px 40px rgba(0, 85, 123, 0.1);
 }
 .tariff-v2--featured {
-  border-color: var(--color-orange);
-  box-shadow: 0 15px 40px rgba(255, 103, 0, 0.08);
+  /* removed: no special highlight */
 }
 .tariff-v2--promo {
-  border: 2px solid var(--color-orange);
-  background: linear-gradient(180deg, #fff7ef 0%, #ffffff 60%);
+  /* removed: no special highlight */
 }
 
 .tariff-v2__badge {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--color-orange), var(--color-orange-light));
-  color: #fff;
-  padding: 6px 18px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  box-shadow: 0 5px 15px var(--color-orange-glow);
-  z-index: 2;
+  display: none;
 }
-.tariff-v2__badge--promo { background: var(--color-orange); }
+.tariff-v2__badge--promo { display: none; }
 
 .tariff-v2__icon {
   width: 48px;
@@ -8431,8 +8417,7 @@ body::before, body::after { display: none !important; }
 }
 .tariff-v2--featured .tariff-v2__icon,
 .tariff-v2--promo .tariff-v2__icon {
-  background: rgba(255, 103, 0, 0.1);
-  color: var(--color-orange);
+  /* removed: no special icon color */
 }
 .tariff-v2__icon > svg {
   width: 24px;

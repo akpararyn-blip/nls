@@ -119,8 +119,6 @@ type TariffFilter = "all" | "lt100" | "lt10000";
 
 type TariffCardData = {
   bucket: "lt100" | "lt10000";
-  variant?: "promo" | "featured";
-  badge?: string;
   title: string;
   subtitle?: string;
   speed: string;
@@ -132,7 +130,6 @@ type TariffCardData = {
   ctaVariant: "btn-primary" | "btn-outline";
   modalTitle: string;
   modalSpeed: string;
-  isMsb?: boolean;
 };
 
 function Tariffs() {
@@ -140,21 +137,14 @@ function Tariffs() {
   const t = useT();
   const [filter, setFilter] = useState<TariffFilter>("all");
 
-  const openTariffModal = (
-    title: string,
-    speedLabel: string,
-    options?: { isMsb?: boolean }
-  ) => {
-    const tariffValue = options?.isMsb
-      ? `${speedLabel} — АКЦИОННЫЙ ТАРИФ МСБ ⚡ (запросил клиент)`
-      : speedLabel;
+  const openTariffModal = (title: string, speedLabel: string) => {
     openConsultationModalWith({
       subject: title,
       defaultMessage: t(
-        `Интересует тариф: ${speedLabel}${options?.isMsb ? " (акционный тариф МСБ)" : ""}`,
-        `Тариф қызықтырады: ${speedLabel}${options?.isMsb ? " (МСБ акциялық тарифі)" : ""}`
+        `Интересует тариф: ${speedLabel}`,
+        `Тариф қызықтырады: ${speedLabel}`
       ),
-      extraFields: { "Тариф": tariffValue },
+      extraFields: { "Тариф": speedLabel },
       messageReadOnly: false,
     });
   };
@@ -162,8 +152,6 @@ function Tariffs() {
   const cards: TariffCardData[] = [
     {
       bucket: "lt100",
-      variant: "promo",
-      badge: t("Акция", "Акция"),
       title: t("Интернет для МСБ", "МСБ үшін интернет"),
       subtitle: t("для малого и среднего бизнеса", "шағын және орта бизнес үшін"),
       speed: "30",
@@ -177,7 +165,6 @@ function Tariffs() {
       ctaVariant: "btn-primary",
       modalTitle: t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"),
       modalSpeed: "до 30 Мбит/с",
-      isMsb: true,
     },
     {
       bucket: "lt100",
@@ -200,8 +187,6 @@ function Tariffs() {
     },
     {
       bucket: "lt10000",
-      variant: "featured",
-      badge: t("Хит продаж", "Сатылым хиті"),
       title: t("Интернет для офиса", "Кеңсеге арналған интернет"),
       speed: "1 000",
       speedUnit: t("Мбит/с", "Мбит/с"),
@@ -244,14 +229,7 @@ function Tariffs() {
   const showCarousel = filter === "all";
 
   const renderCard = (c: TariffCardData) => (
-    <article
-      className={`tariff-v2${c.variant === "promo" ? " tariff-v2--promo" : ""}${c.variant === "featured" ? " tariff-v2--featured" : ""}`}
-    >
-      {c.badge && (
-        <span className={`tariff-v2__badge${c.variant === "promo" ? " tariff-v2__badge--promo" : ""}`}>
-          {c.badge}
-        </span>
-      )}
+    <article className="tariff-v2">
       <div className="tariff-v2__icon">
         <CheckIcon />
       </div>
@@ -280,7 +258,7 @@ function Tariffs() {
       <button
         type="button"
         className={`btn ${c.ctaVariant} tariff-v2__cta`}
-        onClick={() => openTariffModal(c.modalTitle, c.modalSpeed, { isMsb: c.isMsb })}
+        onClick={() => openTariffModal(c.modalTitle, c.modalSpeed)}
       >
         {c.cta}
       </button>
@@ -325,9 +303,9 @@ function Tariffs() {
           <div className="tariffs-v2-carousel">
             <div className="tariffs-v2-carousel__wrap">
               <Carousel opts={{ align: "start", containScroll: false }}>
-                <CarouselContent className="-ml-6">
+                <CarouselContent className="-ml-8">
                   {cards.map((c, i) => (
-                    <CarouselItem key={i} className="pl-6 tariffs-v2-carousel__item">
+                    <CarouselItem key={i} className="pl-8 tariffs-v2-carousel__item">
                       {renderCard(c)}
                     </CarouselItem>
                   ))}
