@@ -84,7 +84,7 @@ function Hero() {
     t("Круглосуточная поддержка и мониторинг", "Тәулік бойы қолдау және мониторинг"),
   ];
   return (
-    <section className="hero">
+    <section className="hero hero--no-image-mobile">
       <div className="container">
         <div className="hero-content">
           <span className="section-eyebrow" style={{ marginBottom: 16, display: "inline-block" }}>

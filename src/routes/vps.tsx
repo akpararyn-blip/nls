@@ -123,7 +123,7 @@ function Hero() {
     t("Техническая поддержка 24/7", "24/7 техникалық қолдау"),
   ];
   return (
-    <section className="hero">
+    <section className="hero hero--no-image-mobile">
       <div className="container">
         <div className="hero-content">
           <span className="section-eyebrow" style={{ marginBottom: 16, display: "inline-block" }}>

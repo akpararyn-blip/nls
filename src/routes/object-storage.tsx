@@ -56,7 +56,7 @@ function Hero() {
     t("Оплата за фактический объём", "Нақты көлемге ақы төлеу"),
   ];
   return (
-    <section className="hero">
+    <section className="hero hero--no-image-mobile">
       <div className="container">
         <div className="hero-content">
           <span className="section-eyebrow" style={{ marginBottom: 16, display: "inline-block" }}>
