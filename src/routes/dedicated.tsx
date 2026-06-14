@@ -729,7 +729,13 @@ function Calculator() {
                     </div>
                   )}
                   <p className="summary-vat">{t("Цены всех услуг указаны без учета НДС", "Барлық қызметтердің бағасы ҚҚС-сыз көрсетілген")}</p>
-                  <button type="button" className="btn btn-primary calc-order-btn" onClick={orderClick}>
+                  <button
+                    type="button"
+                    className="btn btn-primary calc-order-btn"
+                    onClick={orderClick}
+                    disabled={!canOrder}
+                    title={!canOrder ? t("Выберите процессор, ОЗУ и накопитель", "Процессор, ЖЖҚ және жинақтаушыны таңдаңыз") : undefined}
+                  >
                     {t("Заказать", "Тапсырыс беру")}
                   </button>
                 </div>
