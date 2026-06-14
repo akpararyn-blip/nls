@@ -162,8 +162,6 @@ function Tariffs() {
   const cards: TariffCardData[] = [
     {
       bucket: "lt100",
-      variant: "promo",
-      badge: t("Акция", "Акция"),
       title: t("Интернет для МСБ", "МСБ үшін интернет"),
       subtitle: t("для малого и среднего бизнеса", "шағын және орта бизнес үшін"),
       speed: "30",
@@ -177,7 +175,6 @@ function Tariffs() {
       ctaVariant: "btn-primary",
       modalTitle: t("Интернет для МСБ — до 30 Мбит/с", "МСБ үшін интернет — 30 Мбит/с дейін"),
       modalSpeed: "до 30 Мбит/с",
-      isMsb: true,
     },
     {
       bucket: "lt100",
@@ -200,8 +197,6 @@ function Tariffs() {
     },
     {
       bucket: "lt10000",
-      variant: "featured",
-      badge: t("Хит продаж", "Сатылым хиті"),
       title: t("Интернет для офиса", "Кеңсеге арналған интернет"),
       speed: "1 000",
       speedUnit: t("Мбит/с", "Мбит/с"),
