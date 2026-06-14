@@ -9,6 +9,13 @@ import { CheckIcon } from "@/components/nls/Icons";
 import internetHero from "@/assets/internet-hero2.png";
 import { LeadForm } from "@/components/forms/LeadForm";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
   Cctv,
   Network,
   ShieldCheck,
