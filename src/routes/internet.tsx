@@ -468,10 +468,14 @@ function HowWeWork() {
 
 function ExtraServices() {
   const t = useT();
+  const { openConsultationModalWith } = useCity();
+  const [ctaOpen, setCtaOpen] = useState(false);
+
   const extraServices = [
     {
       icon: Wifi,
       title: t("Wi-Fi для гостей и клиентов", "Қонақтар мен клиенттерге арналған Wi-Fi"),
+      shortTitle: t("Wi-Fi для гостей", "Қонақтарға Wi-Fi"),
       text: t(
         "СМС-авторизация (согласно закону РК) и инструменты для маркетинга и аналитики.",
         "SMS-авторизация (ҚР заңына сәйкес) және маркетинг пен аналитикаға арналған құралдар."
@@ -480,6 +484,7 @@ function ExtraServices() {
     {
       icon: Cctv,
       title: t("Видеонаблюдение", "Бейнебақылау"),
+      shortTitle: t("Видеонаблюдение", "Бейнебақылау"),
       text: t(
         "Профессиональные системы с облачным хранением и доступом из любой точки мира. Контроль безопасности офиса, склада или производства 24/7.",
         "Бұлтты сақтау және әлемнің кез келген нүктесінен қолжетімділігі бар кәсіби жүйелер. Кеңсе, қойма немесе өндіріс қауіпсіздігін 24/7 бақылау."
@@ -488,6 +493,7 @@ function ExtraServices() {
     {
       icon: Network,
       title: t("СКС — монтаж локальных сетей", "ҚКЖ — жергілікті желілерді орнату"),
+      shortTitle: t("Монтаж локальных сетей", "Жергілікті желілерді орнату"),
       text: t(
         "Проектирование и монтаж структурированных кабельных систем любой сложности. Создаём надёжную ИТ-инфраструктуру «под ключ» — от небольшого офиса до крупного предприятия.",
         "Кез келген күрделіліктегі құрылымдалған кабельдік жүйелерді жобалау және орнату. Шағын кеңседен ірі кәсіпорынға дейін сенімді IT-инфрақұрылымды дайын күйінде жасаймыз."
@@ -496,12 +502,22 @@ function ExtraServices() {
     {
       icon: ShieldCheck,
       title: t("IT-аутсорсинг", "IT-аутсорсинг"),
+      shortTitle: t("IT аутсорсинг", "IT аутсорсинг"),
       text: t(
         "Полная поддержка вашей ИТ-инфраструктуры. Обеспечим бесперебойную работу серверов, компьютеров и офисной техники, чтобы вы сосредоточились на бизнесе.",
         "IT-инфрақұрылымыңызды толық қолдау. Бизнесіңізге шоғырлану үшін серверлердің, компьютерлердің және кеңсе техникасының үзіліссіз жұмысын қамтамасыз етеміз."
       ),
     },
   ];
+
+  const openServiceModal = (title: string) =>
+    openConsultationModalWith({
+      subject: t(`Консультация по доп. услуге: ${title}`, `Қосымша қызмет бойынша кеңес: ${title}`),
+      defaultMessage: t(`Интересует услуга: ${title}`, `Қызмет қызықтырады: ${title}`),
+      extraFields: { "Услуга": title },
+      messageReadOnly: false,
+    });
+
   return (
     <section className="extra-services-section">
       <div className="container">
@@ -530,12 +546,85 @@ function ExtraServices() {
             );
           })}
         </div>
+
+        {/* Mobile-only consultation CTA for additional services */}
+        <div className="extra-cta-mobile">
+          {!ctaOpen ? (
+            <button type="button" className="btn btn-primary extra-cta-mobile__btn" onClick={() => setCtaOpen(true)}>
+              {t("Консультация по доп. услугам", "Қосымша қызметтер бойынша кеңес")}
+            </button>
+          ) : (
+            <div className="extra-cta-mobile__choices">
+              <div className="extra-cta-mobile__title">{t("Выберите услугу:", "Қызметті таңдаңыз:")}</div>
+              {extraServices.map((s) => (
+                <button
+                  key={s.title}
+                  type="button"
+                  className="btn btn-outline extra-cta-mobile__option"
+                  onClick={() => openServiceModal(s.shortTitle)}
+                >
+                  {s.shortTitle}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
 }
 
 function DcServices() {
+  const t = useT();
+  const cloudTiles = [
+    { to: "/iaas" as const, title: t("Виртуальный дата‑центр", "Виртуалды дата-орталық"), desc: t("IaaS-платформа на VMware / OpenStack", "VMware / OpenStack IaaS-платформасы"), icon: Boxes },
+    { to: "/vps" as const, title: t("VPS / VDS сервер", "VPS / VDS сервер"), desc: t("Гибкие конфигурации и быстрый запуск", "Икемді конфигурациялар және жылдам іске қосу"), icon: Cloud },
+    { to: "/object-storage" as const, title: t("Объектное хранилище S3", "S3 объектілік сақтау"), desc: t("S3-совместимое хранилище для бэкапов и данных", "Резервтік көшірмелер мен деректерге арналған S3-сақтау"), icon: Database },
+    { to: "/cloud-storage" as const, title: t("Облачное хранилище", "Бұлттық сақтау"), desc: t("Файловое облако для команд и проектов", "Командалар мен жобаларға арналған файлдық бұлт"), icon: CloudUpload },
+  ];
+  const dcTiles = [
+    { to: "/colocation" as const, title: t("Размещение сервера", "Серверді орналастыру"), desc: t("Colocation от 1U", "1U-дан бастап Colocation"), icon: HardDrive },
+    { to: "/colocation-full" as const, title: t("Аренда стойки", "Тіректі жалға алу"), desc: t("Full Rack 42U в собственном дата‑центре", "Меншікті дата-орталықтағы Full Rack 42U"), icon: Boxes },
+    { to: "/dedicated" as const, title: t("Аренда сервера", "Серверді жалға алу"), desc: t("Dedicated серверы под ваши задачи", "Тапсырмаларыңызға арналған Dedicated серверлер"), icon: Server },
+  ];
+
+  const renderTile = (tile: { to: string; title: string; desc: string; icon: typeof Server }) => {
+    const Icon = tile.icon;
+    return (
+      <Link to={tile.to as "/iaas"} className="dc-tile" key={tile.to}>
+        <div className="dc-tile-accent" aria-hidden />
+        <div className="dc-tile-icon">
+          <Icon size={28} strokeWidth={1.8} />
+        </div>
+        <div className="dc-tile-body">
+          <h3>{tile.title}</h3>
+          <p>{tile.desc}</p>
+        </div>
+        <span className="dc-tile-arrow" aria-hidden>
+          <ArrowRight size={20} />
+        </span>
+      </Link>
+    );
+  };
+
+  return (
+    <section className="dc-tiles-section">
+      <div className="container">
+        <div className="section-title">
+          <span className="section-eyebrow">{t("Услуги ЦОД", "Дата-орталығының қызметтері")}</span>
+          <h2>{t("Решения дата‑центра NLS", "NLS дата-орталығының шешімдері")}</h2>
+          <p>{t("Размещайте инфраструктуру в собственном дата‑центре NLS Kazakhstan.", "Инфрақұрылымды NLS Kazakhstan-ның меншікті дата-орталығында орналастырыңыз.")}</p>
+        </div>
+
+        <div className="dc-tiles-subtitle">{t("Облачные решения", "Бұлттық шешімдер")}</div>
+        <div className="dc-tiles-grid">{cloudTiles.map(renderTile)}</div>
+
+        <div className="dc-tiles-subtitle">{t("Услуги дата‑центра", "Дата-орталық қызметтері")}</div>
+        <div className="dc-tiles-grid">{dcTiles.map(renderTile)}</div>
+      </div>
+    </section>
+  );
+}
   const t = useT();
   const dcTiles = [
     { to: "/dedicated" as const, title: t("Аренда сервера", "Серверді жалға алу"), desc: t("Dedicated серверы под ваши задачи", "Тапсырмаларыңызға арналған Dedicated серверлер"), icon: Server },
