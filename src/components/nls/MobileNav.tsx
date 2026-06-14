@@ -152,7 +152,7 @@ export function MobileNav() {
                 onClick={() => setLang("ru")}
                 className={`mobile-lang-pill__btn${lang === "ru" ? " is-active" : ""}`}
               >
-                RU
+                RU<span className="mobile-lang-beta">beta</span>
               </button>
               <button
                 type="button"
@@ -161,7 +161,7 @@ export function MobileNav() {
                 onClick={() => setLang("kz")}
                 className={`mobile-lang-pill__btn${lang === "kz" ? " is-active" : ""}`}
               >
-                KZ
+                KZ<span className="mobile-lang-beta">beta</span>
               </button>
             </div>
           </div>
