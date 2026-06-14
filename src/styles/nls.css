@@ -784,6 +784,12 @@ h3 { font-size: 1.5rem; margin-bottom: 1rem; }
     color: var(--color-blue);
 }
 
+.tariff-icon > svg {
+    width: 24px;
+    height: 24px;
+    flex: none;
+}
+
 .tariff-featured .tariff-icon {
     background: rgba(255, 103, 0, 0.1);
     color: var(--color-orange);
@@ -7990,20 +7996,23 @@ body::before, body::after { display: none !important; }
   display: none;
   align-items: center;
   justify-content: center;
-  min-width: 38px;
-  height: 36px;
-  padding: 0 8px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
   border: none;
   border-radius: 8px;
   background: transparent;
   color: var(--color-blue-dark);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 0.05em;
   cursor: pointer;
-  /* Keep clear of fixed floating menu button on the right */
-  margin-right: 56px;
   transition: opacity 0.15s ease;
+  /* Fixed position next to floating menu button */
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: 68px;
+  z-index: 1001;
 }
 .mobile-lang-toggle:hover {
   opacity: 0.7;
@@ -8096,6 +8105,71 @@ body::before, body::after { display: none !important; }
 .tariffs-grid.tariffs-grid--4 > .tariff-card { grid-column: auto; }
 /* Push CTA buttons to the bottom for visual alignment across cards (promo card has no features list) */
 .tariffs-grid.tariffs-grid--4 > .tariff-card > .btn { margin-top: auto; }
+
+/* --- Desktop carousel for tariffs --- */
+.tariffs-carousel-desktop { display: block; }
+.tariffs-grid--mobile { display: none; }
+
+.tariffs-carousel-wrap {
+  position: relative;
+}
+.tariffs-carousel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--color-bg) 90%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tariffs-carousel-desktop .tariff-card {
+  height: 100%;
+  margin: 0;
+}
+
+.tariffs-carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.tariffs-carousel-btn {
+  position: static !important;
+  transform: none !important;
+  translate: none !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--color-blue-dark);
+  background: transparent;
+  color: var(--color-blue-dark);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.tariffs-carousel-btn:hover {
+  background: var(--color-blue-dark);
+  color: #fff;
+}
+.tariffs-carousel-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.tariffs-carousel-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .tariffs-carousel-desktop { display: none; }
+  .tariffs-grid--mobile { display: grid; }
+}
 @media (max-width: 1200px) {
   .tariffs-grid.tariffs-grid--4 { grid-template-columns: repeat(2, 1fr); }
 }
