@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useCity } from "@/lib/city-context";
 import { useLang } from "@/lib/lang-context";
 import { SmartLink } from "./SmartLink";
