@@ -17,6 +17,8 @@ import {
   HardDrive,
   Cloud,
   Boxes,
+  Database,
+  CloudUpload,
   ArrowRight,
   Calculator,
 } from "lucide-react";
