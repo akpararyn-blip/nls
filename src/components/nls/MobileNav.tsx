@@ -198,7 +198,11 @@ export function MobileNav() {
                 <ul className="mobile-nav__group-items">
                   {g.items.map((it) => (
                     <li key={it.to}>
-                      <SmartLink to={it.to} onClick={close} className="mobile-nav__item">
+                      <SmartLink
+                        to={it.to}
+                        onClick={close}
+                        className={`mobile-nav__item${pathname === it.to ? " is-active" : ""}`}
+                      >
                         <it.Icon size={18} strokeWidth={1.8} />
                         <span>{it.label}</span>
                       </SmartLink>
