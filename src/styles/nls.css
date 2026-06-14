@@ -7990,22 +7990,23 @@ body::before, body::after { display: none !important; }
   display: none;
   align-items: center;
   justify-content: center;
-  min-width: 42px;
+  min-width: 38px;
   height: 36px;
-  padding: 0 10px;
-  border: 1.5px solid var(--color-blue-dark);
+  padding: 0 8px;
+  border: none;
   border-radius: 8px;
   background: transparent;
   color: var(--color-blue-dark);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  /* Keep clear of fixed floating menu button on the right */
+  margin-right: 56px;
+  transition: opacity 0.15s ease;
 }
 .mobile-lang-toggle:hover {
-  background: var(--color-blue-dark);
-  color: var(--color-white);
+  opacity: 0.7;
 }
 
 /* --- 3. Floating menu button (mobile, fixed) --- */
@@ -8067,6 +8068,14 @@ body::before, body::after { display: none !important; }
   color: var(--color-white);
   box-shadow: 0 2px 6px rgba(0,85,123,0.18);
 }
+.mobile-lang-pill__btn .mobile-lang-beta {
+  background: rgba(0,85,123,0.18);
+  color: var(--color-blue-dark);
+}
+.mobile-lang-pill__btn.is-active .mobile-lang-beta {
+  background: var(--color-orange, #ff7a00);
+  color: #fff;
+}
 
 .mobile-nav .mobile-nav__item.is-active,
 .mobile-nav ul li a.mobile-nav__item.is-active {
@@ -8083,6 +8092,10 @@ body::before, body::after { display: none !important; }
   gap: 24px;
   align-items: stretch;
 }
+/* Override the legacy .tariff-card { grid-column: span 3 } so cards fit a 4-col grid */
+.tariffs-grid.tariffs-grid--4 > .tariff-card { grid-column: auto; }
+/* Push CTA buttons to the bottom for visual alignment across cards (promo card has no features list) */
+.tariffs-grid.tariffs-grid--4 > .tariff-card > .btn { margin-top: auto; }
 @media (max-width: 1200px) {
   .tariffs-grid.tariffs-grid--4 { grid-template-columns: repeat(2, 1fr); }
 }
