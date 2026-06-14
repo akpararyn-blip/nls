@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { useFitText } from "@/hooks/use-fit-text";
 
@@ -8,13 +8,6 @@ import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
 import internetHero from "@/assets/internet-hero2.png";
 import { LeadForm } from "@/components/forms/LeadForm";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import {
   Cctv,
   Network,
@@ -136,6 +129,8 @@ function Tariffs() {
   const { openConsultationModalWith } = useCity();
   const t = useT();
   const [filter, setFilter] = useState<TariffFilter>("all");
+  const sliderViewportRef = useRef<HTMLDivElement | null>(null);
+  const [sliderEdges, setSliderEdges] = useState({ canPrev: false, canNext: true });
 
   const openTariffModal = (title: string, speedLabel: string) => {
     openConsultationModalWith({
@@ -228,13 +223,46 @@ function Tariffs() {
   const visibleCards = cards.filter((c) => filter === "all" || c.bucket === filter);
   const showCarousel = filter === "all";
 
+  useEffect(() => {
+    const viewport = sliderViewportRef.current;
+    if (!viewport || !showCarousel) return;
+
+    const updateEdges = () => {
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      setSliderEdges({
+        canPrev: viewport.scrollLeft > 2,
+        canNext: viewport.scrollLeft < maxScroll - 2,
+      });
+    };
+
+    updateEdges();
+    viewport.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges);
+
+    return () => {
+      viewport.removeEventListener("scroll", updateEdges);
+      window.removeEventListener("resize", updateEdges);
+    };
+  }, [showCarousel]);
+
+  const scrollTariffs = (direction: -1 | 1) => {
+    const viewport = sliderViewportRef.current;
+    const firstCard = viewport?.querySelector<HTMLElement>(".tariffs-v2-slider__item");
+    if (!viewport || !firstCard) return;
+
+    const scrollAmount = firstCard.getBoundingClientRect().width / 2;
+    viewport.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
+  };
+
   const renderCard = (c: TariffCardData) => (
     <article className="tariff-v2">
       <div className="tariff-v2__icon">
         <CheckIcon />
       </div>
-      <h3 className="tariff-v2__title">{c.title}</h3>
-      {c.subtitle && <p className="tariff-v2__subtitle">{c.subtitle}</p>}
+      <div className="tariff-v2__heading">
+        <h3 className="tariff-v2__title">{c.title}</h3>
+        {c.subtitle && <p className="tariff-v2__subtitle">{c.subtitle}</p>}
+      </div>
       <div className="tariff-v2__speed">
         <span className="tariff-v2__speed-label">{t("скорость до", "жылдамдық")}</span>
         <span className="tariff-v2__speed-value">
