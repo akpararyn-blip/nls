@@ -8417,8 +8417,7 @@ body::before, body::after { display: none !important; }
 }
 .tariff-v2--featured .tariff-v2__icon,
 .tariff-v2--promo .tariff-v2__icon {
-  background: rgba(255, 103, 0, 0.1);
-  color: var(--color-orange);
+  /* removed: no special icon color */
 }
 .tariff-v2__icon > svg {
   width: 24px;
