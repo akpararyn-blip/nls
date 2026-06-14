@@ -625,46 +625,6 @@ function DcServices() {
     </section>
   );
 }
-  const t = useT();
-  const dcTiles = [
-    { to: "/dedicated" as const, title: t("Аренда сервера", "Серверді жалға алу"), desc: t("Dedicated серверы под ваши задачи", "Тапсырмаларыңызға арналған Dedicated серверлер"), icon: Server },
-    { to: "/colocation" as const, title: t("Размещение в ЦОД", "Дата-орталығында орналастыру"), desc: t("Colocation от 1U до серверного шкафа", "1U-дан серверлік шкафқа дейін Colocation"), icon: HardDrive },
-    { to: "/vps" as const, title: t("Виртуальный сервер VPS", "Виртуалды сервер VPS"), desc: t("Гибкие конфигурации и быстрый запуск", "Икемді конфигурациялар және жылдам іске қосу"), icon: Cloud },
-    { to: "/colocation-full" as const, title: t("Аренда серверного шкафа", "Серверлік шкафты жалға алу"), desc: t("Full Rack 42U в собственном дата‑центре", "Меншікті дата-орталықтағы Full Rack 42U"), icon: Boxes },
-  ];
-  return (
-    <section className="dc-tiles-section">
-      <div className="container">
-        <div className="section-title">
-          <span className="section-eyebrow">{t("Услуги ЦОД", "Дата-орталығының қызметтері")}</span>
-          <h2>{t("Решения дата‑центра NLS", "NLS дата-орталығының шешімдері")}</h2>
-          <p>{t("Размещайте инфраструктуру в собственном дата‑центре NLS Kazakhstan.", "Инфрақұрылымды NLS Kazakhstan-ның меншікті дата-орталығында орналастырыңыз.")}</p>
-        </div>
-
-        <div className="dc-tiles-grid">
-          {dcTiles.map((tile) => {
-            const Icon = tile.icon;
-            return (
-              <Link to={tile.to} className="dc-tile" key={tile.to}>
-                <div className="dc-tile-accent" aria-hidden />
-                <div className="dc-tile-icon">
-                  <Icon size={28} strokeWidth={1.8} />
-                </div>
-                <div className="dc-tile-body">
-                  <h3>{tile.title}</h3>
-                  <p>{tile.desc}</p>
-                </div>
-                <span className="dc-tile-arrow" aria-hidden>
-                  <ArrowRight size={20} />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Trust() {
   const t = useT();
