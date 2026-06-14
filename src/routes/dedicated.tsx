@@ -431,7 +431,11 @@ function Calculator() {
     return parts.join(" | ");
   };
 
-  const orderClick = () => openConsultationModalWith({ subject: buildSubject() });
+  const canOrder = calc.cpu !== null && calc.ram !== null && calc.storageItems.length > 0;
+  const orderClick = () => {
+    if (!canOrder) return;
+    openConsultationModalWith({ subject: buildSubject() });
+  };
 
   // === Расчёт с учётом периода и скидки ===
   const discount = CALC_DISCOUNT_ENABLED ? CALC_DISCOUNT[period] : 0;
