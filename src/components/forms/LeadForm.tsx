@@ -111,6 +111,7 @@ export function LeadForm({
           : {
               ["Город"]: city.name.ru,
             }),
+        ...(extraFields ?? {}),
         [keyMessage]: String(fd.get("message") ?? ""),
         ...(subject ? { [t("Тема", "Тақырып")]: subject } : {}),
       };
