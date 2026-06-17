@@ -81,7 +81,7 @@ export function ArticleLayout({ meta, children }: Props) {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => openConsultationModal("article_cta")}
+            onClick={() => openConsultationModal()}
           >
             {t("Получить консультацию", "Кеңес алу")}
             <ArrowRight size={18} />
