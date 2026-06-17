@@ -427,6 +427,86 @@ function Faq() {
   );
 }
 
+function Articles() {
+  const t = useT();
+  const items = [
+    {
+      slug: "/kak-pravilno-prolozhit-kabel",
+      title: t(
+        "Как правильно проложить кабель в офисе",
+        "Кеңседе кабельді қалай дұрыс төсеу керек"
+      ),
+      excerpt: t(
+        "Гайд по проектированию трасс, выбору категории кабеля и типовым ошибкам монтажа.",
+        "Трассаларды жобалау, кабель санатын таңдау және орнатудың типтік қателері туралы нұсқаулық."
+      ),
+      date: t("1 июня 2026", "2026 ж. 1 маусым"),
+      minutes: 6,
+    },
+    {
+      slug: "/vybor-oborudovaniya-dlya-lvs",
+      title: t(
+        "Как выбрать оборудование для ЛВС",
+        "ЖЕЖ үшін жабдықты қалай таңдау керек"
+      ),
+      excerpt: t(
+        "Коммутаторы, Wi-Fi точки и пассивное оборудование — на что обратить внимание.",
+        "Коммутаторлар, Wi-Fi нүктелері және пассивті жабдық — неге назар аудару керек."
+      ),
+      date: t("5 июня 2026", "2026 ж. 5 маусым"),
+      minutes: 7,
+    },
+    {
+      slug: "/oshibki-pri-montazhe-sks",
+      title: t(
+        "5 типичных ошибок при монтаже СКС",
+        "ҚКЖ орнатудағы 5 типтік қате"
+      ),
+      excerpt: t(
+        "Наводки, неверные радиусы изгиба и отсутствие маркировки — чего избегать на объекте.",
+        "Кедергілер, дұрыс емес иілу радиустары және таңбалаудың болмауы — нысанда неден аулақ болу керек."
+      ),
+      date: t("10 июня 2026", "2026 ж. 10 маусым"),
+      minutes: 5,
+    },
+  ];
+
+  return (
+    <section className="sks-articles-section">
+      <div className="container">
+        <div className="section-title">
+          <span className="section-eyebrow">{t("Статьи", "Мақалалар")}</span>
+          <h2>{t("Полезные материалы о монтаже СКС", "ҚКЖ орнату туралы пайдалы материалдар")}</h2>
+        </div>
+
+        <div className="sks-articles-grid">
+          {items.map((a) => (
+            <SmartLink key={a.slug} to={a.slug} className="sks-article-card">
+              <div className="sks-article-card__cover" aria-hidden="true">
+                <ImageIcon size={40} strokeWidth={1.2} />
+              </div>
+              <div className="sks-article-card__body">
+                <span className="sks-article-card__badge">
+                  {t("Статья", "Мақала")}
+                </span>
+                <h3>{a.title}</h3>
+                <p>{a.excerpt}</p>
+                <div className="sks-article-card__meta">
+                  <span><Calendar size={14} /> {a.date}</span>
+                  <span><Clock size={14} /> {a.minutes} {t("мин", "мин")}</span>
+                </div>
+                <span className="sks-article-card__cta">
+                  {t("Читать", "Оқу")} <ArrowRight size={16} />
+                </span>
+              </div>
+            </SmartLink>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   const t = useT();
   return (
