@@ -12,6 +12,12 @@ export const Route = createFileRoute("/about")({
         content:
           "NLS Kazakhstan — единый оператор связи и IT-инфраструктуры с более чем 18-летним опытом. Полный спектр телеком и IT-инфраструктуры для бизнеса в Казахстане.",
       },
+      {
+        name: "keywords",
+        content:
+          "о компании NLS, оператор связи Казахстан, IT-инфраструктура, история NLS, телеком Казахстан",
+      },
+      { property: "og:url", content: "/about" },
       { property: "og:title", content: "О компании — NLS Kazakhstan" },
       {
         property: "og:description",

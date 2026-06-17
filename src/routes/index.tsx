@@ -32,6 +32,12 @@ export const Route = createFileRoute("/")({
         content:
           "NLS Kazakhstan — надежный провайдер высокоскоростного интернета и IT-инфраструктуры для бизнеса в Казахстане. Дата‑центры, colocation, СКС и IT-аутсорсинг.",
       },
+      {
+        name: "keywords",
+        content:
+          "интернет провайдер для бизнеса, IT-инфраструктура, дата-центр Казахстан, СКС, colocation, VPS, IT аутсорсинг, NLS",
+      },
+      { property: "og:url", content: "/" },
       { property: "og:title", content: "NLS Kazakhstan — Интернет и IT-инфраструктура для бизнеса" },
       {
         property: "og:description",

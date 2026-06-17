@@ -20,6 +20,12 @@ export const Route = createFileRoute("/iaas")({
         content:
           "Виртуальный дата‑центр на базе VMware Cloud Director. Гибкая конфигурация vCPU, vRAM, SSD/HDD, резервные копии Veeam. Дата‑центры в Алматы, Астане и Шымкенте.",
       },
+      {
+        name: "keywords",
+        content:
+          "VMware Cloud Director, виртуальный дата-центр, IaaS Казахстан, vCPU, vRAM, Veeam Backup, облачная инфраструктура",
+      },
+      { property: "og:url", content: "/iaas" },
       { property: "og:title", content: "Виртуальный дата‑центр на VMware Cloud Director — NLS Kazakhstan" },
       {
         property: "og:description",

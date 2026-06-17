@@ -11,6 +11,12 @@ export const Route = createFileRoute("/cloud")({
         content:
           "Облачные решения NLS: виртуальный дата-центр, VPS/VDS, объектное хранилище S3, облачное хранилище и услуги собственного дата-центра Tier III — colocation, аренда стойки, dedicated серверы.",
       },
+      {
+        name: "keywords",
+        content:
+          "облачные решения, дата-центр Казахстан, VPS, IaaS, объектное хранилище S3, colocation, dedicated сервер, Tier III",
+      },
+      { property: "og:url", content: "/cloud" },
       { property: "og:title", content: "Облачные решения и услуги дата-центра — NLS Kazakhstan" },
       {
         property: "og:description",

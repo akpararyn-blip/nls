@@ -36,6 +36,12 @@ export const Route = createFileRoute("/it")({
         content:
           "Комплексный IT-аутсорсинг от экспертов NLS Kazakhstan: серверы, сети, IP-телефония, кибербезопасность. Реакция на заявку от 12 минут, опыт 18+ лет.",
       },
+      {
+        name: "keywords",
+        content:
+          "IT аутсорсинг, обслуживание компьютеров, IT поддержка офиса, системный администратор, IT-сопровождение бизнеса",
+      },
+      { property: "og:url", content: "/it" },
       { property: "og:title", content: "IT аутсорсинг — NLS Kazakhstan" },
       {
         property: "og:description",

@@ -31,6 +31,12 @@ export const Route = createFileRoute("/colocation-full")({
         content:
           "Изолированные стойки 42U в собственном дата‑центре уровня Tier III. Индивидуальные параметры питания и каналов связи под задачи Enterprise.",
       },
+      {
+        name: "keywords",
+        content:
+          "аренда стойки, full rack, 42U, дата-центр Tier III, аренда серверной стойки Казахстан",
+      },
+      { property: "og:url", content: "/colocation-full" },
       { property: "og:title", content: "Аренда серверной стойки (Full Rack) — NLS Kazakhstan" },
       {
         property: "og:description",

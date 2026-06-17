@@ -39,6 +39,12 @@ export const Route = createFileRoute("/it-sks")({
         content:
           "Проектирование и монтаж структурированных кабельных систем (СКС) и ЛВС для офисов, ТРЦ, складов и заводов в Казахстане. Гарантия 1 год.",
       },
+      {
+        name: "keywords",
+        content:
+          "СКС, монтаж локальных сетей, ЛВС, структурированные кабельные системы, монтаж сети под ключ, прокладка кабеля, Wi-Fi для офиса",
+      },
+      { property: "og:url", content: "/it-sks" },
       { property: "og:title", content: "СКС. Монтаж локальных сетей — NLS Kazakhstan" },
       {
         property: "og:description",

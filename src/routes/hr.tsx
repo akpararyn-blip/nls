@@ -29,6 +29,12 @@ export const Route = createFileRoute("/hr")({
         content:
           "Стань частью команды NLS Kazakhstan — единого оператора связи. Открытые вакансии, этапы собеседования и советы кандидатам.",
       },
+      {
+        name: "keywords",
+        content:
+          "вакансии NLS, работа в IT Казахстан, карьера телеком, работа в Алматы, работа в Астане",
+      },
+      { property: "og:url", content: "/hr" },
       { property: "og:title", content: "Карьера в NLS Kazakhstan" },
       {
         property: "og:description",
