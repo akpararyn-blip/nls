@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
+import { SmartLink } from "@/components/nls/SmartLink";
 import { useCity } from "@/lib/city-context";
 import { useT } from "@/lib/lang-context";
 import { CheckIcon } from "@/components/nls/Icons";
@@ -28,6 +29,9 @@ import {
   Landmark,
   Plane,
   Coffee,
+  ImageIcon,
+  Calendar,
+  Clock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/it-sks")({
