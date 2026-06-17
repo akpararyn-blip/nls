@@ -18,6 +18,12 @@ export const Route = createFileRoute("/cloud-storage")({
         content:
           "Облачное файловое хранилище для команд: совместный доступ, синхронизация, версии файлов. 100 ₸/ГБ, скидки за 6 и 12 месяцев.",
       },
+      {
+        name: "keywords",
+        content:
+          "облачное хранилище, файловое облако, совместный доступ к файлам, синхронизация, корпоративный диск Казахстан",
+      },
+      { property: "og:url", content: "/cloud-storage" },
       { property: "og:title", content: "Облачное хранилище — NLS Kazakhstan" },
       {
         property: "og:description",

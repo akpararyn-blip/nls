@@ -20,6 +20,12 @@ export const Route = createFileRoute("/vps")({
         content:
           "Виртуальные серверы VPS/VDS на базе KVM-виртуализации. Дата‑центры в Алматы и Астане, моментальное масштабирование ресурсов. Қазақстанда VPS/VDS серверлерін жалдау.",
       },
+      {
+        name: "keywords",
+        content:
+          "аренда VPS, VDS сервер, виртуальный сервер Казахстан, hosting Алматы, KVM, дешёвый VPS",
+      },
+      { property: "og:url", content: "/vps" },
       { property: "og:title", content: "Аренда VPS/VDS серверов в Казахстане — NLS Kazakhstan" },
       {
         property: "og:description",

@@ -18,6 +18,12 @@ export const Route = createFileRoute("/object-storage")({
         content:
           "S3-совместимое объектное хранилище в дата-центрах NLS Kazakhstan. 110 ₸/ГБ, оплата по факту, шифрование, версионирование, доступ по API.",
       },
+      {
+        name: "keywords",
+        content:
+          "объектное хранилище, S3 Казахстан, бэкап в облако, хранение медиа, хранение статики, S3 совместимое API",
+      },
+      { property: "og:url", content: "/object-storage" },
       { property: "og:title", content: "Объектное хранилище S3 — NLS Kazakhstan" },
       {
         property: "og:description",

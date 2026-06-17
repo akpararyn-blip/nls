@@ -33,6 +33,12 @@ export const Route = createFileRoute("/colocation")({
         content:
           "Размещение оборудования в собственном дата‑центре уровня Tier III в Казахстане. Бесперебойное питание, охлаждение и безопасность 24/7. Серверлерді дата-орталығында орналастыру.",
       },
+      {
+        name: "keywords",
+        content:
+          "colocation, размещение серверов, дата-центр Tier III, аренда юнитов, ЦОД Алматы, ЦОД Астана",
+      },
+      { property: "og:url", content: "/colocation" },
       { property: "og:title", content: "Размещение серверов в ЦОД (Colocation) — NLS Kazakhstan" },
       {
         property: "og:description",

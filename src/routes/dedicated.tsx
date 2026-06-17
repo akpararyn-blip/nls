@@ -20,6 +20,12 @@ export const Route = createFileRoute("/dedicated")({
         content:
           "Аренда выделенных серверов в дата‑центре NLS. Конфигуратор: CPU, RAM, накопители, сеть, ПО. Серверы в Алматы и Астане. NLS дата-орталығында бөлінген серверлерді жалдау.",
       },
+      {
+        name: "keywords",
+        content:
+          "dedicated сервер, выделенный сервер, аренда сервера Казахстан, bare metal, конфигуратор сервера",
+      },
+      { property: "og:url", content: "/dedicated" },
       { property: "og:title", content: "Аренда Dedicated сервера — NLS Kazakhstan" },
       {
         property: "og:description",

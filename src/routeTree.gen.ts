@@ -9,13 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VyborOborudovaniyaDlyaLvsRouteImport } from './routes/vybor-oborudovaniya-dlya-lvs'
 import { Route as VpsRouteImport } from './routes/vps'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as SpamRouteImport } from './routes/spam'
 import { Route as RequisitesRouteImport } from './routes/requisites'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as OshibkiPriMontazheSksRouteImport } from './routes/oshibki-pri-montazhe-sks'
 import { Route as ObjectStorageRouteImport } from './routes/object-storage'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KakPravilnoProlozhitKabelRouteImport } from './routes/kak-pravilno-prolozhit-kabel'
 import { Route as ItSksRouteImport } from './routes/it-sks'
 import { Route as ItRouteImport } from './routes/it'
 import { Route as InternetRouteImport } from './routes/internet'
@@ -30,6 +33,12 @@ import { Route as CloudRouteImport } from './routes/cloud'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VyborOborudovaniyaDlyaLvsRoute =
+  VyborOborudovaniyaDlyaLvsRouteImport.update({
+    id: '/vybor-oborudovaniya-dlya-lvs',
+    path: '/vybor-oborudovaniya-dlya-lvs',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const VpsRoute = VpsRouteImport.update({
   id: '/vps',
   path: '/vps',
@@ -55,6 +64,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OshibkiPriMontazheSksRoute = OshibkiPriMontazheSksRouteImport.update({
+  id: '/oshibki-pri-montazhe-sks',
+  path: '/oshibki-pri-montazhe-sks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ObjectStorageRoute = ObjectStorageRouteImport.update({
   id: '/object-storage',
   path: '/object-storage',
@@ -65,6 +79,12 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KakPravilnoProlozhitKabelRoute =
+  KakPravilnoProlozhitKabelRouteImport.update({
+    id: '/kak-pravilno-prolozhit-kabel',
+    path: '/kak-pravilno-prolozhit-kabel',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ItSksRoute = ItSksRouteImport.update({
   id: '/it-sks',
   path: '/it-sks',
@@ -145,13 +165,16 @@ export interface FileRoutesByFullPath {
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
+  '/kak-pravilno-prolozhit-kabel': typeof KakPravilnoProlozhitKabelRoute
   '/login': typeof LoginRoute
   '/object-storage': typeof ObjectStorageRoute
+  '/oshibki-pri-montazhe-sks': typeof OshibkiPriMontazheSksRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
+  '/vybor-oborudovaniya-dlya-lvs': typeof VyborOborudovaniyaDlyaLvsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -167,13 +190,16 @@ export interface FileRoutesByTo {
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
+  '/kak-pravilno-prolozhit-kabel': typeof KakPravilnoProlozhitKabelRoute
   '/login': typeof LoginRoute
   '/object-storage': typeof ObjectStorageRoute
+  '/oshibki-pri-montazhe-sks': typeof OshibkiPriMontazheSksRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
+  '/vybor-oborudovaniya-dlya-lvs': typeof VyborOborudovaniyaDlyaLvsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -190,13 +216,16 @@ export interface FileRoutesById {
   '/internet': typeof InternetRoute
   '/it': typeof ItRoute
   '/it-sks': typeof ItSksRoute
+  '/kak-pravilno-prolozhit-kabel': typeof KakPravilnoProlozhitKabelRoute
   '/login': typeof LoginRoute
   '/object-storage': typeof ObjectStorageRoute
+  '/oshibki-pri-montazhe-sks': typeof OshibkiPriMontazheSksRoute
   '/privacy': typeof PrivacyRoute
   '/requisites': typeof RequisitesRoute
   '/spam': typeof SpamRoute
   '/thank-you': typeof ThankYouRoute
   '/vps': typeof VpsRoute
+  '/vybor-oborudovaniya-dlya-lvs': typeof VyborOborudovaniyaDlyaLvsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -214,13 +243,16 @@ export interface FileRouteTypes {
     | '/internet'
     | '/it'
     | '/it-sks'
+    | '/kak-pravilno-prolozhit-kabel'
     | '/login'
     | '/object-storage'
+    | '/oshibki-pri-montazhe-sks'
     | '/privacy'
     | '/requisites'
     | '/spam'
     | '/thank-you'
     | '/vps'
+    | '/vybor-oborudovaniya-dlya-lvs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -236,13 +268,16 @@ export interface FileRouteTypes {
     | '/internet'
     | '/it'
     | '/it-sks'
+    | '/kak-pravilno-prolozhit-kabel'
     | '/login'
     | '/object-storage'
+    | '/oshibki-pri-montazhe-sks'
     | '/privacy'
     | '/requisites'
     | '/spam'
     | '/thank-you'
     | '/vps'
+    | '/vybor-oborudovaniya-dlya-lvs'
   id:
     | '__root__'
     | '/'
@@ -258,13 +293,16 @@ export interface FileRouteTypes {
     | '/internet'
     | '/it'
     | '/it-sks'
+    | '/kak-pravilno-prolozhit-kabel'
     | '/login'
     | '/object-storage'
+    | '/oshibki-pri-montazhe-sks'
     | '/privacy'
     | '/requisites'
     | '/spam'
     | '/thank-you'
     | '/vps'
+    | '/vybor-oborudovaniya-dlya-lvs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -281,17 +319,27 @@ export interface RootRouteChildren {
   InternetRoute: typeof InternetRoute
   ItRoute: typeof ItRoute
   ItSksRoute: typeof ItSksRoute
+  KakPravilnoProlozhitKabelRoute: typeof KakPravilnoProlozhitKabelRoute
   LoginRoute: typeof LoginRoute
   ObjectStorageRoute: typeof ObjectStorageRoute
+  OshibkiPriMontazheSksRoute: typeof OshibkiPriMontazheSksRoute
   PrivacyRoute: typeof PrivacyRoute
   RequisitesRoute: typeof RequisitesRoute
   SpamRoute: typeof SpamRoute
   ThankYouRoute: typeof ThankYouRoute
   VpsRoute: typeof VpsRoute
+  VyborOborudovaniyaDlyaLvsRoute: typeof VyborOborudovaniyaDlyaLvsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vybor-oborudovaniya-dlya-lvs': {
+      id: '/vybor-oborudovaniya-dlya-lvs'
+      path: '/vybor-oborudovaniya-dlya-lvs'
+      fullPath: '/vybor-oborudovaniya-dlya-lvs'
+      preLoaderRoute: typeof VyborOborudovaniyaDlyaLvsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vps': {
       id: '/vps'
       path: '/vps'
@@ -327,6 +375,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oshibki-pri-montazhe-sks': {
+      id: '/oshibki-pri-montazhe-sks'
+      path: '/oshibki-pri-montazhe-sks'
+      fullPath: '/oshibki-pri-montazhe-sks'
+      preLoaderRoute: typeof OshibkiPriMontazheSksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/object-storage': {
       id: '/object-storage'
       path: '/object-storage'
@@ -339,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kak-pravilno-prolozhit-kabel': {
+      id: '/kak-pravilno-prolozhit-kabel'
+      path: '/kak-pravilno-prolozhit-kabel'
+      fullPath: '/kak-pravilno-prolozhit-kabel'
+      preLoaderRoute: typeof KakPravilnoProlozhitKabelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/it-sks': {
@@ -449,13 +511,16 @@ const rootRouteChildren: RootRouteChildren = {
   InternetRoute: InternetRoute,
   ItRoute: ItRoute,
   ItSksRoute: ItSksRoute,
+  KakPravilnoProlozhitKabelRoute: KakPravilnoProlozhitKabelRoute,
   LoginRoute: LoginRoute,
   ObjectStorageRoute: ObjectStorageRoute,
+  OshibkiPriMontazheSksRoute: OshibkiPriMontazheSksRoute,
   PrivacyRoute: PrivacyRoute,
   RequisitesRoute: RequisitesRoute,
   SpamRoute: SpamRoute,
   ThankYouRoute: ThankYouRoute,
   VpsRoute: VpsRoute,
+  VyborOborudovaniyaDlyaLvsRoute: VyborOborudovaniyaDlyaLvsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

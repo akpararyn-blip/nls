@@ -25,6 +25,12 @@ export const Route = createFileRoute("/contacts")({
         content:
           "Контакты NLS Kazakhstan: телефоны отдела продаж и адреса офисов в Алматы, Астане и Шымкенте.",
       },
+      {
+        name: "keywords",
+        content:
+          "контакты NLS, телефон оператора связи, офис Алматы, офис Астана, офис Шымкент, отдел продаж",
+      },
+      { property: "og:url", content: "/contacts" },
       { property: "og:title", content: "Контакты NLS Kazakhstan" },
       {
         property: "og:description",
