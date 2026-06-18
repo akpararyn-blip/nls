@@ -28,6 +28,7 @@ export const Route = createFileRoute("/kak-pravilno-prolozhit-kabel")({
       { property: "og:url", content: `/${META.slug}` },
       { property: "og:title", content: META.title },
       { property: "og:description", content: META.description },
+      { property: "og:image", content: prokladkaAsset.url },
       { property: "article:published_time", content: META.publishedTime },
       { property: "article:section", content: META.section },
       { property: "article:author", content: "NLS Kazakhstan" },
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/kak-pravilno-prolozhit-kabel")({
 function ArticlePage() {
   return (
     <SiteLayout>
-      <ArticleLayout meta={META}>
+      <ArticleLayout meta={META} image={prokladkaAsset.url} imageAlt={META.title}>
         <p>
           Независимо от того, прокладываете вы кабель для трех компьютеров или
           для трехсот, эти правила нарушать нельзя:
