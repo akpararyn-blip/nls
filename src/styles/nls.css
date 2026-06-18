@@ -6897,6 +6897,8 @@ body::before, body::after { display: none !important; }
     height: 72px;
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-left: 16px;  /* <--- Добавляем это */
+    padding-right: 16px; /* <--- И это */
     align-items: center;
   }
   .main-header .logo,
@@ -8018,7 +8020,7 @@ body::before, body::after { display: none !important; }
   transition: all 0.2s ease;
 
   /* Позиционирование и кликабельность */
-  margin-right: 64px;
+  margin-right: 54px;
   pointer-events: auto;
 }
 
@@ -8036,7 +8038,7 @@ body::before, body::after { display: none !important; }
   display: none;
   position: fixed;
   top: max(12px, env(safe-area-inset-top));
-  right: 12px;
+  right: 16px;
   z-index: 1000;
   width: 48px;
   height: 48px;
