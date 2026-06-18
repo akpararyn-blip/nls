@@ -36,7 +36,7 @@ export function SupportPromo() {
     const now = new Date();
     let offset = 0;
     return SEEDS.map((s, i) => {
-      offset += 7 + ((i * 13) % 19); // 7..25 sec gaps, deterministic per index
+      offset += 7 + ((i * 13) % 19);
       const d = new Date(now.getTime() - offset * 1000);
       return {
         ...s,
@@ -51,16 +51,20 @@ export function SupportPromo() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      // mark everything resolved, no rAF
+    // ДОБАВЛЕНО: Проверяем, является ли устройство мобильным (ширина экрана до 768px)
+    const isMobile = window.matchMedia?.("(max-width: 768px)").matches; 
+
+    // Отключаем тяжелые вычисления JS для мобильных и при prefers-reduced-motion
+    if (reduce || isMobile) {
       const all = new Set<string>();
       containerRef.current?.querySelectorAll<HTMLElement>("[data-ticket-uid]").forEach((el) => {
         const uid = el.dataset.ticketUid;
         if (uid) all.add(uid);
       });
       setResolvedSet(all);
-      return;
+      return; // Выходим из useEffect, не запуская requestAnimationFrame
     }
 
     let raf = 0;
@@ -79,13 +83,12 @@ export function SupportPromo() {
         const r = el.getBoundingClientRect();
         const center = r.top + r.height / 2;
         const uid = el.dataset.ticketUid!;
-        const should = center < midY; // crossed midpoint going up
+        const should = center < midY;
         const has = resolvedSet.has(uid);
         if (should && !has) {
           if (!next) next = new Set(resolvedSet);
           next.add(uid);
         } else if (!should && has) {
-          // card looped back below midpoint — reset for next pass
           if (!next) next = new Set(resolvedSet);
           next.delete(uid);
         }
@@ -96,7 +99,6 @@ export function SupportPromo() {
     return () => cancelAnimationFrame(raf);
   }, [resolvedSet]);
 
-  // Duplicate list for seamless marquee
   const loop = [...tickets, ...tickets];
 
   return (
@@ -111,7 +113,7 @@ export function SupportPromo() {
             <h2 className="support-promo__title">24/7</h2>
             <p className="support-promo__desc">
               {t(
-                "Наши инженеры бесплатно решают любые технические вопросы — помощь с переносом сайта, настройками хостинга или сервера. Обращайтесь в любое время суток, даже в выходные и праздники, и получайте ответ за считанные минуты.",
+                "Наши инженеры решают любые технические вопросы — помощь с переносом сайта, настройками хостинга или сервера. Обращайтесь в любое время суток, даже в выходные и праздники, и получайте ответ за считанные минуты.",
                 "Біздің инженерлер кез келген техникалық сұрақты тегін шешеді — сайтты көшіру, хостинг пен сервер баптауларына көмек. Тәулік бойы, тіпті демалыс пен мерекелерде де хабарласыңыз — жауапты бірнеше минут ішінде аласыз."
               )}
             </p>
@@ -164,8 +166,9 @@ export function SupportPromo() {
                         </span>
                       </header>
                       <div className="ticket-card__body">
-                        <span className="ticket-card__line ticket-card__line--lg">{tk.problemRu}</span>
-                        <span className="ticket-card__line ticket-card__line--sm">{tk.problemRu}</span>
+                        {/* ИСПРАВЛЕНО: добавлена обертка t() для корректной локализации */}
+                        <span className="ticket-card__line ticket-card__line--lg">{t(tk.problemRu, tk.problemKz)}</span>
+                        <span className="ticket-card__line ticket-card__line--sm">{t(tk.problemRu, tk.problemKz)}</span>
                       </div>
                       <footer className="ticket-card__foot">
                         <span className="ticket-card__avatar">{tk.initials}</span>

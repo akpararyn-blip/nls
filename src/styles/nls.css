@@ -4841,7 +4841,7 @@ a.contacts-city-row:hover { color: var(--color-orange); }
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 10px;
+  padding: 12px 10px;
   font-size: 0.88rem;
   font-weight: 500;
   color: #0f3a55;
@@ -5293,7 +5293,7 @@ body::before, body::after { display: none !important; }
   gap: 0;
 }
 .dropdown-menu.mega-menu .mega-menu-link {
-  padding: 6px 9px;
+  padding: 10px 9px;
   font-size: 0.83rem;
   gap: 9px;
 }
@@ -7175,6 +7175,11 @@ body::before, body::after { display: none !important; }
 @media (max-width: 980px) {
   .support-promo__inner { grid-template-columns: 1fr; gap: 36px; }
   .support-tickets { height: 380px; }
+  .support-promo__inner { grid-template-columns: 1fr; gap: 36px; }
+  .support-tickets { height: 380px; }
+  
+  /* Добавь эту строку, чтобы скрыть правый блок с анимацией */
+  .support-promo__right { display: none; }
 }
 @media (max-width: 640px) {
   .support-promo { padding: 56px 0; }
