@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
+import problemsAsset from "@/assets/problems.png.asset.json";
+
 
 const META = {
   slug: "oshibki-pri-montazhe-sks",
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/oshibki-pri-montazhe-sks")({
       { property: "og:url", content: `/${META.slug}` },
       { property: "og:title", content: META.title },
       { property: "og:description", content: META.description },
+      { property: "og:image", content: problemsAsset.url },
       { property: "article:published_time", content: META.publishedTime },
       { property: "article:section", content: META.section },
       { property: "article:author", content: "NLS Kazakhstan" },
@@ -37,7 +40,7 @@ export const Route = createFileRoute("/oshibki-pri-montazhe-sks")({
 function ArticlePage() {
   return (
     <SiteLayout>
-      <ArticleLayout meta={META}>
+      <ArticleLayout meta={META} image={problemsAsset.url} imageAlt={META.title}>
         <p>
           <strong>Структурированная кабельная система (СКС)</strong> — это
           фундамент IT-инфраструктуры любого офиса. Проблема кабельных ошибок в

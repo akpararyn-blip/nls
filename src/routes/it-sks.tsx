@@ -8,8 +8,12 @@ import sksHero from "@/assets/sks.png";
 import sksBefore from "@/assets/remontwithsks.png";
 import sksAfter from "@/assets/afterremontsks.png";
 import itTeamImg from "@/assets/it-team.png";
+import prokladkaAsset from "@/assets/prokladka.png.asset.json";
+import devicesAsset from "@/assets/devices.png.asset.json";
+import problemsAsset from "@/assets/problems.png.asset.json";
 import { useState } from "react";
 import { LeadForm } from "@/components/forms/LeadForm";
+
 import {
   Wifi,
   Phone,
@@ -442,6 +446,11 @@ function Articles() {
       ),
       date: t("1 июня 2026", "2026 ж. 1 маусым"),
       minutes: 6,
+      image: prokladkaAsset.url,
+      imageAlt: t(
+        "Как правильно проложить кабель в офисе",
+        "Кеңседе кабельді қалай дұрыс төсеу керек"
+      ),
     },
     {
       slug: "/vybor-oborudovaniya-dlya-lvs",
@@ -455,6 +464,11 @@ function Articles() {
       ),
       date: t("5 июня 2026", "2026 ж. 5 маусым"),
       minutes: 7,
+      image: devicesAsset.url,
+      imageAlt: t(
+        "Как выбрать оборудование для ЛВС",
+        "ЖЕЖ үшін жабдықты қалай таңдау керек"
+      ),
     },
     {
       slug: "/oshibki-pri-montazhe-sks",
@@ -468,6 +482,11 @@ function Articles() {
       ),
       date: t("10 июня 2026", "2026 ж. 10 маусым"),
       minutes: 5,
+      image: problemsAsset.url,
+      imageAlt: t(
+        "5 типичных ошибок при монтаже СКС",
+        "ҚКЖ орнатудағы 5 типтік қате"
+      ),
     },
   ];
 
@@ -482,8 +501,12 @@ function Articles() {
         <div className="sks-articles-grid">
           {items.map((a) => (
             <SmartLink key={a.slug} to={a.slug} className="sks-article-card">
-              <div className="sks-article-card__cover" aria-hidden="true">
-                <ImageIcon size={40} strokeWidth={1.2} />
+              <div className={`sks-article-card__cover${a.image ? " has-image" : ""}`} aria-hidden="true">
+                {a.image ? (
+                  <img src={a.image} alt={a.imageAlt} loading="lazy" />
+                ) : (
+                  <ImageIcon size={40} strokeWidth={1.2} />
+                )}
               </div>
               <div className="sks-article-card__body">
                 <span className="sks-article-card__badge">

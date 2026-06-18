@@ -15,14 +15,16 @@ export interface ArticleMeta {
 
 interface Props {
   meta: ArticleMeta;
+  image?: string;
+  imageAlt?: string;
   children: ReactNode;
 }
 
-export function ArticleLayout({ meta, children }: Props) {
+export function ArticleLayout({ meta, image, imageAlt, children }: Props) {
   const t = useT();
   const { openConsultationModal } = useCity();
 
-  const jsonLd = {
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: meta.title,
@@ -38,6 +40,13 @@ export function ArticleLayout({ meta, children }: Props) {
     mainEntityOfPage: { "@type": "WebPage", "@id": `/${meta.slug}` },
     articleSection: meta.section ?? t("СКС", "ҚКЖ"),
   };
+
+  if (image) {
+    jsonLd.image = {
+      "@type": "ImageObject",
+      url: image,
+    };
+  }
 
   const dateStr = new Date(meta.publishedTime).toLocaleDateString(
     t("ru-RU", "kk-KZ"),
@@ -64,9 +73,14 @@ export function ArticleLayout({ meta, children }: Props) {
           </div>
         </header>
 
-        <div className="article-hero" aria-hidden="true">
-          <ImageIcon size={48} strokeWidth={1.2} />
+        <div className={`article-hero${image ? " has-image" : ""}`} aria-hidden="true">
+          {image ? (
+            <img src={image} alt={imageAlt || meta.title} loading="eager" />
+          ) : (
+            <ImageIcon size={48} strokeWidth={1.2} />
+          )}
         </div>
+
 
         <div className="article-body">{children}</div>
 

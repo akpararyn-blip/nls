@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
+import devicesAsset from "@/assets/devices.png.asset.json";
+
 
 const META = {
   slug: "vybor-oborudovaniya-dlya-lvs",
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/vybor-oborudovaniya-dlya-lvs")({
       { property: "og:url", content: `/${META.slug}` },
       { property: "og:title", content: META.title },
       { property: "og:description", content: META.description },
+      { property: "og:image", content: devicesAsset.url },
       { property: "article:published_time", content: META.publishedTime },
       { property: "article:section", content: META.section },
       { property: "article:author", content: "NLS Kazakhstan" },
@@ -37,7 +40,7 @@ export const Route = createFileRoute("/vybor-oborudovaniya-dlya-lvs")({
 function ArticlePage() {
   return (
     <SiteLayout>
-      <ArticleLayout meta={META}>
+      <ArticleLayout meta={META} image={devicesAsset.url} imageAlt={META.title}>
         <p>
           <strong>Локальная вычислительная сеть (ЛВС)</strong> — это цифровая
           кровеносная система любого бизнеса. От того, насколько грамотно
