@@ -501,8 +501,12 @@ function Articles() {
         <div className="sks-articles-grid">
           {items.map((a) => (
             <SmartLink key={a.slug} to={a.slug} className="sks-article-card">
-              <div className="sks-article-card__cover" aria-hidden="true">
-                <ImageIcon size={40} strokeWidth={1.2} />
+              <div className={`sks-article-card__cover${a.image ? " has-image" : ""}`} aria-hidden="true">
+                {a.image ? (
+                  <img src={a.image} alt={a.imageAlt} loading="lazy" />
+                ) : (
+                  <ImageIcon size={40} strokeWidth={1.2} />
+                )}
               </div>
               <div className="sks-article-card__body">
                 <span className="sks-article-card__badge">
