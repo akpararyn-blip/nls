@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
+import prokladkaAsset from "@/assets/prokladka.png.asset.json";
+
 
 const META = {
   slug: "kak-pravilno-prolozhit-kabel",

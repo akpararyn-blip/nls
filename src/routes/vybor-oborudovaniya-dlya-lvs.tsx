@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
+import devicesAsset from "@/assets/devices.png.asset.json";
+
 
 const META = {
   slug: "vybor-oborudovaniya-dlya-lvs",
