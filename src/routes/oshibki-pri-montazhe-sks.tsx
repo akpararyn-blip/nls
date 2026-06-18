@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
-import problemsAsset from "@/assets/problems.png.asset.json";
+import problemsImg from "@/assets/problems.png";
 
 
 const META = {

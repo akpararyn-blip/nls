@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
-import prokladkaAsset from "@/assets/prokladka.png.asset.json";
+import prokladkaImg from "@/assets/prokladka.png";
 
 
 const META = {
