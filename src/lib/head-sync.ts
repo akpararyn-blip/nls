@@ -20,24 +20,31 @@ export function installHeadSync(router: AnyRouter) {
     const links: Array<Record<string, string>> = [];
 
     for (const m of matches) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const headFn = (m.routeContext?.head ?? m.staticData?.head ?? m.route?.options?.head) as any;
-      // В TanStack Router head хранится в options маршрута
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const route = (router.routesById as any)?.[m.routeId];
-      const opts = route?.options ?? {};
-      const head = typeof opts.head === "function"
-        ? opts.head({ loaderData: m.loaderData, params: m.params, match: m })
-        : undefined;
+      // Ищем функцию head там, где она реально доступна (включая lazy-роуты)
+      // Берем первый доступный вариант:
+      const headFn = 
+        m.routeContext?.head ?? 
+        m.staticData?.head ?? 
+        m.route?.options?.head ?? 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (router.routesById as any)?.[m.routeId]?.options?.head;
+
+      // Выполняем найденную функцию, передавая ей нужные параметры
+      const head = typeof headFn === "function"
+        ? headFn({ loaderData: m.loaderData, params: m.params, match: m })
+        : headFn; 
+
       if (!head) continue;
 
       if (Array.isArray(head.meta)) {
         for (const tag of head.meta) {
           if (!tag) continue;
+          
           if (tag.title) {
             pageTitle = String(tag.title);
             continue;
           }
+          
           const key = tag.name
             ? `name:${tag.name}`
             : tag.property
@@ -47,14 +54,17 @@ export function installHeadSync(router: AnyRouter) {
                 : tag.httpEquiv
                   ? `http:${tag.httpEquiv}`
                   : JSON.stringify(tag);
+                  
           metaMap.set(key, tag);
         }
       }
+      
       if (Array.isArray(head.links)) {
         for (const l of head.links) if (l) links.push(l);
       }
     }
 
+    // Применяем собранный title
     if (pageTitle) document.title = pageTitle;
 
     // Чистим ранее проставленные теги и ставим новые
@@ -74,7 +84,6 @@ export function installHeadSync(router: AnyRouter) {
     }
 
     for (const l of links) {
-      // Стили / favicon уже в index.html — не дублируем `rel=stylesheet` для шрифтов и т.п.
       if (l.rel === "stylesheet") continue;
       if (l.rel === "icon" && document.querySelector('link[rel="icon"]')) continue;
       const el = document.createElement("link");

@@ -8788,3 +8788,77 @@ body::before, body::after { display: none !important; }
   margin: 0 0 18px;
   color: var(--color-text-light, #5a6a85);
 }
+@media (max-width: 600px) {
+  /* Растягиваем контейнер на всю ширину */
+  .storage-calc__period {
+    display: flex;
+    width: 100%;
+    gap: 4px;
+    padding: 4px;
+  }
+  
+  /* Сжимаем кнопки равномерно, чтобы они всегда помещались в один ряд */
+  .storage-calc__period-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 4px;
+    font-size: 0.75rem;
+    gap: 4px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  
+  /* Делаем бейджики со скидками (-3%, -6%) чуть компактнее */
+  .storage-calc__period-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+
+  /* Чуть уменьшаем отступы в самой карточке, чтобы дать кнопкам больше места */
+  .storage-calc {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* 1. Уменьшаем двойные отступы, которые съедают ширину экрана на смартфонах */
+  .calc-form {
+    padding: 16px 12px;
+  }
+  .vdc-card {
+    padding: 16px 12px;
+  }
+
+  /* 2. iOS Safari Fix: принудительно разрешаем флексам и гридам сжиматься */
+  .calc-grid,
+  .calc-form,
+  .vdc-card,
+  .summary-card,
+  .iaas-summary,
+  .iaas-summary__head,
+  .iaas-summary__meta {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* 3. Разрешаем длинным названиям (кластеров и процессоров) переноситься на новую строку */
+  .iaas-summary__meta {
+    word-break: break-word;
+    white-space: normal;
+  }
+  
+  .vdc-tab {
+    white-space: normal;
+    word-break: break-word;
+    min-width: 0;
+    padding: 8px 10px;
+  }
+
+  /* 4. Защита кнопок +/- и инпута от распирания контейнера */
+  .vps-resource-control {
+    min-width: 0;
+  }
+  .vps-resource-input-wrap {
+    min-width: 0 !important;
+  }
+}

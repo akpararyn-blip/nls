@@ -54,9 +54,6 @@ export const PATH_TO_DOMAIN: Record<ServicePath, string> = {
   "/object-storage": "cloud.nls.kz",
   "/cloud-storage": "cloud.nls.kz",
   "/cloud": "cloud.nls.kz",
-  "/kak-pravilno-prolozhit-kabel": "lan.nls.kz",
-  "/vybor-oborudovaniya-dlya-lvs": "lan.nls.kz",
-  "/oshibki-pri-montazhe-sks": "lan.nls.kz",
 };
 
 /**
