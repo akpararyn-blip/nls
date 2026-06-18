@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { useNavigate } from "@tanstack/react-router";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
-import { submitLead } from "@/lib/submitLead";
+import { submitLead, BlacklistedPhoneError } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
 import { isPhoneSuspicious } from "@/lib/phone-validation";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
@@ -117,7 +117,7 @@ export function LeadForm({
       };
 
       const suspicious = isPhoneSuspicious(phone);
-      await submitLead({ formName, action, fields, city: cityRu, iin, isSpam: suspicious });
+      await submitLead({ formName, action, fields, city: cityRu, iin, isSpam: suspicious, phone });
 
       // Сохраняем заявку для страницы thank-you
       const orderNumber = generateOrderNumber();
