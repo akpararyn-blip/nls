@@ -59,6 +59,10 @@ export function HrApplyForm() {
         navigate({ to: "/thank-you", search: { type: "hr" } });
       }
     } catch (err) {
+      if (err instanceof BlacklistedPhoneError) {
+        navigate({ to: "/spam" });
+        return;
+      }
       console.error(err);
       alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));
     } finally {
