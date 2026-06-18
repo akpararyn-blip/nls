@@ -138,6 +138,10 @@ export function LeadForm({
         navigate({ to: suspicious ? "/spam" : "/thank-you" });
       }
     } catch (err) {
+      if (err instanceof BlacklistedPhoneError) {
+        navigate({ to: "/spam" });
+        return;
+      }
       console.error(err);
       alert(t("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.", "Өтінімді жіберу мүмкін болмады. Қайталап көріңіз."));
     } finally {

@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Send } from "lucide-react";
 import { ConsentCheckbox } from "@/components/nls/ConsentCheckbox";
 import { RecaptchaNotice } from "@/components/nls/RecaptchaNotice";
-import { submitLead } from "@/lib/submitLead";
+import { submitLead, BlacklistedPhoneError } from "@/lib/submitLead";
 import { formatKzPhone } from "@/lib/phone-mask";
 import { generateOrderNumber, saveLastOrder } from "@/lib/order-number";
 import { useT } from "@/lib/lang-context";
@@ -40,6 +40,7 @@ export function HrApplyForm() {
         target: "hr",
         fields,
         isSpam: suspicious,
+        phone: form.phone,
       });
 
       const orderNumber = generateOrderNumber();
