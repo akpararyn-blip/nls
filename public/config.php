@@ -7,7 +7,7 @@ header('Cache-Control: no-store');
 // Добавляйте новые номера в массив ниже.
 echo json_encode([
   'blacklist' => [
-    // '77001234567',
-    // '77019998877',
+    '77020670431',
+    '77011230275',
   ],
 ], JSON_UNESCAPED_UNICODE);
