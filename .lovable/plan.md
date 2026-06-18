@@ -1,70 +1,65 @@
-## 1. Мета-теги для каждой страницы
+## Чёрный список телефонов
 
-Сейчас у большинства маршрутов уже есть `title` + `description` + `og:*`, но нет `keywords` и местами формулировки можно подтянуть. Я пройдусь по всем route-файлам в `src/routes/` (кроме служебных `__root`, `thank-you`, `spam`, `login`, `privacy`, `requisites` — у них оставлю минимум + `noindex` там, где было) и приведу `head: () => ({ meta: [...] })` к единому виду:
+### 1. Файл на хостинге
 
-- `title` — уникальный, ≤ 60 символов, с ключевым словом.
-- `description` — уникальный, ≤ 160 символов.
-- `keywords` — 5–10 ключей через запятую (заглушка под услугу, под доработку пользователем).
-- `og:title`, `og:description`, `og:type` (`website` / `article` для статей).
-- `link rel="canonical"` — относительный путь страницы.
+Создаём `public/config.php` (попадёт в собранный сайт как есть, его можно будет править прямо на хостинге):
 
-Затронутые файлы (заполню «как вижу», пользователь поправит):
-`index.tsx`, `about.tsx`, `contacts.tsx`, `hr.tsx`, `internet.tsx`, `it.tsx`, `it-sks.tsx`, `cloud.tsx`, `cloud-storage.tsx`, `object-storage.tsx`, `iaas.tsx`, `vps.tsx`, `colocation.tsx`, `colocation-full.tsx`, `dedicated.tsx`.
+```php
+<?php
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Cache-Control: no-store');
 
-## 2. Блок «Статьи» на странице `/it-sks`
+// Чёрный список номеров. Только 11 цифр, формат 77XXXXXXXXX.
+// Добавляйте новые номера в массив ниже.
+echo json_encode([
+  'blacklist' => [
+    // '77001234567',
+    // '77019998877',
+  ],
+], JSON_UNESCAPED_UNICODE);
+```
 
-В `src/routes/it-sks.tsx` перед `<Faq />` добавлю новую секцию `<Articles />`:
+URL после деплоя: `https://<домен>/config.php`.
 
-- Заголовок секции + подзаголовок (RU/KZ через `useT`).
-- Сетка из 3 карточек (desktop — 3 в ряд, mobile — стэк).
-- Карточка: заглушка-изображение (плейсхолдер 16:9, серый блок с иконкой `ImageIcon` из lucide), бейдж «Статья», заголовок, lorem-текст (2–3 строки), мета (дата + время чтения), `SmartLink` «Читать →».
-- Стили добавлю в `src/styles.css` (или существующий `nls.css`), используя текущие токены дизайн-системы.
+### 2. Загрузка списка во фронте
 
-3 статьи-заглушки:
-1. `kak-pravilno-prolozhit-kabel` — «Как правильно проложить кабель в офисе»
-2. `vybor-oborudovaniya-dlya-lvs` — «Как выбрать оборудование для ЛВС»
-3. `oshibki-pri-montazhe-sks` — «5 ошибок при монтаже СКС»
+Новый модуль `src/lib/phone-blacklist.ts`:
+- Функция `fetchPhoneBlacklist()`: fetch `/config.php`, парсит JSON, нормализует каждый номер (`replace(/\D/g, "")`, ведущая `8` → `7`), оставляет только 11-значные. Кэш в памяти на время сессии + защита от ошибок (если файл недоступен — пустой список, форма продолжает работать).
+- Функция `isPhoneBlacklisted(phone: string): Promise<boolean>` — нормализует переданный номер и проверяет наличие в списке.
 
-## 3. Страницы статей + SEO как у новостей
+### 3. Интеграция в отправку форм
 
-Создам по файлу на статью в `src/routes/`:
-`kak-pravilno-prolozhit-kabel.tsx`, `vybor-oborudovaniya-dlya-lvs.tsx`, `oshibki-pri-montazhe-sks.tsx`.
+В `src/lib/submitLead.ts` добавить новый флаг и проверку **перед** `executeRecaptcha` и `sendToTelegram`:
 
-Маршруты топ-уровневые, чтобы URL совпадал с требованием `lan.nls.kz/<slug>`. Каждая страница:
+```ts
+const blocked = await isPhoneBlacklisted(phoneFromFields);
+if (blocked) {
+  throw new BlacklistedPhoneError();
+}
+```
 
-- `SiteLayout` + компонент `ArticleLayout` (новый, в `src/components/nls/ArticleLayout.tsx`) с хлебными крошками `Главная → СКС → <статья>`, заглушкой hero-изображения, заголовком H1, мета (дата публикации, автор «NLS Kazakhstan», время чтения), телом из lorem ipsum (несколько H2/параграфов/списков), CTA «Заказать монтаж СКС» в конце.
-- `head: () => ({ meta, links })` со «статейным» SEO:
-  - `title`, `description`, `keywords`.
-  - `og:type="article"`, `og:title`, `og:description`, `og:url` (относительный).
-  - `article:published_time`, `article:author`, `article:section="СКС"`.
-  - JSON-LD `Article` (через `<script type="application/ld+json">` в `links`/`scripts` head TanStack — фактически вставлю инлайн в компонент через `useEffect` или через `head().scripts`, как уже сделано в проекте; проверю текущий шаблон в `src/lib/head-sync.ts` — он поддерживает только meta/links, поэтому JSON-LD добавлю прямо в JSX компонента статьи через `<script>` тэг рендерится в head нельзя, поэтому пойду тем же путём, что и `index.html` — встрою `<script type="application/ld+json">` в тело страницы (Google это принимает).
+Чтобы взять телефон из `fields`, добавим в `SubmitLeadOptions` опциональное поле `phone?: string` (передаётся напрямую из форм) — это надёжнее, чем парсить `fields` по ключу с локализацией.
 
-## 4. Поддоменная маршрутизация
+Поведение «полностью блокировать»:
+- `submitLead` НЕ зовёт reCAPTCHA и НЕ шлёт в Telegram.
+- Кидает `BlacklistedPhoneError`.
+- В формах (`LeadForm.tsx`, `HrApplyForm.tsx`) в `catch` ловим этот класс ошибки и делаем `navigate({ to: "/spam" })` без alert.
 
-В `src/config/links.ts`:
+### 4. Файлы
 
-- Расширю `ServicePath` типом, включающим 3 новых slug-а.
-- Добавлю их в `PATH_TO_DOMAIN` со значением `lan.nls.kz` (это «родной» поддомен `/it-sks`).
-- В `resolveLink`: если текущий хост `lan.nls.kz`, ссылка на `/kak-pravilno-prolozhit-kabel` остаётся внутренней; с других хостов будет переписана на `https://lan.nls.kz/kak-pravilno-prolozhit-kabel`. Логика уже есть в ветке «Прочие сервисные пути → исторический поддомен», нужно только добавить пути в карту.
-- В блоке `Articles` и в карточках использовать `SmartLink to="/kak-pravilno-prolozhit-kabel"` и т.д.
+**Создать:**
+- `public/config.php`
+- `src/lib/phone-blacklist.ts`
 
-## 5. Технические детали
+**Изменить:**
+- `src/lib/submitLead.ts` — экспорт `BlacklistedPhoneError`, проверка списка в самом начале, новый параметр `phone`.
+- `src/components/forms/LeadForm.tsx` — передавать `phone` в `submitLead`, ловить `BlacklistedPhoneError` → redirect на `/spam`.
+- `src/components/forms/HrApplyForm.tsx` — то же самое.
 
-- `src/routeTree.gen.ts` обновится автоматически TanStack File-Based роутером при добавлении файлов в `src/routes/`.
-- JSON-LD для `Article` будет рендериться в теле страницы (текущий `head-sync` не прокидывает inline-скрипты), что валидно для Google.
-- Никаких изменений в `index.html` и `__root.tsx` не требуется.
-- Изображения статей — пока заглушка (CSS-блок с иконкой); пользователь заменит позже.
+### 5. Технические детали
 
-## Файлы
-
-Изменяю:
-- все основные route-файлы из п.1
-- `src/routes/it-sks.tsx` (новая секция Articles)
-- `src/config/links.ts` (добавить slug-и статей)
-- `src/styles.css` или `src/styles/nls.css` (стили карточек статей и article-layout)
-
-Создаю:
-- `src/routes/kak-pravilno-prolozhit-kabel.tsx`
-- `src/routes/vybor-oborudovaniya-dlya-lvs.tsx`
-- `src/routes/oshibki-pri-montazhe-sks.tsx`
-- `src/components/nls/ArticleLayout.tsx`
+- Нормализация номера на клиенте и в проверке одинаковая: убрать всё кроме цифр, заменить ведущую `8` на `7`. Сравнение по строке из 11 цифр.
+- Запрос к `config.php` идёт с `cache: "no-store"`, чтобы свежие правки на хостинге подхватывались сразу.
+- Если хостинг отдаст HTML/ошибку — список считается пустым, отправка продолжается штатно (никогда не ломаем пользователю отправку из-за упавшего конфига).
+- Никаких изменений в `isPhoneSuspicious` и текущей логике «подозрительных» номеров — это независимый дополнительный слой.
