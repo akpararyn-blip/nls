@@ -1,5 +1,8 @@
 import { sendToTelegram } from "@/services/telegramApi";
 import { executeRecaptcha } from "@/lib/recaptcha";
+import { BlacklistedPhoneError, isPhoneBlacklisted } from "@/lib/phone-blacklist";
+
+export { BlacklistedPhoneError } from "@/lib/phone-blacklist";
 
 export type LeadTarget = "sales" | "hr";
 
@@ -18,6 +21,8 @@ export interface SubmitLeadOptions {
   iin?: string;
   /** Заявка определена как спам (битый телефон и т.п.) */
   isSpam?: boolean;
+  /** Телефон для проверки по чёрному списку (опционально, но рекомендуется) */
+  phone?: string;
 }
 
 function escapeHtml(text: string): string {
@@ -37,7 +42,14 @@ export async function submitLead({
   city,
   iin,
   isSpam = false,
+  phone,
 }: SubmitLeadOptions): Promise<void> {
+  // 0. Чёрный список телефонов — проверяем ДО reCAPTCHA и отправки в Telegram.
+  // Если номер в списке — заявка молча блокируется, пользователь редиректится на /spam.
+  if (phone && (await isPhoneBlacklisted(phone))) {
+    throw new BlacklistedPhoneError();
+  }
+
   // 1. reCAPTCHA v3 — выполняем, но результат в сообщение не пишем
   try {
     await executeRecaptcha(action);
