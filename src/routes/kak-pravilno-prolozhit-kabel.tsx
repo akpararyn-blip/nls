@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/nls/SiteLayout";
 import { ArticleLayout } from "@/components/nls/ArticleLayout";
-import prokladkaAsset from "@/assets/prokladka.png.asset.json";
+import prokladkaImg from "@/assets/prokladka.png";
 
 
 const META = {
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/kak-pravilno-prolozhit-kabel")({
       { property: "og:url", content: `/${META.slug}` },
       { property: "og:title", content: META.title },
       { property: "og:description", content: META.description },
-      { property: "og:image", content: prokladkaAsset.url },
+      { property: "og:image", content: prokladkaImg },
       { property: "article:published_time", content: META.publishedTime },
       { property: "article:section", content: META.section },
       { property: "article:author", content: "NLS Kazakhstan" },
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/kak-pravilno-prolozhit-kabel")({
 function ArticlePage() {
   return (
     <SiteLayout>
-      <ArticleLayout meta={META} image={prokladkaAsset.url} imageAlt={META.title}>
+      <ArticleLayout meta={META} image={prokladkaImg} imageAlt={META.title}>
         <p>
           Независимо от того, прокладываете вы кабель для трех компьютеров или
           для трехсот, эти правила нарушать нельзя:
