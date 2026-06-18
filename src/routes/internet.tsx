@@ -34,6 +34,12 @@ export const Route = createFileRoute("/internet")({
         content:
           "Высокоскоростной интернет от 10 Мбит/с до 10 Гбит/с для офисов и бизнес-центров. Симметричные каналы, SLA, поддержка 24/7.",
       },
+      {
+        name: "keywords",
+        content:
+          "интернет для бизнеса, оптоволокно, 10 Гбит/с, симметричный канал, SLA, провайдер Казахстан, корпоративный интернет",
+      },
+      { property: "og:url", content: "/internet" },
       { property: "og:title", content: "Высокоскоростной интернет для бизнеса — NLS Kazakhstan" },
       {
         property: "og:description",

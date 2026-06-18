@@ -23,7 +23,10 @@ export type ServicePath =
   | "/iaas"
   | "/object-storage"
   | "/cloud-storage"
-  | "/cloud";
+  | "/cloud"
+  | "/kak-pravilno-prolozhit-kabel"
+  | "/vybor-oborudovaniya-dlya-lvs"
+  | "/oshibki-pri-montazhe-sks";
 
 /** Поддомен → внутренний путь, который он представляет */
 export const DOMAIN_TO_PATH: Record<string, ServicePath> = {
@@ -51,6 +54,9 @@ export const PATH_TO_DOMAIN: Record<ServicePath, string> = {
   "/object-storage": "cloud.nls.kz",
   "/cloud-storage": "cloud.nls.kz",
   "/cloud": "cloud.nls.kz",
+  "/kak-pravilno-prolozhit-kabel": "lan.nls.kz",
+  "/vybor-oborudovaniya-dlya-lvs": "lan.nls.kz",
+  "/oshibki-pri-montazhe-sks": "lan.nls.kz",
 };
 
 /**
