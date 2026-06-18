@@ -7431,38 +7431,51 @@ body::before, body::after { display: none !important; }
 
 .storage-calc__period {
   display: inline-flex;
-  gap: 6px;
+  gap: 8px;
   padding: 6px;
-  background: #f1f4f8;
-  border-radius: 14px;
+  background: #d9e3eb; /* Темный фон как в IaaS */
+  border: 1px solid rgba(0, 85, 123, 0.18);
+  border-radius: 999px;
   width: fit-content;
 }
+
 .storage-calc__period-btn {
+  position: relative; /* Обязательно для позиционирования бейджика */
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 10px 22px;
   background: transparent;
   border: none;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--color-blue-dark);
   cursor: pointer;
   transition: background .2s ease, color .2s ease;
 }
-.storage-calc__period-btn.is-active {
-  background: #fff;
-  color: var(--color-orange);
-  box-shadow: 0 2px 8px rgba(15,23,42,0.08);
+
+.storage-calc__period-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
 }
+
+.storage-calc__period-btn.is-active {
+  background: var(--color-blue-dark);
+  color: var(--color-white);
+  box-shadow: 0 4px 14px rgba(0, 85, 123, 0.18);
+}
+
 .storage-calc__period-badge {
+  position: absolute; /* Делаем бейджик "плавающим" */
+  top: -8px;
+  right: -8px;
   background: var(--color-orange);
   color: #fff;
   border-radius: 999px;
   font-size: 0.7rem;
-  padding: 2px 8px;
+  padding: 2px 7px;
   font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .storage-calc__result {
