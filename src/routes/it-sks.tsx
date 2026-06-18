@@ -446,6 +446,11 @@ function Articles() {
       ),
       date: t("1 июня 2026", "2026 ж. 1 маусым"),
       minutes: 6,
+      image: prokladkaAsset.url,
+      imageAlt: t(
+        "Как правильно проложить кабель в офисе",
+        "Кеңседе кабельді қалай дұрыс төсеу керек"
+      ),
     },
     {
       slug: "/vybor-oborudovaniya-dlya-lvs",
@@ -459,6 +464,11 @@ function Articles() {
       ),
       date: t("5 июня 2026", "2026 ж. 5 маусым"),
       minutes: 7,
+      image: devicesAsset.url,
+      imageAlt: t(
+        "Как выбрать оборудование для ЛВС",
+        "ЖЕЖ үшін жабдықты қалай таңдау керек"
+      ),
     },
     {
       slug: "/oshibki-pri-montazhe-sks",
@@ -472,6 +482,11 @@ function Articles() {
       ),
       date: t("10 июня 2026", "2026 ж. 10 маусым"),
       minutes: 5,
+      image: problemsAsset.url,
+      imageAlt: t(
+        "5 типичных ошибок при монтаже СКС",
+        "ҚКЖ орнатудағы 5 типтік қате"
+      ),
     },
   ];
 
