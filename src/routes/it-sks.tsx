@@ -446,7 +446,7 @@ function Articles() {
       ),
       date: t("1 июня 2026", "2026 ж. 1 маусым"),
       minutes: 6,
-      image: prokladkaAsset.url,
+      image: prokladkaImg,
       imageAlt: t(
         "Как правильно проложить кабель в офисе",
         "Кеңседе кабельді қалай дұрыс төсеу керек"
@@ -464,7 +464,7 @@ function Articles() {
       ),
       date: t("5 июня 2026", "2026 ж. 5 маусым"),
       minutes: 7,
-      image: devicesAsset.url,
+      image: devicesImg,
       imageAlt: t(
         "Как выбрать оборудование для ЛВС",
         "ЖЕЖ үшін жабдықты қалай таңдау керек"
@@ -482,7 +482,7 @@ function Articles() {
       ),
       date: t("10 июня 2026", "2026 ж. 10 маусым"),
       minutes: 5,
-      image: problemsAsset.url,
+      image: problemsImg,
       imageAlt: t(
         "5 типичных ошибок при монтаже СКС",
         "ҚКЖ орнатудағы 5 типтік қате"
