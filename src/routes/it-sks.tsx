@@ -8,8 +8,12 @@ import sksHero from "@/assets/sks.png";
 import sksBefore from "@/assets/remontwithsks.png";
 import sksAfter from "@/assets/afterremontsks.png";
 import itTeamImg from "@/assets/it-team.png";
+import prokladkaAsset from "@/assets/prokladka.png.asset.json";
+import devicesAsset from "@/assets/devices.png.asset.json";
+import problemsAsset from "@/assets/problems.png.asset.json";
 import { useState } from "react";
 import { LeadForm } from "@/components/forms/LeadForm";
+
 import {
   Wifi,
   Phone,
