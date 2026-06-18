@@ -10,7 +10,7 @@
  * на 7 услуг (Облачные решения + Услуги дата-центра) переписываются на
  * cloud.nls.kz/<service>, а не на исторический «свой» поддомен.
  */
-export const USE_INTERNAL_ROUTING = true;
+export const USE_INTERNAL_ROUTING = false;
 
 export type ServicePath =
   | "/internet"
