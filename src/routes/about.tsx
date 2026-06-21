@@ -151,7 +151,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="about-services">
+      <section className="about-services" id="about-services">
         <div className="container">
           <div className="section-title">
             <span className="section-eyebrow">{t("Что мы делаем", "Біз не істейміз")}</span>
