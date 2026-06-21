@@ -62,29 +62,60 @@ function AboutPage() {
 
   return (
     <SiteLayout>
-      <section className="about-hero">
+      <section className="about-hero about-hero--v2">
+        <div className="about-hero__bg" aria-hidden />
         <div className="container">
-          <span className="section-eyebrow about-hero-eyebrow">{t("О компании", "Компания туралы")}</span>
-          <h1 className="about-hero-title">
-            <span style={{ color: "var(--color-orange)" }}>NLS</span> Kazakhstan — {t("единый оператор связи и IT-инфраструктуры", "біртұтас байланыс және IT-инфрақұрылым операторы")}
-          </h1>
-          <p className="about-hero-text">
-            {t(
-              "Более 18 лет мы строим телеком и IT-инфраструктуру для бизнеса в Казахстане. Более 1 000 специалистов, собственный дата‑центр и магистральная сеть — всё, чтобы ваш бизнес работал без перебоев.",
-              "18 жылдан астам уақыт бойы біз Қазақстандағы бизнес үшін телеком және IT-инфрақұрылым құрып келеміз. 1 000-нан астам маман, меншікті дата-орталық және магистральдық желі — бизнесіңіздің үзіліссіз жұмыс істеуі үшін бәрі бар."
-            )}
-          </p>
+          <div className="about-hero-grid">
+            <div className="about-hero-content">
+              <span className="section-eyebrow about-hero-eyebrow">{t("О компании", "Компания туралы")}</span>
+              <h1 className="about-hero-title">
+                <span style={{ color: "var(--color-orange)" }}>NLS</span> Kazakhstan —{" "}
+                <span className="about-hero-title__accent">
+                  {t("единый оператор связи и IT-инфраструктуры", "біртұтас байланыс және IT-инфрақұрылым операторы")}
+                </span>
+              </h1>
+              <p className="about-hero-text">
+                {t(
+                  "Более 18 лет мы строим телеком и IT-инфраструктуру для бизнеса в Казахстане. Более 1 000 специалистов, собственный дата‑центр и магистральная сеть — всё, чтобы ваш бизнес работал без перебоев.",
+                  "18 жылдан астам уақыт бойы біз Қазақстандағы бизнес үшін телеком және IT-инфрақұрылым құрып келеміз. 1 000-нан астам маман, меншікті дата-орталық және магистральдық желі — бизнесіңіздің үзіліссіз жұмыс істеуі үшін бәрі бар."
+                )}
+              </p>
 
-          <div className="about-stats">
-            {stats.map((s) => (
-              <div className="about-stat" key={s.label}>
-                <div className="about-stat-value">{s.value}</div>
-                <div className="about-stat-label">{s.label}</div>
+              <div className="about-hero-actions">
+                <button type="button" className="btn btn-primary" onClick={openConsultationModal}>
+                  {t("Получить консультацию", "Кеңес алу")}
+                </button>
+                <a href="#about-services" className="about-hero-link">
+                  {t("Наши услуги", "Қызметтеріміз")} <span aria-hidden>→</span>
+                </a>
               </div>
-            ))}
+            </div>
+
+            <div className="about-hero-visual" aria-hidden>
+              <div className="about-hero-stats-card">
+                <div className="about-hero-stats-card__head">
+                  <span className="about-hero-stats-card__dot" />
+                  {t("NLS в цифрах", "Сандардағы NLS")}
+                </div>
+                <div className="about-stats about-stats--inset">
+                  {stats.map((s) => (
+                    <div className="about-stat" key={s.label}>
+                      <div className="about-stat-value">{s.value}</div>
+                      <div className="about-stat-label">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="about-hero-stats-card__foot">
+                  <span>Tier III</span>
+                  <span>24/7 SLA</span>
+                  <span>{t("Алматы · Астана", "Алматы · Астана")}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
 
       <section className="about-mission">
         <div className="container">
