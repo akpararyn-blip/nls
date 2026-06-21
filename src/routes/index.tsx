@@ -8,6 +8,7 @@ import heroMain from "@/assets/hero-main.png";
 import datacenterImg from "@/assets/datacenter.png";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { USE_INTERNAL_ROUTING, currentDomainPath, type ServicePath } from "@/config/links";
+import { SmartLink } from "@/components/nls/SmartLink";
 import { InternetPage } from "./internet";
 import { ColocationPage } from "./colocation";
 import { SksPage } from "./it-sks";
