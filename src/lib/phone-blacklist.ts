@@ -1,6 +1,6 @@
 /**
  * Чёрный список телефонов.
- * Список тянется с /config.php на хостинге — там администратор вручную
+ * Список тянется с /blacklist.php на хостинге — там администратор вручную
  * пополняет массив запрещённых номеров. Если файл недоступен или вернул
  * что-то некорректное — список считается пустым, чтобы не блокировать
  * легитимные заявки.
@@ -25,7 +25,7 @@ let cache: Promise<Set<string>> | null = null;
 
 async function loadBlacklist(): Promise<Set<string>> {
   try {
-    const res = await fetch("/config.php", { cache: "no-store" });
+    const res = await fetch("/blacklist.php", { cache: "no-store" });
     if (!res.ok) return new Set();
     const data = (await res.json()) as { blacklist?: unknown };
     if (!data || !Array.isArray(data.blacklist)) return new Set();
@@ -36,7 +36,7 @@ async function loadBlacklist(): Promise<Set<string>> {
     }
     return set;
   } catch (err) {
-    console.warn("[phone-blacklist] не удалось загрузить /config.php:", err);
+    console.warn("[phone-blacklist] не удалось загрузить /blacklist.php:", err);
     return new Set();
   }
 }
