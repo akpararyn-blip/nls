@@ -1,6 +1,5 @@
-import { sendToTelegram } from "@/services/telegramApi";
 import { executeRecaptcha } from "@/lib/recaptcha";
-import { BlacklistedPhoneError, isPhoneBlacklisted } from "@/lib/phone-blacklist";
+import { BlacklistedPhoneError } from "@/lib/phone-blacklist";
 
 export { BlacklistedPhoneError } from "@/lib/phone-blacklist";
 
@@ -21,19 +20,27 @@ export interface SubmitLeadOptions {
   iin?: string;
   /** Заявка определена как спам (битый телефон и т.п.) */
   isSpam?: boolean;
-  /** Телефон для проверки по чёрному списку (опционально, но рекомендуется) */
+  /** Телефон для проверки по чёрному списку и нормализации */
   phone?: string;
+  /** ERP form_key (по умолчанию consultation) */
+  formKey?: string;
 }
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
 
-const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+const HANDLER_URL = "/handler.php";
 
+/**
+ * Отправка заявки на серверный обработчик (handler.php).
+ * Handler сам валидирует, шлёт в Telegram, дублирует в ERP и пишет лог.
+ * Все секреты (токен TG, chat_id, ERP-URL) живут только на сервере.
+ */
 export async function submitLead({
   formName,
   action,
@@ -43,77 +50,90 @@ export async function submitLead({
   iin,
   isSpam = false,
   phone,
+  formKey = "consultation",
 }: SubmitLeadOptions): Promise<void> {
-  // 0. Чёрный список телефонов — проверяем ДО reCAPTCHA и отправки в Telegram.
-  // Если номер в списке — заявка молча блокируется, пользователь редиректится на /spam.
-  if (phone && (await isPhoneBlacklisted(phone))) {
-    throw new BlacklistedPhoneError();
-  }
-
-  // 1. reCAPTCHA v3 — выполняем, но результат в сообщение не пишем
+  // reCAPTCHA v3 — токен валидируется на бэке
+  let recaptchaToken = "";
   try {
-    await executeRecaptcha(action);
+    recaptchaToken = await executeRecaptcha(action);
   } catch (err) {
     console.error("[submitLead] reCAPTCHA error:", err);
-    throw new Error("Не удалось пройти проверку reCAPTCHA. Попробуйте обновить страницу.");
+    throw new Error(
+      "Не удалось пройти проверку reCAPTCHA. Попробуйте обновить страницу."
+    );
   }
 
-  // 2. Контекст страницы
+  // Контекст страницы
   const pageTitle = typeof document !== "undefined" ? document.title : "";
-  const fullUrl = typeof window !== "undefined" ? window.location.href : "";
+  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
   const cleanUrl =
     typeof window !== "undefined"
       ? window.location.origin + window.location.pathname
       : "";
 
   // UTM-метки
-  const utmPairs: Array<[string, string]> = [];
+  const utm: Record<string, string> = {};
   if (typeof window !== "undefined") {
     const params = new URLSearchParams(window.location.search);
     for (const k of UTM_KEYS) {
       const v = params.get(k);
-      if (v) utmPairs.push([k, v]);
+      if (v) utm[k] = v;
     }
   }
 
-  // 3. Поля
-  const fieldLines = Object.entries(fields)
-    .filter(([k, v]) => v && String(v).trim() !== "" && k !== "Город")
-    .map(([k, v]) => `• <b>${escapeHtml(k)}:</b> ${escapeHtml(String(v))}`)
-    .join("\n");
-
-  const iinLine = iin
-    ? `\n• <b>Проверить ИИН:</b> https://pk.adata.kz/counterparty/main/company/${iin}/basic-info`
-    : "";
-
-  // 4. Сборка сообщения
-  const parts: string[] = [];
-
-  if (isSpam) {
-    parts.push("🚨 <b>ДАННАЯ ЗАЯВКА УЛИЧЕНА КАК СПАМ</b> 🚨");
+  // Чистим undefined/null в fields — на бэк уходит только то, что заполнено
+  const cleanFields: Record<string, string> = {};
+  for (const [k, v] of Object.entries(fields)) {
+    if (v === undefined || v === null) continue;
+    const s = String(v).trim();
+    if (s === "") continue;
+    cleanFields[k] = s;
   }
 
-  parts.push(
-    `🔔 <b>${escapeHtml(formName)}</b>\n` +
-      `📄 Страница: ${escapeHtml(pageTitle)}\n` +
-      `🔗 ${escapeHtml(cleanUrl)}`
-  );
+  const payload = {
+    formName,
+    action,
+    target,
+    fields: cleanFields,
+    city: city ?? "",
+    iin: iin ?? "",
+    isSpam,
+    phone: phone ?? "",
+    pageTitle,
+    pageUrl,
+    cleanUrl,
+    utm,
+    formKey,
+    recaptchaToken,
+  };
 
-  parts.push(`<b>Данные заявки:</b>\n${fieldLines}${iinLine}`);
-
-  if (city) {
-    parts.push(`🏙 Город: ${escapeHtml(city)}`);
+  let res: Response;
+  try {
+    res = await fetch(HANDLER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error("[submitLead] network error:", err);
+    throw new Error("Сеть недоступна. Попробуйте ещё раз.");
   }
 
-  if (utmPairs.length > 0) {
-    const utmBlock = utmPairs.map(([k, v]) => `${k}=${escapeHtml(v)}`).join("\n");
-    parts.push(`<b>UTM-метки:</b>\n${utmBlock}`);
+  let data: { ok?: boolean; spam?: boolean; error?: string } = {};
+  try {
+    data = await res.json();
+  } catch {
+    /* handler всегда возвращает JSON, но подстрахуемся */
   }
 
-  parts.push(`🔗 Полная ссылка: ${escapeHtml(fullUrl)}`);
+  if (!res.ok || !data.ok) {
+    if (res.status === 422) throw new Error("Некорректный номер телефона.");
+    throw new Error(data.error || "Не удалось отправить заявку.");
+  }
 
-  const text = parts.join("\n\n");
-
-  // 5. Отправка в Telegram
-  await sendToTelegram(text, target);
+  // Handler в blacklist-кейсе возвращает {ok:true, spam:true}.
+  // Возвращаем ту же ошибку, что и раньше — формы её ловят и редиректят на /spam.
+  if (data.spam && !isSpam) {
+    throw new BlacklistedPhoneError();
+  }
 }
