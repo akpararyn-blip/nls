@@ -7,7 +7,7 @@
  * 1) Валидирует и санитизирует данные.
  * 2) Проверяет blacklist / reCAPTCHA / rate-limit.
  * 3) Отправляет сообщение в Telegram.
- * 4) Дублирует заявку в ERP (multipart/form-data).
+ * 4) Дублирует заявку в ERP (JSON).
  * 5) Логирует результат в ../private/logs/leads-YYYY-MM.log.
  *
  * Секреты лежат в /private/config.php (вне httpdocs).
@@ -307,7 +307,7 @@ if (!empty($CFG['TELEGRAM_BOT_TOKEN']) && $chatId !== '') {
   }
 }
 
-// ===== ERP (multipart/form-data) =================================
+// ===== ERP (JSON) =================================================
 // Сборка comment
 $commentParts = [];
 if ($pageTitle !== '' || $cleanUrl !== '') {
@@ -365,9 +365,10 @@ if (!empty($CFG['ERP_URL'])) {
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => (int)($CFG['ERP_TIMEOUT'] ?? 8),
     CURLOPT_HTTPHEADER => [
-        'Accept: application/json'
+        'Accept: application/json',
+        'Content-Type: application/json',
     ],
-    CURLOPT_POSTFIELDS => $body, // массив → multipart/form-data
+    CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
   ]);
   $erpResp = curl_exec($ch);
   $erpStatus = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
