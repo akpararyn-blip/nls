@@ -1,4 +1,8 @@
+public/private/config.php
 # Logs
+# Игнорируем файлы логов и счетчики лимитов, но сохраняем сами папки
+private/logs/*.log
+private/logs/ratelimit/*.json
 logs
 *.log
 npm-debug.log*

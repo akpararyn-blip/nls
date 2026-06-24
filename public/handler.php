@@ -16,8 +16,9 @@
 
 declare(strict_types=1);
 
+
 // ===== Конфиг =====================================================
-$configPath = __DIR__ . '/../private/config.php';
+$configPath = __DIR__ . '/private/config.php';
 if (!is_file($configPath)) {
   http_response_code(500);
   header('Content-Type: application/json; charset=utf-8');
@@ -105,7 +106,7 @@ function channel_grouping(array $utm): string {
 
 // ===== Логирование ===============================================
 function write_log(array $CFG, array $entry): void {
-  $dir = $CFG['LOG_DIR'] ?? (__DIR__ . '/../private/logs');
+  $dir = $CFG['LOG_DIR'] ?? (__DIR__ . '/private/logs');
   if (!is_dir($dir)) {
     @mkdir($dir, 0750, true);
   }
@@ -119,7 +120,7 @@ function write_log(array $CFG, array $entry): void {
 function rate_limited(array $CFG): bool {
   $limit = (int)($CFG['RATE_LIMIT_PER_MIN'] ?? 10);
   if ($limit <= 0) return false;
-  $dir = ($CFG['LOG_DIR'] ?? (__DIR__ . '/../private/logs')) . '/ratelimit';
+  $dir = ($CFG['LOG_DIR'] ?? (__DIR__ . '/private/logs')) . '/ratelimit';
   if (!is_dir($dir)) @mkdir($dir, 0750, true);
   $key = preg_replace('/[^a-z0-9._:-]/i', '_', client_ip());
   $file = $dir . '/' . $key . '.json';
@@ -192,8 +193,8 @@ $nameVal  = '';
 $phoneVal = '';
 foreach ($fields as $k => $v) {
   $lk = mb_strtolower($k, 'UTF-8');
-  if ($nameVal === ''  && (str_contains($lk, 'фио') || str_contains($lk, 'имя') || str_contains($lk, 'аты'))) $nameVal = $v;
-  if ($phoneVal === '' && (str_contains($lk, 'телефон') || str_contains($lk, 'phone'))) $phoneVal = $v;
+  if ($nameVal === ''  && (strpos($lk, 'фио') !== false || strpos($lk, 'имя') !== false || strpos($lk, 'аты') !== false)) $nameVal = $v;
+  if ($phoneVal === '' && (strpos($lk, 'телефон') !== false || strpos($lk, 'phone') !== false)) $phoneVal = $v;
 }
 $phoneNorm = normalize_phone($payload['phone'] ?? $phoneVal);
 if (strlen($phoneNorm) !== 11) {
@@ -202,6 +203,7 @@ if (strlen($phoneNorm) !== 11) {
   exit;
 }
 
+// ===== Blacklist =================================================
 // ===== Blacklist =================================================
 $blacklist = [];
 $blFile = __DIR__ . '/blacklist.php';
@@ -213,7 +215,7 @@ if (is_file($blFile)) {
   $blJson = ob_get_clean();
   $blData = json_decode((string)$blJson, true);
   if (is_array($blData) && isset($blData['blacklist']) && is_array($blData['blacklist'])) {
-    $blacklist = array_map(fn($p) => normalize_phone((string)$p), $blData['blacklist']);
+    $blacklist = array_map(function($p) { return normalize_phone((string)$p); }, $blData['blacklist']);
   }
 }
 if (in_array($phoneNorm, $blacklist, true)) {
@@ -314,8 +316,8 @@ if ($pageTitle !== '' || $cleanUrl !== '') {
 foreach ($fields as $k => $v) {
   $lk = mb_strtolower($k, 'UTF-8');
   // Дубли: имя, телефон, город — пропускаем
-  if (str_contains($lk, 'фио') || str_contains($lk, 'имя') || str_contains($lk, 'аты')) continue;
-  if (str_contains($lk, 'телефон') || str_contains($lk, 'phone')) continue;
+  if (strpos($lk, 'фио') !== false || strpos($lk, 'имя') !== false || strpos($lk, 'аты') !== false) continue;
+  if (strpos($lk, 'телефон') !== false || strpos($lk, 'phone') !== false) continue;
   if ($lk === 'город') continue;
   $commentParts[] = $k . ': ' . $v;
 }
@@ -362,6 +364,9 @@ if (!empty($CFG['ERP_URL'])) {
     CURLOPT_POST => true,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => (int)($CFG['ERP_TIMEOUT'] ?? 8),
+    CURLOPT_HTTPHEADER => [
+        'Accept: application/json'
+    ],
     CURLOPT_POSTFIELDS => $body, // массив → multipart/form-data
   ]);
   $erpResp = curl_exec($ch);
@@ -396,7 +401,10 @@ write_log($CFG, $logEntry);
 
 // ===== Ответ фронту ==============================================
 // Пользователю показываем успех, если хотя бы Telegram прошёл.
+// ===== Ответ фронту ==============================================
 echo json_encode([
   'ok'   => $tgStatus === 'ok',
   'spam' => $isSpam,
+  'debug_erp_status' => $erpStatus, // ВРЕМЕННО ДЛЯ ТЕСТА
+  'debug_erp_error'  => $erpError   // ВРЕМЕННО ДЛЯ ТЕСТА
 ]);
