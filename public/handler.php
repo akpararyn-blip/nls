@@ -331,6 +331,15 @@ $comment = strip_urls($comment);
 $comment = flatten_line($comment);
 if (mb_strlen($comment, 'UTF-8') > 4000) $comment = mb_substr($comment, 0, 4000, 'UTF-8');
 
+// Ищем email и адрес для новых полей API (используем strpos для PHP 7.2)
+$emailVal = '';
+$addressVal = '';
+foreach ($fields as $k => $v) {
+  $lk = mb_strtolower($k, 'UTF-8');
+  if ($emailVal === '' && (strpos($lk, 'email') !== false || strpos($lk, 'почта') !== false)) $emailVal = $v;
+  if ($addressVal === '' && (strpos($lk, 'адрес') !== false || strpos($lk, 'address') !== false)) $addressVal = $v;
+}
+
 $tracking = [
   'website_domain'   => 'nls.kz',
   'landing_page_url' => $pageUrl !== '' ? $pageUrl : null,
@@ -351,29 +360,41 @@ $tracking = [
 
 $erpStatus = null;
 $erpError = null;
+
 if (!empty($CFG['ERP_URL'])) {
   $body = [
-    'name'     => $nameVal !== '' ? $nameVal : 'Без имени',
-    'phone'    => $phoneNorm,
-    'form_key' => $formKey,
-    'comment'  => $comment,
-    'tracking' => json_encode($tracking, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'name'      => $nameVal !== '' ? $nameVal : 'Без имени',
+    'phone'     => $phoneNorm,
+    'email'     => $emailVal !== '' ? $emailVal : null,
+    'address'   => $addressVal !== '' ? $addressVal : null,
+    'comment'   => $comment,
+    'tracking'  => $tracking, // Передаем как массив, json_encode ниже соберет его в объект
   ];
+
+  // Формируем заголовки запроса
+  $headers = [
+      'Accept: application/json',
+      'Content-Type: application/json',
+  ];
+  
+  // Добавляем Bearer токен из конфига
+  if (!empty($CFG['ERP_BEARER_TOKEN'])) {
+      $headers[] = 'Authorization: Bearer ' . $CFG['ERP_BEARER_TOKEN'];
+  }
+
   $ch = curl_init($CFG['ERP_URL']);
   curl_setopt_array($ch, [
     CURLOPT_POST => true,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => (int)($CFG['ERP_TIMEOUT'] ?? 8),
-    CURLOPT_HTTPHEADER => [
-        'Accept: application/json',
-        'Content-Type: application/json',
-    ],
+    CURLOPT_HTTPHEADER => $headers,
     CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
   ]);
   $erpResp = curl_exec($ch);
   $erpStatus = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
   $curlErr = curl_error($ch);
   curl_close($ch);
+  
   if ($erpStatus < 200 || $erpStatus >= 300) {
     $erpError = $curlErr ?: substr((string)$erpResp, 0, 200);
   }
